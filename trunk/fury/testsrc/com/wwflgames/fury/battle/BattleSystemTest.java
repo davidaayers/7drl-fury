@@ -3,14 +3,14 @@ package com.wwflgames.fury.battle;
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.item.ItemFactory;
-import com.wwflgames.fury.item.Shuffler;
 import com.wwflgames.fury.item.effect.Damage;
 import com.wwflgames.fury.item.effect.DamageType;
 import com.wwflgames.fury.item.effect.EffectApplierFactory;
 import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
-import com.wwflgames.fury.util.Log;
+import com.wwflgames.fury.util.Shuffler;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,24 +23,29 @@ import static junit.framework.Assert.assertTrue;
 public class BattleSystemTest {
 
     private BattleSystem battleSystem;
-    private Shuffler shufflerStub;
     private ItemFactory itemFactory;
 
     @Before
     public void setUp() throws Exception {
-        EffectApplierFactory effectApplierFactory = new EffectApplierFactory();
-        itemFactory = new ItemFactory(effectApplierFactory);
-        shufflerStub = new Shuffler() {
+        Shuffler.installShuffleProvider(new Shuffler.ShuffleProvider() {
             @Override
             public void shuffle(List list) {
             }
-        };
+        });
+
+        EffectApplierFactory effectApplierFactory = new EffectApplierFactory();
+        itemFactory = new ItemFactory(effectApplierFactory);
+    }
+
+    @After
+    public void afterTest() {
+        Shuffler.resetShuffleProvider();
     }
 
     @Test
     public void testOneRoundBattleAgainstOneMobWithPlayerInitiative() {
         Battle b = createBattle(10,10,5,1,true);
-        battleSystem = new BattleSystem(shufflerStub,b);
+        battleSystem = new BattleSystem(b);
 
         doBattle();
 
@@ -52,7 +57,7 @@ public class BattleSystemTest {
     @Test
     public void testOneRoundBattleAgainstOneMobWithMobInitiative() {
         Battle b = createBattle(10,10,5,1,false);
-        battleSystem = new BattleSystem(shufflerStub,b);
+        battleSystem = new BattleSystem(b);
 
         doBattle();
 
@@ -64,7 +69,7 @@ public class BattleSystemTest {
     @Test
     public void testTwoRoundBattleAgainstOneMobWithPlayerInitiative() {
         Battle b = createBattle(10,5,10,1,true);
-        battleSystem = new BattleSystem(shufflerStub,b);
+        battleSystem = new BattleSystem(b);
 
         doBattle();
 
@@ -76,7 +81,7 @@ public class BattleSystemTest {
     @Test
     public void testTwoRoundBattleAgainstOneMobWithMobInitiative() {
         Battle b = createBattle(10,5,10,1,false);
-        battleSystem = new BattleSystem(shufflerStub,b);
+        battleSystem = new BattleSystem(b);
 
         doBattle();
 
@@ -108,7 +113,7 @@ public class BattleSystemTest {
     private Mob newMob(String name, int health) {
         Mob mob = new Mob(name);
         mob.setStatValue(Stat.HEALTH,health);
-        mob.setDeck(new ItemDeck(shufflerStub));
+        mob.setDeck(new ItemDeck());
         return mob;
     }
 

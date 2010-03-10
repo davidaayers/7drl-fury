@@ -1,23 +1,21 @@
 package com.wwflgames.fury.battle;
 
 import com.wwflgames.fury.item.Item;
-import com.wwflgames.fury.item.Shuffler;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.util.Log;
+import com.wwflgames.fury.util.Shuffler;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BattleSystem {
 
-    private Shuffler shuffler;
     private Battle battle;
     private int battleRound;
     private boolean battleOver = false;
     private boolean playerWon = false;
 
-    public BattleSystem(Shuffler shuffler,Battle battle) {
-        this.shuffler = shuffler;
+    public BattleSystem(Battle battle) {
         this.battle = battle;
     }
 
@@ -112,7 +110,7 @@ public class BattleSystem {
         List<Mob> mobs = new ArrayList<Mob>();
         mobs.addAll(battle.getEnemies());
         Log.debug("Enemies in battle: " + mobs);
-        shuffler.shuffle(mobs);
+        Shuffler.shuffle(mobs);
         // grab the first one in the list
         Mob first = mobs.get(0);
         Log.debug("Enemy player is facing now: " + first.name());

@@ -1,6 +1,7 @@
 package com.wwflgames.fury.item;
 
 import com.wwflgames.fury.util.Log;
+import com.wwflgames.fury.util.Shuffler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +10,8 @@ public class ItemDeck {
 
     private List<Item> deck = new ArrayList<Item>();
     private int idx;
-    private Shuffler shuffler;
 
-    public ItemDeck(Shuffler shuffler) {
-        this.shuffler = shuffler;
+    public ItemDeck() {
     }
 
     public void addItem(Item item) {
@@ -24,7 +23,7 @@ public class ItemDeck {
     }
 
     public void shuffle() {  
-        shuffler.shuffle(deck);
+        Shuffler.shuffle(deck);
         idx = 0;
     }
 
