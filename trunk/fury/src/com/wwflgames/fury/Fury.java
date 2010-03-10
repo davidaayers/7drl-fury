@@ -26,8 +26,8 @@ public class Fury extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
-        addState(new TitleState());
-        addState(new GamePlayState());
+        //addState(new TitleState());
+        //addState(new GamePlayState());
         addState(new BattleState());
     }
 
