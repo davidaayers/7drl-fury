@@ -106,7 +106,6 @@ public class BattleSystem {
 
     private void doPlayerRound() {
         // pick an enemy randomly.
-        //TODO: add focus ability support
         List<Mob> mobs = new ArrayList<Mob>();
         mobs.addAll(battle.getEnemies());
         Log.debug("Enemies in battle: " + mobs);

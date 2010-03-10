@@ -1,4 +1,9 @@
 package com.wwflgames.fury.monster;
 
-public class Monster {
+import com.wwflgames.fury.mob.Mob;
+
+public class Monster extends Mob {
+    public Monster(String name) {
+        super(name);
+    }
 }
