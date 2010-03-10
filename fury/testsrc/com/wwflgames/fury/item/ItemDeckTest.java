@@ -1,6 +1,7 @@
 package com.wwflgames.fury.item;
 
 import com.wwflgames.fury.mob.Mob;
+import com.wwflgames.fury.util.Shuffler;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +16,8 @@ public class ItemDeckTest {
     @Before
     public void setUp() throws Exception {
         shuffler = new TrackingShuffler();
-        itemDeck = new ItemDeck(shuffler);
+        Shuffler.installShuffleProvider(shuffler);
+        itemDeck = new ItemDeck();
     }
 
     @Test
@@ -69,7 +71,7 @@ public class ItemDeckTest {
         };
     }
 
-    class TrackingShuffler implements Shuffler {
+    class TrackingShuffler implements Shuffler.ShuffleProvider {
 
         int timesShuffled = 0;
 
