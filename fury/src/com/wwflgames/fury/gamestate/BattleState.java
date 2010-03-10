@@ -33,7 +33,7 @@ public class BattleState extends BasicGameState {
 
         heroSprites = new SpriteSheet("warrior.png", 24, 32);
         dungeonTiles = new SpriteSheet("dg_dungeon32.gif", 32, 32);
-        monsterSprites = new SpriteSheet("horned_skelly.png",24,32);
+        monsterSprites = new SpriteSheet("horned_skelly.png", 24, 32);
 
         font = new Font("Verdana", Font.PLAIN, 12);
         tfont = new UnicodeFont(font);
@@ -48,23 +48,25 @@ public class BattleState extends BasicGameState {
         g.setColor(Color.white);
         TextUtil.centerText(container, g, "Battle Screen", 0);
 
-        int TILE_WIDTH = 96;
-        int TILE_HEIGHT = 96;
-        int x = 256;
-        int y = 96 + 32;
+        int scale = 4;
+
+        int TILE_WIDTH = 32 * scale;
+        int TILE_HEIGHT = 32 * scale;
+        int x = 400 - ((TILE_WIDTH * 3) / 2);
+        int y = 32;
         // draw the dungeon floor under the mobs
         // first row
-        dungeonTiles.getSprite(0, 0).draw(x, y, 3);
-        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH, y, 3);
-        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH * 2, y, 3);
+        dungeonTiles.getSprite(0, 0).draw(x, y, scale);
+        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH, y, scale);
+        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH * 2, y, scale);
         // second row
-        dungeonTiles.getSprite(0, 0).draw(x, y + TILE_HEIGHT, 3);
-        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH, y + TILE_HEIGHT, 3);
-        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH * 2, y + TILE_HEIGHT, 3);
+        dungeonTiles.getSprite(0, 0).draw(x, y + TILE_HEIGHT, scale);
+        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH, y + TILE_HEIGHT, scale);
+        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH * 2, y + TILE_HEIGHT, scale);
         // third row
-        dungeonTiles.getSprite(0, 0).draw(x, y + TILE_HEIGHT * 2, 3);
-        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH, y + TILE_HEIGHT * 2, 3);
-        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH * 2, y + TILE_HEIGHT * 2, 3);
+        dungeonTiles.getSprite(0, 0).draw(x, y + TILE_HEIGHT * 2, scale);
+        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH, y + TILE_HEIGHT * 2, scale);
+        dungeonTiles.getSprite(0, 8).draw(x + TILE_WIDTH * 2, y + TILE_HEIGHT * 2, scale);
 
         if (false) {
             g.setColor(Color.red);
@@ -77,27 +79,88 @@ public class BattleState extends BasicGameState {
 
 
         //g.drawImage(heroSprites.getSprite(1,2),100,100);
-        heroSprites.getSprite(1, 2).draw(x + TILE_WIDTH + 12, y + TILE_HEIGHT, 3);
-        monsterSprites.getSprite(1,2).draw(x + TILE_WIDTH + 12, y,3);
-        monsterSprites.getSprite(1,2).draw(x + TILE_WIDTH*2 + 12, y+TILE_HEIGHT*2,3);
+        heroSprites.getSprite(1, 2).draw(x + TILE_WIDTH + 4 * scale, y + TILE_HEIGHT, scale);
+        monsterSprites.getSprite(1, 2).draw(x + TILE_WIDTH + 4 * scale, y, scale);
+        monsterSprites.getSprite(1, 2).draw(x + TILE_WIDTH * 2 + 4 * scale, y + TILE_HEIGHT * 2, scale);
 
         // draw an item at the top
+        if (false) {
+            g.setColor(Color.gray);
+            g.fillRoundRect(x + TILE_WIDTH, y - 96 - 4, 96, 96, 15);
+            g.fillRoundRect(x + TILE_WIDTH, y + TILE_HEIGHT * 3 + 4, 96, 96, 15);
+
+            g.fillRoundRect(x - TILE_WIDTH - 4, y - 96 - 4, 96, 96, 15);
+            g.fillRoundRect(x - TILE_WIDTH - 4, y + TILE_HEIGHT, 96, 96, 15);
+            g.fillRoundRect(x - TILE_WIDTH - 4, y + TILE_HEIGHT * 3 + 4, 96, 96, 15);
+
+            g.fillRoundRect(x + TILE_WIDTH * 3 + 4, y - 96 - 4, 96, 96, 15);
+            g.fillRoundRect(x + TILE_WIDTH * 3 + 4, y + TILE_HEIGHT, 96, 96, 15);
+            g.fillRoundRect(x + TILE_WIDTH * 3 + 4, y + TILE_HEIGHT * 3 + 4, 96, 96, 15);
+
+            g.setColor(Color.white);
+            String itemName = "Spikey Mace";
+            int width = tfont.getWidth(itemName);
+            tfont.drawString(x + TILE_WIDTH + 48 - (width / 2), y - 96 - 4, itemName, Color.white);
+        }
+
+        String player = "Player: Warrior";
+        int width = tfont.getWidth(player);
+        tfont.drawString(x/2-width/2, y , player, Color.white);
+
+        // draw a "deck" at the top left
         g.setColor(Color.gray);
-        g.fillRoundRect(x + TILE_WIDTH, y - 96 - 4, 96, 96, 15);
-        g.fillRoundRect(x + TILE_WIDTH, y + TILE_HEIGHT*3 + 4, 96, 96, 15);
-
-        g.fillRoundRect(x - TILE_WIDTH-4, y - 96 -4, 96, 96, 15);
-        g.fillRoundRect(x - TILE_WIDTH-4, y + TILE_HEIGHT, 96, 96, 15);
-        g.fillRoundRect(x - TILE_WIDTH-4, y + TILE_HEIGHT*3 + 4 , 96, 96, 15);
-
-        g.fillRoundRect(x + TILE_WIDTH*3 +4, y -96-4, 96, 96, 15);
-        g.fillRoundRect(x + TILE_WIDTH*3 +4, y + TILE_HEIGHT, 96, 96, 15);
-        g.fillRoundRect(x + TILE_WIDTH*3 +4, y + TILE_HEIGHT*3+4, 96, 96, 15);
-
+        int deckOffset = 20;
+        int dx = 10;
+        int dy = y + 32;
+        g.fillRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
         g.setColor(Color.white);
-        String itemName = "Spikey Mace";
-        int width = tfont.getWidth(itemName);
-        tfont.drawString(x + TILE_WIDTH + 48 - (width / 2), y - 96 - 4, itemName, Color.white);
+        g.drawRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        dx += deckOffset;
+        g.setColor(Color.gray);
+        g.fillRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        g.setColor(Color.white);
+        g.drawRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        dx += deckOffset;
+        g.setColor(Color.gray);
+        g.fillRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        g.setColor(Color.white);
+        g.drawRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        dx += deckOffset;
+        g.setColor(Color.gray);
+        g.fillRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        g.setColor(Color.white);
+        g.drawRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+
+        String monster = "Menacing Skeleton";
+        width = tfont.getWidth(monster);
+        int mw = 800-(x+TILE_WIDTH*3);
+        System.out.println("mw = " + mw );
+        int mx = (x+TILE_WIDTH*3) + mw/2 - width/2;
+        tfont.drawString(mx, y , monster, Color.white);
+
+
+        // draw a "deck" at the top right
+        g.setColor(Color.darkGray);
+        dx = 800 - TILE_WIDTH - 10;
+        g.fillRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        g.setColor(Color.white);
+        g.drawRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        dx -= deckOffset;
+        g.setColor(Color.darkGray);
+        g.fillRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        g.setColor(Color.white);
+        g.drawRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        dx -= deckOffset;
+        g.setColor(Color.darkGray);
+        g.fillRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        g.setColor(Color.white);
+        g.drawRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        dx -= deckOffset;
+        g.setColor(Color.darkGray);
+        g.fillRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+        g.setColor(Color.white);
+        g.drawRoundRect(dx, dy, 32 * scale, 32 * scale, 15);
+
     }
 
     @Override
