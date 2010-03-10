@@ -40,7 +40,7 @@ public class TitleState extends BasicGameState {
 
     @Override
 	public void keyPressed(int key, char c) {
-		stateBasedGame.enterState(Fury.GAME_STATE,new FadeOutTransition(Color.black), 
+		stateBasedGame.enterState(Fury.BATTLE_STATE,new FadeOutTransition(Color.black),
 				new FadeInTransition(Color.black));
 	}
 }

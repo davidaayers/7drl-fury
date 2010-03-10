@@ -20,14 +20,6 @@ public class NamePart {
         return part;
     }
 
-    public int getMinPoints() {
-        return minPoints;
-    }
-
-    public int getMaxPoints() {
-        return maxPoints;
-    }
-
     public boolean validFor(int points) {
         return points >= minPoints && points <=maxPoints;
     }

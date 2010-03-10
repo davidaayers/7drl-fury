@@ -1,5 +1,6 @@
 package com.wwflgames.fury;
 
+import com.wwflgames.fury.gamestate.BattleState;
 import com.wwflgames.fury.gamestate.GamePlayState;
 import com.wwflgames.fury.gamestate.TitleState;
 import org.newdawn.slick.AppGameContainer;
@@ -13,6 +14,8 @@ public class Fury extends StateBasedGame {
 
     public static final int TITLE_STATE = 1;
     public static final int GAME_STATE = 2;
+    public static final int BATTLE_STATE = 3;
+
 
 
     private static AppGameContainer container;
@@ -25,6 +28,7 @@ public class Fury extends StateBasedGame {
     public void initStatesList(GameContainer gameContainer) throws SlickException {
         addState(new TitleState());
         addState(new GamePlayState());
+        addState(new BattleState());
     }
 
     public static void main ( String[] args ) {
