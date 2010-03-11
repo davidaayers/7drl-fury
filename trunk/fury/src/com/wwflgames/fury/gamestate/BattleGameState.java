@@ -5,6 +5,7 @@ import com.wwflgames.fury.battle.Battle;
 import com.wwflgames.fury.battle.BattleSystem;
 import com.wwflgames.fury.entity.BattleMapRenderComponent;
 import com.wwflgames.fury.entity.Entity;
+import com.wwflgames.fury.entity.EntityManager;
 import com.wwflgames.fury.entity.MobLocationComponent;
 import com.wwflgames.fury.entity.SpriteSheetRenderComponent;
 import com.wwflgames.fury.main.AppState;
@@ -33,11 +34,10 @@ public class BattleGameState extends BasicGameState {
     private SpriteSheet heroSprites;
     private SpriteSheet monsterSprites;
     private UnicodeFont font;
-    private Entity mapEntity;
     private AppState appState;
     private Battle battle;
     private BattleSystem battleSystem;
-    private List<Entity> allMobs;
+    private EntityManager entityManager;
 
     public BattleGameState(AppState appState) {
         this.appState = appState;
@@ -63,11 +63,13 @@ public class BattleGameState extends BasicGameState {
         font.addAsciiGlyphs();
         font.loadGlyphs();
 
+        entityManager = new EntityManager(container,game);
+
     }
 
     // called when this state is entered. Here's where we'll setup our battle 
     public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-        Log.debug("BattleGameState->entered.");
+        Log.debug("BattleGameState-> entered.");
 
         // grab the player
         Player player = appState.getPlayer();
@@ -76,41 +78,41 @@ public class BattleGameState extends BasicGameState {
         int playerMapX = player.getMapX();
         int playerMapY = player.getMapY();
 
-        Log.debug("playerMapX = " + playerMapX + " , playerMapY = " + playerMapY );
-
         int mapOffsetX = playerMapX - 1;
         int mapOffsetY = playerMapY - 1;
 
-        Log.debug("mapOffsetX = " + mapOffsetX + " , mapOffsetY = " + mapOffsetY );
-
-        mapEntity = new Entity("map", container, game)
+        Entity mapEntity = new Entity("map")
                 .setPosition(new Vector2f(208, 32))
                 .setScale(4)
                 .addComponent(new BattleMapRenderComponent("mapRender", appState.getMap(), mapOffsetX, mapOffsetY));
 
-        List<Mob> monsters = findMonsters(map, playerMapX, playerMapY);
-        //TODO: the "true" here is player initiative, it should be set somehow. For now,
-        //we'll just always give the player initiative.
+        entityManager.addEntity(mapEntity);
 
-        battle = new Battle(player, monsters, true);
-        battleSystem = new BattleSystem(battle);
+        List<Mob> monsters = findMonsters(map, playerMapX, playerMapY);
 
         // finally, create entities for all of the monsters found, and the player, so
         // they can be rendered
-        allMobs = new ArrayList<Entity>();
-
         for (Mob monster : monsters) {
             Log.debug("monster x = " + monster.getMapX() + " , y = " + monster.getMapY());
             SpriteSheetRenderComponent sprite = new SpriteSheetRenderComponent(monster.name() + "sprite", monsterSprites)
                 .useSprite(1, 2);
             Entity mobEntity = createMobEntity(mapOffsetX, mapOffsetY, monster, sprite);
-            allMobs.add(mobEntity);
+            entityManager.addEntity(mobEntity);
         }
 
         SpriteSheetRenderComponent heroSprite = new SpriteSheetRenderComponent(player.name() + "sprite", heroSprites)
             .useSprite(1, 2);
 
-        allMobs.add(createMobEntity(mapOffsetX, mapOffsetY, player, heroSprite));
+        Entity playerEntity = createMobEntity(mapOffsetX, mapOffsetY, player, heroSprite);
+        entityManager.addEntity(playerEntity);
+
+        // Set up the battle
+        //TODO: the "true" here is player initiative, it should be set somehow. For now,
+        //we'll just always give the player initiative.
+        battle = new Battle(player, monsters, true);
+        battleSystem = new BattleSystem(battle);
+
+        Log.debug("BattleGameState-> complete.");
     }
 
     private Entity createMobEntity(int mapOffsetX, int mapOffsetY, Mob mob,SpriteSheetRenderComponent sprite) {
@@ -119,10 +121,11 @@ public class BattleGameState extends BasicGameState {
                 .setScreenOffset(208, 32)
                 .setMob(mob);
 
-        Entity mobEntity = new Entity(mob.name() + "entity", container, game)
+        Entity mobEntity = new Entity(mob.name() + "entity")
                 .setScale(4)
                 .addComponent(sprite)
                 .addComponent(mobLocationComponent);
+        
         return mobEntity;
     }
 
@@ -151,25 +154,18 @@ public class BattleGameState extends BasicGameState {
         g.setColor(Color.white);
         TextUtil.centerText(container, g, "Battle Screen", 0);
 
+        entityManager.render(g);
+
+        /////////////////////////////////////////////////////////////////////
+        // Move all this stuff to entities
+        /////////////////////////////////////////////////////////////////////
+
         int scale = 4;
 
         int TILE_WIDTH = 32 * scale;
         int TILE_HEIGHT = 32 * scale;
         int x = 400 - ((TILE_WIDTH * 3) / 2);
         int y = 32;
-
-        mapEntity.render(g);
-
-        //g.drawImage(heroSprites.getSprite(1,2),100,100);
-        //heroSprites.getSprite(1, 2).draw(x + TILE_WIDTH + 4 * scale, y + TILE_HEIGHT, scale);
-
-//        monsterSprites.getSprite(1, 2).draw(x + TILE_WIDTH + 4 * scale, y, scale);
-//        monsterSprites.getSprite(1, 2).draw(x + TILE_WIDTH * 2 + 4 * scale, y + TILE_HEIGHT * 2, scale);
-
-        for (Entity entity : allMobs) {
-            entity.render(g);
-        }
-
 
         String player = appState.getPlayer().name();
         int width = font.getWidth(player);
@@ -232,9 +228,6 @@ public class BattleGameState extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        for (Entity entity : allMobs) {
-            entity.update(delta);
-        }
-
+        entityManager.update(delta);
     }
 }
