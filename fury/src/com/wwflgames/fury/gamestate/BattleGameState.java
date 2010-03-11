@@ -1,9 +1,18 @@
 package com.wwflgames.fury.gamestate;
 
 import com.wwflgames.fury.Fury;
+import com.wwflgames.fury.battle.Battle;
+import com.wwflgames.fury.battle.BattleSystem;
 import com.wwflgames.fury.entity.BattleMapRenderComponent;
 import com.wwflgames.fury.entity.Entity;
+import com.wwflgames.fury.entity.MobLocationComponent;
+import com.wwflgames.fury.entity.SpriteSheetRenderComponent;
 import com.wwflgames.fury.main.AppState;
+import com.wwflgames.fury.map.Map;
+import com.wwflgames.fury.mob.Mob;
+import com.wwflgames.fury.monster.Monster;
+import com.wwflgames.fury.player.Player;
+import com.wwflgames.fury.util.Log;
 import com.wwflgames.fury.util.TextUtil;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.*;
@@ -14,6 +23,8 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BattleGameState extends BasicGameState {
 
@@ -24,6 +35,9 @@ public class BattleGameState extends BasicGameState {
     private UnicodeFont font;
     private Entity mapEntity;
     private AppState appState;
+    private Battle battle;
+    private BattleSystem battleSystem;
+    private List<Entity> allMobs;
 
     public BattleGameState(AppState appState) {
         this.appState = appState;
@@ -36,7 +50,7 @@ public class BattleGameState extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        
+
         this.container = container;
         this.game = game;
 
@@ -49,10 +63,87 @@ public class BattleGameState extends BasicGameState {
         font.addAsciiGlyphs();
         font.loadGlyphs();
 
+    }
+
+    // called when this state is entered. Here's where we'll setup our battle 
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+        Log.debug("BattleGameState->entered.");
+
+        // grab the player
+        Player player = appState.getPlayer();
+        Map map = appState.getMap();
+
+        int playerMapX = player.getMapX();
+        int playerMapY = player.getMapY();
+
+        Log.debug("playerMapX = " + playerMapX + " , playerMapY = " + playerMapY );
+
+        int mapOffsetX = playerMapX - 1;
+        int mapOffsetY = playerMapY - 1;
+
+        Log.debug("mapOffsetX = " + mapOffsetX + " , mapOffsetY = " + mapOffsetY );
+
         mapEntity = new Entity("map", container, game)
                 .setPosition(new Vector2f(208, 32))
                 .setScale(4)
-                .addComponent(new BattleMapRenderComponent("mapRender", appState.getMap(), 1, 0));
+                .addComponent(new BattleMapRenderComponent("mapRender", appState.getMap(), mapOffsetX, mapOffsetY));
+
+        List<Mob> monsters = findMonsters(map, playerMapX, playerMapY);
+        //TODO: the "true" here is player initiative, it should be set somehow. For now,
+        //we'll just always give the player initiative.
+
+        battle = new Battle(player, monsters, true);
+        battleSystem = new BattleSystem(battle);
+
+        // finally, create entities for all of the monsters found, and the player, so
+        // they can be rendered
+        allMobs = new ArrayList<Entity>();
+
+        for (Mob monster : monsters) {
+            Log.debug("monster x = " + monster.getMapX() + " , y = " + monster.getMapY());
+            SpriteSheetRenderComponent sprite = new SpriteSheetRenderComponent(monster.name() + "sprite", monsterSprites)
+                .useSprite(1, 2);
+            Entity mobEntity = createMobEntity(mapOffsetX, mapOffsetY, monster, sprite);
+            allMobs.add(mobEntity);
+        }
+
+        SpriteSheetRenderComponent heroSprite = new SpriteSheetRenderComponent(player.name() + "sprite", heroSprites)
+            .useSprite(1, 2);
+
+        allMobs.add(createMobEntity(mapOffsetX, mapOffsetY, player, heroSprite));
+    }
+
+    private Entity createMobEntity(int mapOffsetX, int mapOffsetY, Mob mob,SpriteSheetRenderComponent sprite) {
+        MobLocationComponent mobLocationComponent = new MobLocationComponent(mob.name() + "location")
+                .setMapOffset(mapOffsetX, mapOffsetY)
+                .setScreenOffset(208, 32)
+                .setMob(mob);
+
+        Entity mobEntity = new Entity(mob.name() + "entity", container, game)
+                .setScale(4)
+                .addComponent(sprite)
+                .addComponent(mobLocationComponent);
+        return mobEntity;
+    }
+
+    // package private for testing
+    List<Mob> findMonsters(Map map, int playerX, int playerY) {
+        List<Mob> monsters = new ArrayList<Mob>();
+        // look at all of the 8 squares around the player
+        // and see if there are monsters there
+        for (int y = -1; y < 2; y++) {
+            for (int x = -1; x < 2; x++) {
+                int mx = playerX + x;
+                int my = playerY + y;
+                if (map.inBounds(mx, my)) {
+                    Mob mob = map.getTileAt(playerX + x, playerY + y).getMob();
+                    if (mob != null && mob instanceof Monster) {
+                        monsters.add(mob);
+                    }
+                }
+            }
+        }
+        return monsters;
     }
 
     @Override
@@ -70,29 +161,15 @@ public class BattleGameState extends BasicGameState {
         mapEntity.render(g);
 
         //g.drawImage(heroSprites.getSprite(1,2),100,100);
-        heroSprites.getSprite(1, 2).draw(x + TILE_WIDTH + 4 * scale, y + TILE_HEIGHT, scale);
-        monsterSprites.getSprite(1, 2).draw(x + TILE_WIDTH + 4 * scale, y, scale);
-        monsterSprites.getSprite(1, 2).draw(x + TILE_WIDTH * 2 + 4 * scale, y + TILE_HEIGHT * 2, scale);
+        //heroSprites.getSprite(1, 2).draw(x + TILE_WIDTH + 4 * scale, y + TILE_HEIGHT, scale);
 
-        // draw an item at the top
-        if (false) {
-            g.setColor(Color.gray);
-            g.fillRoundRect(x + TILE_WIDTH, y - 96 - 4, 96, 96, 15);
-            g.fillRoundRect(x + TILE_WIDTH, y + TILE_HEIGHT * 3 + 4, 96, 96, 15);
+//        monsterSprites.getSprite(1, 2).draw(x + TILE_WIDTH + 4 * scale, y, scale);
+//        monsterSprites.getSprite(1, 2).draw(x + TILE_WIDTH * 2 + 4 * scale, y + TILE_HEIGHT * 2, scale);
 
-            g.fillRoundRect(x - TILE_WIDTH - 4, y - 96 - 4, 96, 96, 15);
-            g.fillRoundRect(x - TILE_WIDTH - 4, y + TILE_HEIGHT, 96, 96, 15);
-            g.fillRoundRect(x - TILE_WIDTH - 4, y + TILE_HEIGHT * 3 + 4, 96, 96, 15);
-
-            g.fillRoundRect(x + TILE_WIDTH * 3 + 4, y - 96 - 4, 96, 96, 15);
-            g.fillRoundRect(x + TILE_WIDTH * 3 + 4, y + TILE_HEIGHT, 96, 96, 15);
-            g.fillRoundRect(x + TILE_WIDTH * 3 + 4, y + TILE_HEIGHT * 3 + 4, 96, 96, 15);
-
-            g.setColor(Color.white);
-            String itemName = "Spikey Mace";
-            int width = font.getWidth(itemName);
-            font.drawString(x + TILE_WIDTH + 48 - (width / 2), y - 96 - 4, itemName, Color.white);
+        for (Entity entity : allMobs) {
+            entity.render(g);
         }
+
 
         String player = appState.getPlayer().name();
         int width = font.getWidth(player);
@@ -155,6 +232,9 @@ public class BattleGameState extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        for (Entity entity : allMobs) {
+            entity.update(delta);
+        }
 
     }
 }

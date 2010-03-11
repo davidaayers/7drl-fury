@@ -94,6 +94,8 @@ public class Mob {
 
     public void setCurrentMapTile(Tile currentMapTile) {
         this.currentMapTile = currentMapTile;
+        setMapX(currentMapTile.getX());
+        setMapY(currentMapTile.getY());
     }
 
     public int getMapX() {

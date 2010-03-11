@@ -11,16 +11,15 @@ public class SpriteSheetRenderComponent extends RenderComponent {
     private int spriteCol;
     private int spriteRow;
 
-    public SpriteSheetRenderComponent(String id, SpriteSheet spriteSheet, int spriteCol, int spriteRow) {
+    public SpriteSheetRenderComponent(String id, SpriteSheet spriteSheet) {
         super(id);
         this.spriteSheet = spriteSheet;
-        this.spriteCol = spriteCol;
-        this.spriteRow = spriteRow;
     }
 
-    public void useSprite(int spriteCol, int spriteRow) {
+    public SpriteSheetRenderComponent useSprite(int spriteCol, int spriteRow) {
         this.spriteCol = spriteCol;
         this.spriteRow = spriteRow;
+        return this;
     }
 
     @Override
