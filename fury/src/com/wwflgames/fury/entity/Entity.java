@@ -56,32 +56,31 @@ public class Entity {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public Vector2f getPosition() {
         return position;
     }
 
-    public void setPosition(Vector2f position) {
+    public Entity setPosition(Vector2f position) {
         this.position = position;
+        return this;
     }
 
     public float getScale() {
         return scale;
     }
 
-    public void setScale(float scale) {
+    public Entity setScale(float scale) {
         this.scale = scale;
+        return this;
     }
 
     public float getRotation() {
         return rotation;
     }
 
-    public void setRotation(float rotation) {
+    public Entity setRotation(float rotation) {
         this.rotation = rotation;
+        return this;
     }
 
     public GameContainer getContainer() {
@@ -92,13 +91,13 @@ public class Entity {
         return game;
     }
 
-    public void update(GameContainer gc, StateBasedGame sb, int delta) {
+    public void update(int delta) {
         for (Component component : components) {
             component.update(delta);
         }
     }
 
-    public void render(GameContainer gc, StateBasedGame sb, Graphics gr) {
+    public void render(Graphics gr) {
         if (renderComponent != null) {
             renderComponent.render(gr);
         }
