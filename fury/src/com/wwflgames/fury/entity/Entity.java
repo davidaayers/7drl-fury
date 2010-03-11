@@ -5,6 +5,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
+import javax.naming.ldap.Rdn;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,24 +15,19 @@ public class Entity {
     private Vector2f position;
     private float scale;
     private float rotation;
+    private Integer zIndex = 0;
 
     private RenderComponent renderComponent;
-    private List<Component> components;
+    private List<Component> components = new ArrayList<Component>();
 
     private GameContainer container;
     private StateBasedGame game;
 
-    public Entity(String id, GameContainer container, StateBasedGame game) {
+    public Entity(String id) {
         this.id = id;
-        this.container = container;
-        this.game = game;
-
-        components = new ArrayList<Component>();
-
         position = new Vector2f(0, 0);
         scale = 1;
         rotation = 0;
-
     }
 
     public Entity addComponent(Component component) {
@@ -74,6 +70,15 @@ public class Entity {
         return this;
     }
 
+    public Integer getZIndex() {
+        return zIndex;
+    }
+
+    public Entity setZIndex(Integer zIndex) {
+        this.zIndex = zIndex;
+        return this;
+    }
+
     public float getRotation() {
         return rotation;
     }
@@ -87,8 +92,18 @@ public class Entity {
         return container;
     }
 
+    public Entity setContainer(GameContainer container) {
+        this.container = container;
+        return this;
+    }
+
     public StateBasedGame getGame() {
         return game;
+    }
+
+    public Entity setGame(StateBasedGame game) {
+        this.game = game;
+        return this;
     }
 
     public void update(int delta) {

@@ -27,7 +27,7 @@ public class MobLocationComponentTest {
                 .setScreenOffset(208,32)
                 .setMob(testMob);
 
-        Entity mobEntity = new Entity("mob",null,null)
+        Entity mobEntity = new Entity("mob")
                 .setScale(4)
                 .addComponent(mobLocationComponent);
 
