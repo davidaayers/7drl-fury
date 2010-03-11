@@ -15,7 +15,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import java.awt.Font;
 
-public class BattleState extends BasicGameState {
+public class BattleGameState extends BasicGameState {
 
     private GameContainer container;
     private StateBasedGame game;
@@ -25,7 +25,7 @@ public class BattleState extends BasicGameState {
     private Entity mapEntity;
     private AppState appState;
 
-    public BattleState(AppState appState) {
+    public BattleGameState(AppState appState) {
         this.appState = appState;
     }
 

@@ -7,10 +7,10 @@ public class FixedMapCreator implements MapCreator {
 
         // add walls to the all around
         for ( int cnt = 0 ; cnt < 5 ; cnt ++ ) {
-            map.setTileAt(cnt,0, TileType.WALL);
-            map.setTileAt(cnt,4, TileType.WALL);
-            map.setTileAt(0,cnt, TileType.WALL);
-            map.setTileAt(4,cnt, TileType.WALL);
+            map.getTileAt(cnt,0).setType(TileType.WALL);
+            map.getTileAt(cnt,4).setType(TileType.WALL);
+            map.getTileAt(0,cnt).setType(TileType.WALL);
+            map.getTileAt(4,cnt).setType(TileType.WALL);
         }
 
         return map;
