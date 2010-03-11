@@ -1,8 +1,9 @@
 package com.wwflgames.fury;
 
 import com.wwflgames.fury.gamestate.BattleGameState;
-import com.wwflgames.fury.main.AppState;
+import com.wwflgames.fury.main.AppStateImpl;
 import com.wwflgames.fury.map.FixedMapCreator;
+import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.player.Player;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -19,7 +20,7 @@ public class Fury extends StateBasedGame {
 
     private static AppGameContainer container;
 
-    private AppState appState;
+    private AppStateImpl appState;
 
     public Fury() {
         super("Fury - 7DRL");
@@ -27,10 +28,20 @@ public class Fury extends StateBasedGame {
     }
 
     private void initAppState() {
-        appState = new AppState();
+        appState = new AppStateImpl();
 
         //TODO: move map creation somewhere else, later
         appState.setMap(new FixedMapCreator().createMap());
+
+        // an an enemy
+        Monster monster = new Monster("Slavering Skeleton");
+        appState.getMap().addMob(monster,1,2);
+
+        Monster monster2 = new Monster("Slavering Skeleton");
+        appState.getMap().addMob(monster2,2,1);
+
+        Monster monster3 = new Monster("Slavering Skeleton");
+        appState.getMap().addMob(monster3,2,2);
 
         //TODO: move player creation somewhere else, too
         appState.setPlayer(createPlayer());
@@ -39,7 +50,7 @@ public class Fury extends StateBasedGame {
     private Player createPlayer() {
         Player player = new Player("Valiant Knight");
         // put the player in the upper right hand corner of the map
-        
+        appState.getMap().addMob(player,1,1);
         return player;
     }
 

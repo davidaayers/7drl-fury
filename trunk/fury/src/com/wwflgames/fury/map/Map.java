@@ -1,5 +1,8 @@
 package com.wwflgames.fury.map;
 
+import com.wwflgames.fury.mob.Mob;
+import com.wwflgames.fury.player.Player;
+
 public class Map {
 
     private int width;
@@ -38,8 +41,13 @@ public class Map {
         return tiles[x][y];
     }
 
-    public void setTileAt(int x, int y , Tile tileType) {
-        tiles[x][y] = tileType;
+    public void setTileAt(int x, int y , Tile tile) {
+        tiles[x][y] = tile;
     }
 
+    public void addMob(Mob mob, int x, int y) {
+        Tile tile = getTileAt(x, y);
+        tile.setMob(mob);
+        mob.setCurrentMapTile(tile);
+    }
 }

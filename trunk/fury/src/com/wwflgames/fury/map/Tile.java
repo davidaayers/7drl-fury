@@ -31,4 +31,13 @@ public class Tile {
     public int getY() {
         return y;
     }
+
+    public Mob getMob() {
+        return mob;
+    }
+
+    // package private so it can only be called from Map
+    void setMob(Mob mob) {
+        this.mob = mob;
+    }
 }
