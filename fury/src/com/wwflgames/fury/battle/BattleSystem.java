@@ -2,6 +2,7 @@ package com.wwflgames.fury.battle;
 
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.mob.Mob;
+import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.util.Log;
 import com.wwflgames.fury.util.Shuffler;
 
@@ -30,9 +31,10 @@ public class BattleSystem {
         }
     }
 
-    public void performBattleRound() {
+    public BattleRoundResult performBattleRound(Monster monster) {
         // increment the battle Round
         battleRound ++;
+        BattleRoundResult battleRoundResult = new BattleRoundResult(battleRound); 
         Log.debug("=========( Round " + battleRound + " )==============");
         
 
@@ -51,6 +53,7 @@ public class BattleSystem {
         }
 
         Log.debug("Round " + battleRound + " is over");
+        return battleRoundResult;
     }
 
     private void doPlayerRoundAndCheckIfPlayerWon() {

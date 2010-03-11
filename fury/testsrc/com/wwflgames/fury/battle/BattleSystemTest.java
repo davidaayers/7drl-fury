@@ -106,7 +106,7 @@ public class BattleSystemTest {
     private void doBattle() {
         battleSystem.startBattle();
         while ( !battleSystem.isBattleOver() ) {
-            battleSystem.performBattleRound();
+            battleSystem.performBattleRound(null);
         }
     }
 
