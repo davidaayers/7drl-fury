@@ -1,6 +1,7 @@
 package com.wwflgames.fury.mob;
 
 import com.wwflgames.fury.item.ItemDeck;
+import com.wwflgames.fury.map.Tile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,9 @@ public class Mob {
     private Map<Stat, Integer> battleStats;
     private ItemDeck deck;
     private String name;
+    private Tile currentMapTile;
+    private int mapX;
+    private int mapY;
 
     public Mob(String name) {
         this.name = name;
@@ -82,6 +86,30 @@ public class Mob {
 
     public String name() {
         return name;
+    }
+
+    public Tile getCurrentMapTile() {
+        return currentMapTile;
+    }
+
+    public void setCurrentMapTile(Tile currentMapTile) {
+        this.currentMapTile = currentMapTile;
+    }
+
+    public int getMapX() {
+        return mapX;
+    }
+
+    public void setMapX(int mapX) {
+        this.mapX = mapX;
+    }
+
+    public int getMapY() {
+        return mapY;
+    }
+
+    public void setMapY(int mapY) {
+        this.mapY = mapY;
     }
 
     @Override

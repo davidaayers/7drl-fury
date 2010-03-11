@@ -4,12 +4,12 @@ public class Map {
 
     private int width;
     private int height;
-    private TileType[][] tileTypes;
+    private Tile[][] tiles;
 
     public Map(int width, int height) {
         this.width = width;
         this.height = height;
-        tileTypes = new TileType[width][height];
+        tiles = new Tile[width][height];
         initTilesToFloor();
     }
 
@@ -28,17 +28,18 @@ public class Map {
     private void initTilesToFloor() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                tileTypes[x][y] = TileType.FLOOR;
+                // default tiles to floor
+                tiles[x][y] = new Tile(TileType.FLOOR,x,y);
             }
         }
     }
 
-    public TileType getTileFor(int x, int y ) {
-        return tileTypes[x][y];
+    public Tile getTileAt(int x, int y ) {
+        return tiles[x][y];
     }
 
-    public void setTileAt(int x, int y , TileType tileType) {
-        tileTypes[x][y] = tileType;
+    public void setTileAt(int x, int y , Tile tileType) {
+        tiles[x][y] = tileType;
     }
 
 }

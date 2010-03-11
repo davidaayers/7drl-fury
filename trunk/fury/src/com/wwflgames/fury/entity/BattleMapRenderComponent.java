@@ -42,7 +42,7 @@ public class BattleMapRenderComponent extends RenderComponent {
                 int mapX = renderX+x;
                 int mapY = renderY+y;
                 if ( map.inBounds(mapX,mapY)) {
-                    TileType tileType = map.getTileFor(mapX,mapY);
+                    TileType tileType = map.getTileAt(mapX,mapY).getType();
                     Image drawImage = floorImage;
                     if ( tileType == TileType.WALL ) {
                         drawImage = wallImage;
