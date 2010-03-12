@@ -21,7 +21,7 @@ public class BattleSystem {
 
     public void startBattle() {
         Log.debug("Starting battle...");
-        battleRound = 0;
+        battleRound = 1;
         // prepare all of the mobs for battle. This will set their
         // battle stats. Also, shuffle all of their decks.
         for (Mob mob : battle.getAllBattleParticipants()) {
@@ -119,5 +119,9 @@ public class BattleSystem {
 
     public boolean didPlayerWin() {
         return playerWon;
+    }
+
+    public int getBattleRound() {
+        return battleRound;
     }
 }
