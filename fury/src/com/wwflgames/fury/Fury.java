@@ -1,8 +1,16 @@
 package com.wwflgames.fury;
 
 import com.wwflgames.fury.gamestate.BattleGameState;
+import com.wwflgames.fury.item.Item;
+import com.wwflgames.fury.item.ItemDeck;
+import com.wwflgames.fury.item.ItemFactory;
+import com.wwflgames.fury.item.effect.Damage;
+import com.wwflgames.fury.item.effect.DamageType;
+import com.wwflgames.fury.item.effect.EffectApplierFactory;
+import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.main.AppStateImpl;
 import com.wwflgames.fury.map.FixedMapCreator;
+import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.player.Player;
 import org.newdawn.slick.AppGameContainer;
@@ -35,23 +43,45 @@ public class Fury extends StateBasedGame {
 
         // an an enemy
         Monster monster = new Monster("Slavering Skeleton");
-        appState.getMap().addMob(monster, 1, 2);
+        monster.setStatValue(Stat.HEALTH, 10);
+        monster.setDeck(createDeck());
+        appState.getMap().addMob(monster, 2, 1);
 
-        Monster monster2 = new Monster("Slavering Skeleton");
-        appState.getMap().addMob(monster2, 2, 1);
-
-        Monster monster3 = new Monster("Slavering Skeleton");
-        appState.getMap().addMob(monster3, 2, 2);
+//        Monster monster2 = new Monster("Slavering Skeleton");
+//        monster2.setStatValue(Stat.HEALTH,10);
+//        monster2.setDeck(createDeck());
+//        appState.getMap().addMob(monster2, 2, 1);
+//
+//        Monster monster3 = new Monster("Slavering Skeleton");
+//        monster3.setStatValue(Stat.HEALTH,10);
+//        monster3.setDeck(createDeck());
+//        appState.getMap().addMob(monster3, 2, 2);
 
         //TODO: move player creation somewhere else, too
         appState.setPlayer(createPlayer());
     }
 
+    private ItemDeck createDeck() {
+        Damage crushDamage = new Damage(DamageType.MELEE_CRUSH, 5);
+        Item mace = factory().createItemWithUsedAgainstEffects("Mace of crushing", new ItemEffect[]{crushDamage});
+        ItemDeck deck = new ItemDeck();
+        deck.addItem(mace);
+        return deck;
+    }
+
     private Player createPlayer() {
         Player player = new Player("Valiant Knight");
+        player.setStatValue(Stat.HEALTH, 100);
         // put the player in the upper right hand corner of the map
         appState.getMap().addMob(player, 1, 1);
+        player.setDeck(createDeck());
+
         return player;
+    }
+
+    private ItemFactory factory() {
+        EffectApplierFactory effectApplierFactory = new EffectApplierFactory();
+        return new ItemFactory(effectApplierFactory);
     }
 
     @Override

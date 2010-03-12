@@ -81,7 +81,7 @@ public class Mob {
     }
 
     public boolean isDead() {
-        return stats.get(Stat.HEALTH) <= 0;
+        return getStatValue(Stat.HEALTH) <= 0;
     }
 
     public String name() {

@@ -6,7 +6,9 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Entity {
 
@@ -15,6 +17,7 @@ public class Entity {
     private float scale;
     private float rotation;
     private Integer zIndex = 0;
+    private Map<String, Object> propertyMap = new HashMap<String, Object>();
 
     private RenderComponent renderComponent;
     private List<Component> components = new ArrayList<Component>();
@@ -115,6 +118,14 @@ public class Entity {
         if (renderComponent != null) {
             renderComponent.render(gr);
         }
+    }
+
+    public void addProperty(String key, Object value) {
+        propertyMap.put(key, value);
+    }
+
+    public Object getProperty(String key) {
+        return propertyMap.get(key);
     }
 
 }

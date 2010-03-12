@@ -1,5 +1,6 @@
 package com.wwflgames.fury.entity;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
@@ -17,7 +18,16 @@ public class ImageRenderComponent extends RenderComponent {
     public void render(Graphics gr) {
         Vector2f pos = owner.getPosition();
         float scale = owner.getScale();
-        image.draw(pos.x, pos.y, scale);
+        int width = image.getWidth();
+        int height = image.getHeight();
+        Color filterColor = (Color) owner.getProperty("filterColor");
+
+        if (filterColor == null) {
+            image.draw(pos.x, pos.y, scale);
+        } else {
+            image.draw(pos.x, pos.y, width * scale, height * scale, filterColor);
+        }
+
     }
 
     @Override
