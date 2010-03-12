@@ -8,13 +8,13 @@ public class EffectApplierFactory {
     Map<DamageType, DamageApplier> damageAppliers = new HashMap<DamageType, DamageApplier>();
 
     public EffectApplierFactory() {
-        damageAppliers.put(DamageType.MELEE_CRUSH,new CrushDamageApplier());
+        damageAppliers.put(DamageType.MELEE_CRUSH, new CrushDamageApplier());
     }
 
     public EffectApplier applierFor(ItemEffect effect) {
 
-        if ( effect instanceof Damage ) {
-            return damageApplierFor((Damage)effect);
+        if (effect instanceof Damage) {
+            return damageApplierFor((Damage) effect);
         }
 
         return null;

@@ -18,17 +18,17 @@ public class ItemDeck {
         deck.add(item);
     }
 
-    public void removeItem(Item item ) {
+    public void removeItem(Item item) {
         deck.remove(item);
     }
 
-    public void shuffle() {  
+    public void shuffle() {
         Shuffler.shuffle(deck);
         idx = 0;
     }
 
-    public Item nextItem()  {
-        if ( idx == deck.size() ) {
+    public Item nextItem() {
+        if (idx == deck.size()) {
             Log.debug("Reshuffling deck");
             shuffle();
         }
