@@ -1,5 +1,6 @@
 package com.wwflgames.fury.item;
 
+import com.wwflgames.fury.battle.BattleEffectList;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.util.Shuffler;
 import org.junit.Before;
@@ -29,8 +30,8 @@ public class ItemDeckTest {
 
         itemDeck.shuffle();
         Item nextItem = itemDeck.nextItem();
-        assertEquals(1,shuffler.getTimesShuffled());
-        assertEquals(i1,nextItem);
+        assertEquals(1, shuffler.getTimesShuffled());
+        assertEquals(i1, nextItem);
     }
 
     @Test
@@ -44,9 +45,9 @@ public class ItemDeckTest {
         itemDeck.nextItem();
         itemDeck.nextItem();
 
-        assertEquals(1,shuffler.getTimesShuffled());
+        assertEquals(1, shuffler.getTimesShuffled());
         itemDeck.nextItem();
-        assertEquals(2,shuffler.getTimesShuffled());
+        assertEquals(2, shuffler.getTimesShuffled());
 
     }
 
@@ -60,13 +61,13 @@ public class ItemDeckTest {
             }
 
             @Override
-            public void usedBy(Mob mob) {
-
+            public BattleEffectList usedBy(Mob mob) {
+                return null;
             }
 
             @Override
-            public void usedAgainst(Mob mob) {
-
+            public BattleEffectList usedAgainst(Mob mob) {
+                return null;
             }
         };
     }
@@ -77,7 +78,7 @@ public class ItemDeckTest {
 
         @Override
         public void shuffle(List list) {
-            timesShuffled ++;
+            timesShuffled++;
         }
 
         public int getTimesShuffled() {

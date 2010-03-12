@@ -1,11 +1,12 @@
 package com.wwflgames.fury.item;
 
+import com.wwflgames.fury.battle.BattleEffectList;
 import com.wwflgames.fury.mob.Mob;
 
 public interface Item {
     String name();
 
-    void usedBy(Mob mob);
+    BattleEffectList usedBy(Mob mob);
 
-    void usedAgainst(Mob mob);
+    BattleEffectList usedAgainst(Mob mob);
 }
