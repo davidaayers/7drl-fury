@@ -4,7 +4,6 @@ import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.util.Log;
-import com.wwflgames.fury.util.Shuffler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,24 +39,24 @@ public class BattleSystem {
 
         // see who got initiate and let them go first
         if (battle.isPlayerInitiate()) {
-            doPlayerRoundAndCheckIfPlayerWon();
+            doPlayerRoundAndCheckIfPlayerWon(monster, battleRoundResult);
         } else {
-            doEnemyRoundAndCheckIfPlayerLost();
+            doEnemyRoundAndCheckIfPlayerLost(battleRoundResult);
         }
 
         // now, let the other side attack
         if (battle.isPlayerInitiate()) {
-            doEnemyRoundAndCheckIfPlayerLost();
+            doEnemyRoundAndCheckIfPlayerLost(battleRoundResult);
         } else {
-            doPlayerRoundAndCheckIfPlayerWon();
+            doPlayerRoundAndCheckIfPlayerWon(monster, battleRoundResult);
         }
 
         Log.debug("Round " + battleRound + " is over");
         return battleRoundResult;
     }
 
-    private void doPlayerRoundAndCheckIfPlayerWon() {
-        doPlayerRound();
+    private void doPlayerRoundAndCheckIfPlayerWon(Monster monster, BattleRoundResult result) {
+        doNextItemInDeck(battle.getPlayer(), monster, result);
         removeDeadMonstersFromBattle();
 
         if (battle.allEnemiesDead()) {
@@ -65,11 +64,26 @@ public class BattleSystem {
         }
     }
 
-    private void doEnemyRoundAndCheckIfPlayerLost() {
-        doEnemyRound();
+    private void doEnemyRoundAndCheckIfPlayerLost(BattleRoundResult result) {
+        for (Mob enemy : battle.getEnemies()) {
+            doNextItemInDeck(enemy, battle.getPlayer(), result);
+        }
+
         if (battle.getPlayer().isDead()) {
             playerLost();
         }
+    }
+
+    private void doNextItemInDeck(Mob attacker, Mob defender, BattleRoundResult result) {
+        Log.debug("Next item in deck, attacker = " + attacker.name() + ", defender = " + defender.name());
+        // grab the next item from the attackers deck
+        Item item = attacker.getDeck().nextItem();
+        Log.debug("Item chosen from deck is " + item.name());
+        BattleEffectList usedByList = item.usedBy(attacker);
+        BattleEffectList usedAgainstList = item.usedAgainst(defender);
+        result.addEffectList(attacker, usedByList);
+        result.addEffectList(defender, usedAgainstList);
+        Log.debug("Used against list = " + usedAgainstList.get());
     }
 
     private void removeDeadMonstersFromBattle() {
@@ -105,36 +119,5 @@ public class BattleSystem {
 
     public boolean didPlayerWin() {
         return playerWon;
-    }
-
-    private void doPlayerRound() {
-        // pick an enemy randomly.
-        List<Mob> mobs = new ArrayList<Mob>();
-        mobs.addAll(battle.getEnemies());
-        Log.debug("Enemies in battle: " + mobs);
-        Shuffler.shuffle(mobs);
-        // grab the first one in the list
-        Mob first = mobs.get(0);
-        Log.debug("Enemy player is facing now: " + first.name());
-        doNextItemInDeck(battle.getPlayer(), first);
-    }
-
-    private void doEnemyRound() {
-        for (Mob enemy : battle.getEnemies()) {
-            doNextItemInDeck(enemy, battle.getPlayer());
-        }
-    }
-
-    private void doNextItemInDeck(Mob attacker, Mob defender) {
-        Log.debug("Next item in deck, attacker = " + attacker.name() + ", defender = " + defender.name());
-        // grab the next item from the attackers deck
-        Item item = attacker.getDeck().nextItem();
-        Log.debug("Item chosen from deck is " + item.name());
-        item.usedBy(attacker);
-        item.usedAgainst(defender);
-    }
-
-    public int getBattleRound() {
-        return battleRound;
     }
 }

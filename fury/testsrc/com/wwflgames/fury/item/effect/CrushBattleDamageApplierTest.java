@@ -1,8 +1,6 @@
 package com.wwflgames.fury.item.effect;
 
-import com.wwflgames.fury.item.effect.CrushDamageApplier;
-import com.wwflgames.fury.item.effect.Damage;
-import com.wwflgames.fury.item.effect.DamageType;
+import com.wwflgames.fury.battle.BattleEffectList;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import org.junit.Before;
@@ -21,32 +19,32 @@ public class CrushBattleDamageApplierTest {
 
     @Test
     public void testAppliesToArmorBeforeDamage() {
-        Mob victim = newMob(5,10);
-        crushBattleDamageApplier.apply(new Damage(DamageType.MELEE_CRUSH,10),victim);
-        assertEquals(new Integer(0),victim.getBattleStatValue(Stat.ARMOR));
-        assertEquals(new Integer(5),victim.getStatValue(Stat.HEALTH));
+        Mob victim = newMob(5, 10);
+        crushBattleDamageApplier.apply(new Damage(DamageType.MELEE_CRUSH, 10), victim, new BattleEffectList(null, victim));
+        assertEquals(new Integer(0), victim.getBattleStatValue(Stat.ARMOR));
+        assertEquals(new Integer(5), victim.getStatValue(Stat.HEALTH));
     }
 
     @Test
     public void testMobWithNoArmorTakesFullDamage() {
-        Mob victim = newMob(0,10);
-        crushBattleDamageApplier.apply(new Damage(DamageType.MELEE_CRUSH,5),victim);
-        assertEquals(new Integer(0),victim.getBattleStatValue(Stat.ARMOR));
-        assertEquals(new Integer(5),victim.getStatValue(Stat.HEALTH));
+        Mob victim = newMob(0, 10);
+        crushBattleDamageApplier.apply(new Damage(DamageType.MELEE_CRUSH, 5), victim, new BattleEffectList(null, victim));
+        assertEquals(new Integer(0), victim.getBattleStatValue(Stat.ARMOR));
+        assertEquals(new Integer(5), victim.getStatValue(Stat.HEALTH));
     }
 
     @Test
     public void testMobWithLotsOfArmorAbsorbsAllDamage() {
-        Mob victim = newMob(100,10);
-        crushBattleDamageApplier.apply(new Damage(DamageType.MELEE_CRUSH,5),victim);
-        assertEquals(new Integer(95),victim.getBattleStatValue(Stat.ARMOR));
-        assertEquals(new Integer(10),victim.getStatValue(Stat.HEALTH));
+        Mob victim = newMob(100, 10);
+        crushBattleDamageApplier.apply(new Damage(DamageType.MELEE_CRUSH, 5), victim, new BattleEffectList(null, victim));
+        assertEquals(new Integer(95), victim.getBattleStatValue(Stat.ARMOR));
+        assertEquals(new Integer(10), victim.getStatValue(Stat.HEALTH));
     }
 
-    private Mob newMob(int armor,int health) {
+    private Mob newMob(int armor, int health) {
         Mob victim = new Mob("test");
-        victim.setBattleStatValue(Stat.ARMOR,armor);
-        victim.setStatValue(Stat.HEALTH,health);
+        victim.setBattleStatValue(Stat.ARMOR, armor);
+        victim.setStatValue(Stat.HEALTH, health);
         return victim;
     }
 
