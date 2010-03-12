@@ -31,24 +31,24 @@ public class BattleMapRenderComponent extends RenderComponent {
         Vector2f pos = owner.getPosition();
         float scale = owner.getScale();
 
-        Image floorImage = spriteSheet.getSprite(0,8);
-        Image wallImage = spriteSheet.getSprite(0,0);
+        Image floorImage = spriteSheet.getSprite(0, 8);
+        Image wallImage = spriteSheet.getSprite(0, 0);
 
         int tw = floorImage.getWidth();
         int th = floorImage.getHeight();
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                int mapX = renderX+x;
-                int mapY = renderY+y;
-                if ( map.inBounds(mapX,mapY)) {
-                    TileType tileType = map.getTileAt(mapX,mapY).getType();
+                int mapX = renderX + x;
+                int mapY = renderY + y;
+                if (map.inBounds(mapX, mapY)) {
+                    TileType tileType = map.getTileAt(mapX, mapY).getType();
                     Image drawImage = floorImage;
-                    if ( tileType == TileType.WALL ) {
+                    if (tileType == TileType.WALL) {
                         drawImage = wallImage;
                     }
 
-                    drawImage.draw(pos.x+(x*tw*scale),pos.y+(y*th*scale),scale);
+                    drawImage.draw(pos.x + (x * tw * scale), pos.y + (y * th * scale), scale);
                 }
             }
         }

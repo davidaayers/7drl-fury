@@ -1,7 +1,6 @@
 package com.wwflgames.fury.map;
 
 import com.wwflgames.fury.mob.Mob;
-import com.wwflgames.fury.player.Player;
 
 public class Map {
 
@@ -24,24 +23,24 @@ public class Map {
         return height;
     }
 
-    public boolean inBounds(int x, int y ) {
-        return x >=0 && x < width && y >=0 && y < height;
+    public boolean inBounds(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height;
     }
 
     private void initTilesToFloor() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 // default tiles to floor
-                tiles[x][y] = new Tile(TileType.FLOOR,x,y);
+                tiles[x][y] = new Tile(TileType.FLOOR, x, y);
             }
         }
     }
 
-    public Tile getTileAt(int x, int y ) {
+    public Tile getTileAt(int x, int y) {
         return tiles[x][y];
     }
 
-    public void setTileAt(int x, int y , Tile tile) {
+    public void setTileAt(int x, int y, Tile tile) {
         tiles[x][y] = tile;
     }
 

@@ -29,8 +29,8 @@ public class TitleGameState extends BasicGameState {
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics)
             throws SlickException {
-        TextUtil.centerText(gameContainer,graphics,"Fury - A 7 Day Roguelike", 150);    
-        TextUtil.centerText(gameContainer,graphics,"Press any key to start", 180);    
+        TextUtil.centerText(gameContainer, graphics, "Fury - A 7 Day Roguelike", 150);
+        TextUtil.centerText(gameContainer, graphics, "Press any key to start", 180);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class TitleGameState extends BasicGameState {
     }
 
     @Override
-	public void keyPressed(int key, char c) {
-		stateBasedGame.enterState(Fury.BATTLE_STATE,new FadeOutTransition(Color.black),
-				new FadeInTransition(Color.black));
-	}
+    public void keyPressed(int key, char c) {
+        stateBasedGame.enterState(Fury.BATTLE_STATE, new FadeOutTransition(Color.black),
+                new FadeInTransition(Color.black));
+    }
 }

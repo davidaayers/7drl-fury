@@ -23,7 +23,7 @@ public class Mob {
 
     public Integer getStatValue(Stat stat) {
         Integer statValue = stats.get(stat);
-        if ( statValue == null ) {
+        if (statValue == null) {
             return 0;
         }
         return statValue;
@@ -41,7 +41,7 @@ public class Mob {
 
     public Integer getBattleStatValue(Stat stat) {
         Integer statValue = battleStats.get(stat);
-        if ( statValue == null ) {
+        if (statValue == null) {
             return 0;
         }
         return statValue;
@@ -58,7 +58,7 @@ public class Mob {
     }
 
     public void resetBattleStats() {
-        battleStats = new HashMap<Stat, Integer>();    
+        battleStats = new HashMap<Stat, Integer>();
     }
 
     public void prepareForBattle() {
@@ -67,8 +67,8 @@ public class Mob {
 
         // add anything in stats that's a battle stat to battle stats. This
         // is the mob's initial battle stats.
-        for ( Stat stat : stats.keySet() ) {
-            battleStats.put(stat,getStatValue(stat));
+        for (Stat stat : stats.keySet()) {
+            battleStats.put(stat, getStatValue(stat));
         }
     }
 

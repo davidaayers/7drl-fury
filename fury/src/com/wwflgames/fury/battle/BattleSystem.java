@@ -25,7 +25,7 @@ public class BattleSystem {
         battleRound = 0;
         // prepare all of the mobs for battle. This will set their
         // battle stats. Also, shuffle all of their decks.
-        for ( Mob mob: battle.getAllBattleParticipants()) {
+        for (Mob mob : battle.getAllBattleParticipants()) {
             mob.prepareForBattle();
             mob.getDeck().shuffle();
         }
@@ -33,20 +33,20 @@ public class BattleSystem {
 
     public BattleRoundResult performBattleRound(Monster monster) {
         // increment the battle Round
-        battleRound ++;
-        BattleRoundResult battleRoundResult = new BattleRoundResult(battleRound); 
+        battleRound++;
+        BattleRoundResult battleRoundResult = new BattleRoundResult(battleRound);
         Log.debug("=========( Round " + battleRound + " )==============");
-        
+
 
         // see who got initiate and let them go first
-        if ( battle.isPlayerInitiate() ) {
+        if (battle.isPlayerInitiate()) {
             doPlayerRoundAndCheckIfPlayerWon();
         } else {
             doEnemyRoundAndCheckIfPlayerLost();
         }
 
         // now, let the other side attack
-        if ( battle.isPlayerInitiate() ) {
+        if (battle.isPlayerInitiate()) {
             doEnemyRoundAndCheckIfPlayerLost();
         } else {
             doPlayerRoundAndCheckIfPlayerWon();
@@ -59,30 +59,30 @@ public class BattleSystem {
     private void doPlayerRoundAndCheckIfPlayerWon() {
         doPlayerRound();
         removeDeadMonstersFromBattle();
-        
-        if ( battle.allEnemiesDead() ) {
+
+        if (battle.allEnemiesDead()) {
             playerWon();
         }
     }
 
     private void doEnemyRoundAndCheckIfPlayerLost() {
         doEnemyRound();
-        if ( battle.getPlayer().isDead() ) {
+        if (battle.getPlayer().isDead()) {
             playerLost();
         }
     }
 
     private void removeDeadMonstersFromBattle() {
         List<Mob> enemiesToRemove = new ArrayList<Mob>();
-        for ( Mob enemy : battle.getEnemies() ) {
+        for (Mob enemy : battle.getEnemies()) {
             Log.debug("Seeing if " + enemy.name() + " is dead");
-            if ( enemy.isDead() ) {
+            if (enemy.isDead()) {
                 Log.debug(enemy + " was dead, removing");
                 enemiesToRemove.add(enemy);
             }
         }
 
-        for ( Mob enemyToRemove : enemiesToRemove ) {
+        for (Mob enemyToRemove : enemiesToRemove) {
             battle.removeEnemy(enemyToRemove);
         }
     }
@@ -116,12 +116,12 @@ public class BattleSystem {
         // grab the first one in the list
         Mob first = mobs.get(0);
         Log.debug("Enemy player is facing now: " + first.name());
-        doNextItemInDeck(battle.getPlayer(),first);
+        doNextItemInDeck(battle.getPlayer(), first);
     }
 
     private void doEnemyRound() {
-        for ( Mob enemy : battle.getEnemies() ) {
-            doNextItemInDeck(enemy,battle.getPlayer());
+        for (Mob enemy : battle.getEnemies()) {
+            doNextItemInDeck(enemy, battle.getPlayer());
         }
     }
 
@@ -129,7 +129,7 @@ public class BattleSystem {
         Log.debug("Next item in deck, attacker = " + attacker.name() + ", defender = " + defender.name());
         // grab the next item from the attackers deck
         Item item = attacker.getDeck().nextItem();
-        Log.debug("Item chosen from deck is " + item.name() );
+        Log.debug("Item chosen from deck is " + item.name());
         item.usedBy(attacker);
         item.usedAgainst(defender);
     }

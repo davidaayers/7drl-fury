@@ -16,18 +16,18 @@ public class MobLocationComponent extends Component {
         super(id);
     }
 
-    public MobLocationComponent setMob(Mob mob ) {
+    public MobLocationComponent setMob(Mob mob) {
         this.mob = mob;
         return this;
     }
 
-    public MobLocationComponent setMapOffset(int mapOffsetX , int mapOffsetY ) {
+    public MobLocationComponent setMapOffset(int mapOffsetX, int mapOffsetY) {
         this.mapOffsetX = mapOffsetX;
         this.mapOffsetY = mapOffsetY;
         return this;
     }
 
-    public MobLocationComponent setScreenOffset(int screenOffsetX, int screenOffsetY ) {
+    public MobLocationComponent setScreenOffset(int screenOffsetX, int screenOffsetY) {
         this.screenOffsetX = screenOffsetX;
         this.screenOffsetY = screenOffsetY;
         return this;
@@ -41,9 +41,9 @@ public class MobLocationComponent extends Component {
         int drawX = mobTile.getX() - mapOffsetX;
         int drawY = mobTile.getY() - mapOffsetY;
 
-        float screenX = screenOffsetX + ( drawX * 32 * owner.getScale() ) + ( 4 * owner.getScale() );
-        float screenY = screenOffsetY + ( drawY * 32 * owner.getScale() );
+        float screenX = screenOffsetX + (drawX * 32 * owner.getScale()) + (4 * owner.getScale());
+        float screenY = screenOffsetY + (drawY * 32 * owner.getScale());
 
-        owner.setPosition(new Vector2f(screenX,screenY));
+        owner.setPosition(new Vector2f(screenX, screenY));
     }
 }

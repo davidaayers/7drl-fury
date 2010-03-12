@@ -45,7 +45,7 @@ public class Battle {
     }
 
     public void removeEnemy(Mob enemyToRemove) {
-        enemies.remove(enemyToRemove);   
+        enemies.remove(enemyToRemove);
     }
 
     public boolean allEnemiesDead() {

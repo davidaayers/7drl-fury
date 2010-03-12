@@ -40,8 +40,8 @@ public class EntityManager {
     }
 
     public Entity removeEntityById(String id) {
-        for ( Entity entity : entities ) {
-            if ( entity.getId().equals(id) ) {
+        for (Entity entity : entities) {
+            if (entity.getId().equals(id)) {
                 return removeEntity(entity);
             }
         }
@@ -50,25 +50,25 @@ public class EntityManager {
 
     public void update(int delta) {
         // process our removed entities first
-        if ( !entitiesToRemove.isEmpty() ) {
-            for ( Entity removed : entitiesToRemove ) {
+        if (!entitiesToRemove.isEmpty()) {
+            for (Entity removed : entitiesToRemove) {
                 entities.remove(removed);
             }
             entitiesToRemove.clear();
         }
 
         // add any new entries
-        if ( !entitiesToAdd.isEmpty() ) {
-            for ( Entity added : entitiesToAdd ) {
+        if (!entitiesToAdd.isEmpty()) {
+            for (Entity added : entitiesToAdd) {
                 entities.add(added);
             }
             entitiesToAdd.clear();
         }
 
         // resort the entity list by z-order, lowest to highest
-        Collections.sort(entities,entityComparator);
+        Collections.sort(entities, entityComparator);
 
-        for ( Entity entity : entities ) {
+        for (Entity entity : entities) {
             entity.update(delta);
         }
     }
@@ -83,7 +83,7 @@ public class EntityManager {
     }
 
     public void render(Graphics gr) {
-        for ( Entity entity : entities ) {
+        for (Entity entity : entities) {
             entity.render(gr);
         }
     }

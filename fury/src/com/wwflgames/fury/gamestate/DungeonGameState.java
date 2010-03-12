@@ -26,12 +26,12 @@ public class DungeonGameState extends BasicGameState {
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics)
             throws SlickException {
-        TextUtil.centerText(gameContainer,graphics,"Game play screen", 0);
+        TextUtil.centerText(gameContainer, graphics, "Game play screen", 0);
     }
 
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
 
     }
-    
+
 }
