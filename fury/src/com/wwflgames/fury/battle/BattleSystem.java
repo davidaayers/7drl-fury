@@ -79,11 +79,11 @@ public class BattleSystem {
         // grab the next item from the attackers deck
         Item item = attacker.getDeck().nextItem();
         Log.debug("Item chosen from deck is " + item.name());
-        BattleEffectList usedByList = item.usedBy(attacker);
-        BattleEffectList usedAgainstList = item.usedAgainst(defender);
-        result.addEffectList(attacker, usedByList);
-        result.addEffectList(defender, usedAgainstList);
-        Log.debug("Used against list = " + usedAgainstList.get());
+        BattleEffectBag usedByBag = item.usedBy(attacker);
+        BattleEffectBag usedAgainstBag = item.usedAgainst(defender);
+        result.addEffectList(attacker, usedByBag);
+        result.addEffectList(defender, usedAgainstBag);
+        Log.debug("Used against list = " + usedAgainstBag.get());
     }
 
     private void removeDeadMonstersFromBattle() {

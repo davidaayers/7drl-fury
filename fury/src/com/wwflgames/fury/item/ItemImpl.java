@@ -1,6 +1,6 @@
 package com.wwflgames.fury.item;
 
-import com.wwflgames.fury.battle.BattleEffectList;
+import com.wwflgames.fury.battle.BattleEffectBag;
 import com.wwflgames.fury.item.effect.EffectApplierFactory;
 import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.mob.Mob;
@@ -26,24 +26,24 @@ public class ItemImpl implements Item {
     }
 
     @Override
-    public BattleEffectList usedBy(Mob mob) {
-        BattleEffectList list = new BattleEffectList(this, mob);
-        applyItemEffects(usedByEffects, mob, list);
-        return list;
+    public BattleEffectBag usedBy(Mob mob) {
+        BattleEffectBag bag = new BattleEffectBag(this, mob);
+        applyItemEffects(usedByEffects, mob, bag);
+        return bag;
     }
 
     @Override
-    public BattleEffectList usedAgainst(Mob mob) {
-        BattleEffectList list = new BattleEffectList(this, mob);
-        applyItemEffects(usedAgainstEffects, mob, list);
-        return list;
+    public BattleEffectBag usedAgainst(Mob mob) {
+        BattleEffectBag bag = new BattleEffectBag(this, mob);
+        applyItemEffects(usedAgainstEffects, mob, bag);
+        return bag;
 
     }
 
-    private void applyItemEffects(ItemEffect[] effects, Mob mob, BattleEffectList list) {
+    private void applyItemEffects(ItemEffect[] effects, Mob mob, BattleEffectBag bag) {
         if (effects != null) {
             for (ItemEffect effect : effects) {
-                effectApplierFactory.applierFor(effect).apply(effect, mob, list);
+                effectApplierFactory.applierFor(effect).apply(effect, mob, bag);
             }
         }
     }

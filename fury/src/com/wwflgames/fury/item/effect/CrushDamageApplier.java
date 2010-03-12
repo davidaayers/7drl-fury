@@ -1,7 +1,7 @@
 package com.wwflgames.fury.item.effect;
 
 import com.wwflgames.fury.battle.BattleEffect;
-import com.wwflgames.fury.battle.BattleEffectList;
+import com.wwflgames.fury.battle.BattleEffectBag;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
@@ -13,7 +13,7 @@ public class CrushDamageApplier extends AbstractDamageApplier {
     }
 
     @Override
-    public void apply(ItemEffect effect, Mob applyTo, BattleEffectList list) {
+    public void apply(ItemEffect effect, Mob applyTo, BattleEffectBag bag) {
         Damage damage = (Damage) effect;
         // crush damage applies first to armor (i.e. it is absorbed by armor),
         // and any remaining damage left after the armor is applied to the victim
@@ -48,7 +48,7 @@ public class CrushDamageApplier extends AbstractDamageApplier {
 
         String armorDesc = "{0} armor is crushed for {2}";
         String healthDesc = "{1} takes {2} damage!";
-        list.add(new BattleEffect(armorDesc, Stat.ARMOR, armorDelta))
+        bag.add(new BattleEffect(armorDesc, Stat.ARMOR, armorDelta))
                 .add(new BattleEffect(healthDesc, Stat.HEALTH, healthDelta));
 
     }

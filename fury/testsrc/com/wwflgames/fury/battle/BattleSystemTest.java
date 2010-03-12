@@ -10,6 +10,7 @@ import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.monster.Monster;
+import com.wwflgames.fury.player.Player;
 import com.wwflgames.fury.util.Shuffler;
 import org.junit.After;
 import org.junit.Before;
@@ -91,9 +92,33 @@ public class BattleSystemTest {
         assertEquals(new Integer(0), b.getOriginalEnemies().get(0).getStatValue(Stat.HEALTH));
     }
 
+    @Test
+    public void testBattleRoundResult() {
+        Battle b = createBattle(10, 5, 10, 1, false);
+        battleSystem = new BattleSystem(b);
+        battleSystem.startBattle();
+        BattleRoundResult result = battleSystem.performBattleRound((Monster) b.getEnemies().get(0));
+
+        System.out.println("========= replaying battle ==========");
+        List<BattleEffectBag> playerEffects = result.playerEffectList();
+        printBattleEffectList(playerEffects);
+        List<BattleEffectBag> monsterEffects = result.monsterEffectList();
+        printBattleEffectList(monsterEffects);
+    }
+
+    private void printBattleEffectList(List<BattleEffectBag> playerEffects) {
+        for (BattleEffectBag bel : playerEffects) {
+            System.out.println(bel.mob().name() + " was effected by " + bel.item().name());
+            List<BattleEffect> beList = bel.get();
+            for (BattleEffect be : beList) {
+                System.out.println(" " + be.toString());
+            }
+        }
+    }
+
     private Battle createBattle(int playerHealth, int playerDmg, int mobHealth, int mobDamage,
                                 boolean playerInitiative) {
-        Mob player = newMob("Player", playerHealth);
+        Player player = newPlayer("Player", playerHealth);
         player.getDeck().addItem(newItem(playerDmg));
         Monster enemy = newMonster("Enemy 1", mobHealth);
         enemy.getDeck().addItem(newItem(mobDamage));
@@ -106,6 +131,13 @@ public class BattleSystemTest {
 
     private Monster newMonster(String s, int mobHealth) {
         Monster mob = new Monster(s);
+        mob.setStatValue(Stat.HEALTH, mobHealth);
+        mob.setDeck(new ItemDeck());
+        return mob;
+    }
+
+    private Player newPlayer(String s, int mobHealth) {
+        Player mob = new Player(s);
         mob.setStatValue(Stat.HEALTH, mobHealth);
         mob.setDeck(new ItemDeck());
         return mob;

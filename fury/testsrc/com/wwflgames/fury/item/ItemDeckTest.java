@@ -1,6 +1,6 @@
 package com.wwflgames.fury.item;
 
-import com.wwflgames.fury.battle.BattleEffectList;
+import com.wwflgames.fury.battle.BattleEffectBag;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.util.Shuffler;
 import org.junit.Before;
@@ -61,12 +61,12 @@ public class ItemDeckTest {
             }
 
             @Override
-            public BattleEffectList usedBy(Mob mob) {
+            public BattleEffectBag usedBy(Mob mob) {
                 return null;
             }
 
             @Override
-            public BattleEffectList usedAgainst(Mob mob) {
+            public BattleEffectBag usedAgainst(Mob mob) {
                 return null;
             }
         };
