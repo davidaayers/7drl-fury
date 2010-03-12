@@ -29,5 +29,5 @@ public class DamageOverTime implements ItemEffect {
     public int getDamage() {
         return damage;
     }
-    
+
 }

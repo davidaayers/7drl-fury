@@ -16,11 +16,11 @@ public class ItemRenderer extends AbstractRenderer {
     @Override
     public void render(Graphics g) throws SlickException {
         g.setColor(Color.green);
-        g.drawRoundRect(0,0,96,96,25);
+        g.drawRoundRect(0, 0, 96, 96, 25);
     }
 
     @Override
     public void update(int delta) throws SlickException {
-        
+
     }
 }

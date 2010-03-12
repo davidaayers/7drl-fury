@@ -12,8 +12,8 @@ public class NamePart {
         this.maxPoints = maxPoints;
     }
 
-    public static NamePart newNamePart(String part, int minPoints, int maxPoints ) {
-        return new NamePart(part,minPoints,maxPoints);
+    public static NamePart newNamePart(String part, int minPoints, int maxPoints) {
+        return new NamePart(part, minPoints, maxPoints);
     }
 
     public String getPart() {
@@ -21,7 +21,7 @@ public class NamePart {
     }
 
     public boolean validFor(int points) {
-        return points >= minPoints && points <=maxPoints;
+        return points >= minPoints && points <= maxPoints;
     }
 }
 

@@ -26,19 +26,19 @@ public class ItemImpl implements Item {
 
     @Override
     public void usedBy(Mob mob) {
-        applyItemEffects(usedByEffects,mob);
+        applyItemEffects(usedByEffects, mob);
     }
 
     @Override
     public void usedAgainst(Mob mob) {
-        applyItemEffects(usedAgainstEffects,mob);
+        applyItemEffects(usedAgainstEffects, mob);
 
     }
 
     private void applyItemEffects(ItemEffect[] effects, Mob mob) {
-        if ( effects != null ) {
-            for ( ItemEffect effect: effects ) {
-                effectApplierFactory.applierFor(effect).apply(effect,mob);
+        if (effects != null) {
+            for (ItemEffect effect : effects) {
+                effectApplierFactory.applierFor(effect).apply(effect, mob);
             }
         }
     }

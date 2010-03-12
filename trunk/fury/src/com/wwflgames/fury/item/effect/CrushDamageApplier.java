@@ -12,17 +12,17 @@ public class CrushDamageApplier extends AbstractDamageApplier {
 
     @Override
     public void apply(ItemEffect effect, Mob applyTo) {
-        Damage damage = (Damage)effect;
+        Damage damage = (Damage) effect;
         // crush damage applies first to armor (i.e. it is absorbed by armor),
         // and any remaining damage left after the armor is applied to the victim
         int armor = applyTo.getBattleStatValue(Stat.ARMOR);
 
         int dmg = damage.getAmount();
 
-        Log.debug("Armor before: " + armor );
-        Log.debug("Dmg before  : " + dmg );
+        Log.debug("Armor before: " + armor);
+        Log.debug("Dmg before  : " + dmg);
 
-        if ( dmg > armor ) {
+        if (dmg > armor) {
             dmg -= armor;
             armor = 0;
         } else {
@@ -30,11 +30,11 @@ public class CrushDamageApplier extends AbstractDamageApplier {
             dmg = 0;
         }
 
-        Log.debug("Armor after : " + armor );
-        Log.debug("Dmg after   : " + dmg );
+        Log.debug("Armor after : " + armor);
+        Log.debug("Dmg after   : " + dmg);
 
-        applyTo.modifyStatValue(Stat.HEALTH,-dmg);
-        applyTo.setBattleStatValue(Stat.ARMOR,armor);        
+        applyTo.modifyStatValue(Stat.HEALTH, -dmg);
+        applyTo.setBattleStatValue(Stat.ARMOR, armor);
     }
 
 }

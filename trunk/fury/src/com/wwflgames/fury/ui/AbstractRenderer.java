@@ -6,7 +6,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 public abstract class AbstractRenderer {
-    
+
     protected GameContainer container;
     protected StateBasedGame game;
 
