@@ -16,40 +16,47 @@ public class BattleRoundResult {
 
     private Mob enemy;
     private int battleRound;
-    private Map<Mob, List<BattleEffectList>> mobResults = new HashMap<Mob, List<BattleEffectList>>();
+    private Map<Mob, List<BattleEffectBag>> mobResultsMap = new HashMap<Mob, List<BattleEffectBag>>();
 
     public BattleRoundResult(int battleRound) {
         this.battleRound = battleRound;
     }
 
-    public void addEffectList(Mob attacker, BattleEffectList battleEffectList) {
-        // grab the list for this mob
-        List<BattleEffectList> list = mobResults.get(attacker);
-        if (list == null) {
-            list = new ArrayList<BattleEffectList>();
-            mobResults.put(attacker, list);
+    public void addEffectList(Mob mob, BattleEffectBag battleEffectBag) {
+
+        // if there are no effects in the bag, don't do anything
+        if (battleEffectBag.get().isEmpty()) {
+            return;
         }
-        list.add(battleEffectList);
+
+        // grab the bagList for this mob
+        List<BattleEffectBag> bagList = mobResultsMap.get(mob);
+        if (bagList == null) {
+            bagList = new ArrayList<BattleEffectBag>();
+            mobResultsMap.put(mob, bagList);
+        }
+        bagList.add(battleEffectBag);
     }
 
-    public List<BattleEffectList> playerEffectList() {
-        for (Mob mob : mobResults.keySet()) {
+    public List<BattleEffectBag> playerEffectList() {
+        for (Mob mob : mobResultsMap.keySet()) {
             if (mob instanceof Player) {
-                return mobResults.get(mob);
+                return mobResultsMap.get(mob);
             }
         }
+        System.out.println("***** no effects found for player ******");
         // didn't find any effects for the player, return an empty one
-        return new ArrayList<BattleEffectList>();
+        return new ArrayList<BattleEffectBag>();
     }
 
-    public List<BattleEffectList> monsterEffectList() {
-        List<BattleEffectList> allMonsters = new ArrayList<BattleEffectList>();
-        for (Mob mob : mobResults.keySet()) {
+    public List<BattleEffectBag> monsterEffectList() {
+        List<BattleEffectBag> allMonsterEffectBags = new ArrayList<BattleEffectBag>();
+        for (Mob mob : mobResultsMap.keySet()) {
             if (mob instanceof Monster) {
-                allMonsters.addAll(mobResults.get(mob));
+                allMonsterEffectBags.addAll(mobResultsMap.get(mob));
             }
         }
-        return allMonsters;
+        return allMonsterEffectBags;
     }
 
 
