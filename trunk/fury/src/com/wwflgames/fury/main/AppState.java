@@ -5,5 +5,6 @@ import com.wwflgames.fury.player.Player;
 
 public interface AppState {
     Player getPlayer();
+
     Map getMap();
 }

@@ -1,7 +1,7 @@
 package com.wwflgames.fury.entity;
 
 public abstract class Component {
-    
+
     protected String id;
     protected Entity owner;
 

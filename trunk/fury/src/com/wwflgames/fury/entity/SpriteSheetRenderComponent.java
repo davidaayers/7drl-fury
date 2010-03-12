@@ -26,7 +26,7 @@ public class SpriteSheetRenderComponent extends RenderComponent {
     public void render(Graphics gr) {
         Vector2f pos = owner.getPosition();
         float scale = owner.getScale();
-        current().draw(pos.x,pos.y,scale);
+        current().draw(pos.x, pos.y, scale);
     }
 
     @Override
@@ -36,6 +36,6 @@ public class SpriteSheetRenderComponent extends RenderComponent {
     }
 
     private Image current() {
-        return spriteSheet.getSprite(spriteCol,spriteRow);
+        return spriteSheet.getSprite(spriteCol, spriteRow);
     }
 }

@@ -35,13 +35,13 @@ public class Fury extends StateBasedGame {
 
         // an an enemy
         Monster monster = new Monster("Slavering Skeleton");
-        appState.getMap().addMob(monster,1,2);
+        appState.getMap().addMob(monster, 1, 2);
 
         Monster monster2 = new Monster("Slavering Skeleton");
-        appState.getMap().addMob(monster2,2,1);
+        appState.getMap().addMob(monster2, 2, 1);
 
         Monster monster3 = new Monster("Slavering Skeleton");
-        appState.getMap().addMob(monster3,2,2);
+        appState.getMap().addMob(monster3, 2, 2);
 
         //TODO: move player creation somewhere else, too
         appState.setPlayer(createPlayer());
@@ -50,7 +50,7 @@ public class Fury extends StateBasedGame {
     private Player createPlayer() {
         Player player = new Player("Valiant Knight");
         // put the player in the upper right hand corner of the map
-        appState.getMap().addMob(player,1,1);
+        appState.getMap().addMob(player, 1, 1);
         return player;
     }
 
@@ -65,21 +65,20 @@ public class Fury extends StateBasedGame {
         return new BattleGameState(appState);
     }
 
-    public static void main ( String[] args ) {
+    public static void main(String[] args) {
         ResourceLoader.removeAllResourceLocations();
-		ResourceLoader.addResourceLocation(new ClasspathLocation());
+        ResourceLoader.addResourceLocation(new ClasspathLocation());
 
-		try {
-			container = new AppGameContainer(new Fury());
-			container.setDisplayMode(800,600,false);
-			container.setShowFPS(true);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+        try {
+            container = new AppGameContainer(new Fury());
+            container.setDisplayMode(800, 600, false);
+            container.setShowFPS(true);
+            container.start();
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
 
     }
-
 
 
 }

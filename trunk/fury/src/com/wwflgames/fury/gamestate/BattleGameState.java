@@ -3,11 +3,7 @@ package com.wwflgames.fury.gamestate;
 import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.battle.Battle;
 import com.wwflgames.fury.battle.BattleSystem;
-import com.wwflgames.fury.entity.BattleMapRenderComponent;
-import com.wwflgames.fury.entity.Entity;
-import com.wwflgames.fury.entity.EntityManager;
-import com.wwflgames.fury.entity.MobLocationComponent;
-import com.wwflgames.fury.entity.SpriteSheetRenderComponent;
+import com.wwflgames.fury.entity.*;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.map.Map;
 import com.wwflgames.fury.mob.Mob;
@@ -63,7 +59,7 @@ public class BattleGameState extends BasicGameState {
         font.addAsciiGlyphs();
         font.loadGlyphs();
 
-        entityManager = new EntityManager(container,game);
+        entityManager = new EntityManager(container, game);
 
     }
 
@@ -95,13 +91,13 @@ public class BattleGameState extends BasicGameState {
         for (Mob monster : monsters) {
             Log.debug("monster x = " + monster.getMapX() + " , y = " + monster.getMapY());
             SpriteSheetRenderComponent sprite = new SpriteSheetRenderComponent(monster.name() + "sprite", monsterSprites)
-                .useSprite(1, 2);
+                    .useSprite(1, 2);
             Entity mobEntity = createMobEntity(mapOffsetX, mapOffsetY, monster, sprite);
             entityManager.addEntity(mobEntity);
         }
 
         SpriteSheetRenderComponent heroSprite = new SpriteSheetRenderComponent(player.name() + "sprite", heroSprites)
-            .useSprite(1, 2);
+                .useSprite(1, 2);
 
         Entity playerEntity = createMobEntity(mapOffsetX, mapOffsetY, player, heroSprite);
         entityManager.addEntity(playerEntity);
@@ -115,7 +111,7 @@ public class BattleGameState extends BasicGameState {
         Log.debug("BattleGameState-> complete.");
     }
 
-    private Entity createMobEntity(int mapOffsetX, int mapOffsetY, Mob mob,SpriteSheetRenderComponent sprite) {
+    private Entity createMobEntity(int mapOffsetX, int mapOffsetY, Mob mob, SpriteSheetRenderComponent sprite) {
         MobLocationComponent mobLocationComponent = new MobLocationComponent(mob.name() + "location")
                 .setMapOffset(mapOffsetX, mapOffsetY)
                 .setScreenOffset(208, 32)
@@ -125,7 +121,7 @@ public class BattleGameState extends BasicGameState {
                 .setScale(4)
                 .addComponent(sprite)
                 .addComponent(mobLocationComponent);
-        
+
         return mobEntity;
     }
 
