@@ -16,6 +16,9 @@ public class EffectApplierFactory {
         if (effect instanceof Damage) {
             return damageApplierFor((Damage) effect);
         }
+        if (effect instanceof Buff) {
+            return new StatBuffApplier();
+        }
 
         return null;
     }

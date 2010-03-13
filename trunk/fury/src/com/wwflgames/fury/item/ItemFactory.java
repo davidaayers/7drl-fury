@@ -15,4 +15,12 @@ public class ItemFactory {
         return new ItemImpl(effectsApplierFactory, name, null, effects);
     }
 
+    public Item createItemWithUsedByEffects(String name, ItemEffect[] effects) {
+        return new ItemImpl(effectsApplierFactory, name, effects, null);
+    }
+
+    public Item createItem(String name, ItemEffect[] usedByEffects, ItemEffect[] usedAgainstEffects) {
+        return new ItemImpl(effectsApplierFactory, name, usedByEffects, usedAgainstEffects);
+    }
+
 }
