@@ -61,8 +61,8 @@ public class BattleGameState extends BasicGameState {
     private BattleRoundResult lastResult;
     private boolean lastAnimationComplete;
     private StateBag stateBag;
-    private Stack<String> playerEffectStack;
-    private Stack<String> monsterEffectStack;
+    private List<String> playerEffects;
+    private List<String> monsterEffects;
     private List<Entity> cardsInPlay;
 
     public BattleGameState(AppState appState) {
@@ -101,8 +101,8 @@ public class BattleGameState extends BasicGameState {
         stateBag = new StateBag();
 
         // damage stacks
-        playerEffectStack = new Stack<String>();
-        monsterEffectStack = new Stack<String>();
+        playerEffects = new Stack<String>();
+        monsterEffects = new Stack<String>();
 
         // cards in play
         cardsInPlay = new ArrayList<Entity>();
@@ -248,7 +248,7 @@ public class BattleGameState extends BasicGameState {
 
         // render the player's stuff
         int effectY = 32 + 32 * scale + 42;
-        for (String effectStr : playerEffectStack) {
+        for (String effectStr : playerEffects) {
             List<String> splitStr = maybeSplitString(effectStr, 200);
             for (String str : splitStr) {
                 font.drawString(5, effectY, str, Color.white);
@@ -258,7 +258,7 @@ public class BattleGameState extends BasicGameState {
 
         // render the monster's stuff
         int monEeffectY = 32 + 32 * scale + 42;
-        for (String effectStr : monsterEffectStack) {
+        for (String effectStr : monsterEffects) {
             List<String> splitStr = maybeSplitString(effectStr, 208);
             for (String str : splitStr) {
                 font.drawString((x + TILE_WIDTH * 3) + 5, monEeffectY, str, Color.white);
@@ -361,7 +361,7 @@ public class BattleGameState extends BasicGameState {
                 // add the player's effects to the damage stack
                 for (BattleEffectBag bag : lastResult.playerItemEffectList()) {
                     for (BattleEffect effect : bag.get()) {
-                        playerEffectStack.push(createDesc(bag, effect));
+                        playerEffects.add(0, createDesc(bag, effect));
                     }
                 }
                 changeReplayState(ReplayState.CREATE_MONSTER_CARD);
@@ -377,7 +377,7 @@ public class BattleGameState extends BasicGameState {
                 Log.debug("SHOW_MONSTER_DAMAGE");
                 for (BattleEffectBag bag : lastResult.monsterItemEffectList()) {
                     for (BattleEffect effect : bag.get()) {
-                        monsterEffectStack.push(createDesc(bag, effect));
+                        monsterEffects.add(0, createDesc(bag, effect));
                     }
                 }
                 currentState = State.ANIMATION_DONE;

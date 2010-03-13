@@ -4,10 +4,7 @@ import com.wwflgames.fury.gamestate.BattleGameState;
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.item.ItemFactory;
-import com.wwflgames.fury.item.effect.Damage;
-import com.wwflgames.fury.item.effect.DamageType;
-import com.wwflgames.fury.item.effect.EffectApplierFactory;
-import com.wwflgames.fury.item.effect.ItemEffect;
+import com.wwflgames.fury.item.effect.*;
 import com.wwflgames.fury.main.AppStateImpl;
 import com.wwflgames.fury.map.FixedMapCreator;
 import com.wwflgames.fury.mob.Stat;
@@ -72,10 +69,14 @@ public class Fury extends StateBasedGame {
     private Player createPlayer() {
         Player player = new Player("Knight");
         player.setStatValue(Stat.HEALTH, 40);
-        player.setStatValue(Stat.ARMOR, 1);
+        player.setStatValue(Stat.ARMOR, 5);
         // put the player in the upper right hand corner of the map
         appState.getMap().addMob(player, 1, 1);
         player.setDeck(createDeck(2));
+
+        StatBuff buff = new StatBuff(Stat.ARMOR, 4);
+        Item shield = factory().createItemWithUsedByEffects("Shield of Protection", new ItemEffect[]{buff});
+        player.getDeck().addItem(shield);
 
         return player;
     }
