@@ -78,6 +78,8 @@ public class BattleSystem {
         Log.debug("Next item in deck, attacker = " + attacker.name() + ", defender = " + defender.name());
         // grab the next item from the attackers deck
         Item item = attacker.getDeck().nextItem();
+        result.addItemUsedBy(attacker, item);
+
         Log.debug("Item chosen from deck is " + item.name());
         BattleEffectBag usedByBag = item.usedBy(attacker);
         BattleEffectBag usedAgainstBag = item.usedAgainst(defender);

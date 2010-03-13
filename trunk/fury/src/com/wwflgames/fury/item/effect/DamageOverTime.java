@@ -30,4 +30,8 @@ public class DamageOverTime implements ItemEffect {
         return damage;
     }
 
+    @Override
+    public String getEffectDesc() {
+        return null;
+    }
 }
