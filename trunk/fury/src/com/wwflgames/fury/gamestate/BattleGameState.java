@@ -1,9 +1,7 @@
 package com.wwflgames.fury.gamestate;
 
 import com.wwflgames.fury.Fury;
-import com.wwflgames.fury.battle.Battle;
-import com.wwflgames.fury.battle.BattleRoundResult;
-import com.wwflgames.fury.battle.BattleSystem;
+import com.wwflgames.fury.battle.*;
 import com.wwflgames.fury.entity.*;
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.main.AppState;
@@ -22,8 +20,10 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.awt.Font;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class BattleGameState extends BasicGameState {
 
@@ -38,9 +38,8 @@ public class BattleGameState extends BasicGameState {
 
     enum ReplayState {
         CREATE_PLAYER_CARD,
-        SHOW_PLAYER_CARD,
         SHOW_PLAYER_DAMAGE,
-        SHOW_MONSTER_CARD,
+        CREATE_MONSTER_CARD,
         SHOW_MONSTER_DAMAGE
     }
 
@@ -62,6 +61,9 @@ public class BattleGameState extends BasicGameState {
     private BattleRoundResult lastResult;
     private boolean lastAnimationComplete;
     private StateBag stateBag;
+    private Stack<String> playerEffectStack;
+    private Stack<String> monsterEffectStack;
+    private List<Entity> cardsInPlay;
 
     public BattleGameState(AppState appState) {
         this.appState = appState;
@@ -98,6 +100,13 @@ public class BattleGameState extends BasicGameState {
         // create a new state bag
         stateBag = new StateBag();
 
+        // damage stacks
+        playerEffectStack = new Stack<String>();
+        monsterEffectStack = new Stack<String>();
+
+        // cards in play
+        cardsInPlay = new ArrayList<Entity>();
+
         // grab the player
         Player player = appState.getPlayer();
         Map map = appState.getMap();
@@ -121,14 +130,14 @@ public class BattleGameState extends BasicGameState {
         // they can be rendered
         for (Mob monster : monsters) {
             Log.debug("monster x = " + monster.getMapX() + " , y = " + monster.getMapY());
-            SpriteSheetRenderComponent sprite = new SpriteSheetRenderComponent(monster.name() + "sprite", monsterSprites)
-                    .useSprite(1, 2);
+            MobRenderComponent sprite = new MobRenderComponent(monster, monsterSprites);
+            sprite.useSprite(1, 2);
             Entity mobEntity = createMobEntity(mapOffsetX, mapOffsetY, monster, sprite);
             entityManager.addEntity(mobEntity);
         }
 
-        SpriteSheetRenderComponent heroSprite = new SpriteSheetRenderComponent(player.name() + "sprite", heroSprites)
-                .useSprite(1, 2);
+        MobRenderComponent heroSprite = new MobRenderComponent(player, heroSprites);
+        heroSprite.useSprite(1, 2);
 
         Entity playerEntity = createMobEntity(mapOffsetX, mapOffsetY, player, heroSprite);
         entityManager.addEntity(playerEntity);
@@ -142,7 +151,8 @@ public class BattleGameState extends BasicGameState {
 
         currentState = State.PLAYER_CHOOSE_MONSTER;
 
-        createFaceDownItemDecks();
+        //TODO: remove this?
+        //createFaceDownItemDecks();
 
         Log.debug("BattleGameState-> complete.");
     }
@@ -216,9 +226,12 @@ public class BattleGameState extends BasicGameState {
         entityManager.render(g);
 
         if (currentState == State.PLAYER_CHOOSE_MONSTER) {
+            g.setColor(Color.green);
             String text = "Battle Round " + battleSystem.getBattleRound() + ", choose Monster to attack";
             TextUtil.centerText(container, g, text, 416);
         }
+
+        g.setColor(Color.white);
 
         /////////////////////////////////////////////////////////////////////
         // Not sure how to do the word stuff yet -- entities? or just draw em
@@ -233,11 +246,52 @@ public class BattleGameState extends BasicGameState {
         int width = font.getWidth(player);
         font.drawString(x / 2 - width / 2, y, player, Color.white);
 
+        // render the player's stuff
+        int effectY = 32 + 32 * scale + 42;
+        for (String effectStr : playerEffectStack) {
+            List<String> splitStr = maybeSplitString(effectStr, 200);
+            for (String str : splitStr) {
+                font.drawString(5, effectY, str, Color.white);
+                effectY += 14;
+            }
+        }
+
+        // render the monster's stuff
+        int monEeffectY = 32 + 32 * scale + 42;
+        for (String effectStr : monsterEffectStack) {
+            List<String> splitStr = maybeSplitString(effectStr, 208);
+            for (String str : splitStr) {
+                font.drawString((x + TILE_WIDTH * 3) + 5, monEeffectY, str, Color.white);
+                monEeffectY += 14;
+            }
+        }
+
         String monster = "Menacing Skeleton";
         width = font.getWidth(monster);
         int mw = 800 - (x + TILE_WIDTH * 3);
         int mx = (x + TILE_WIDTH * 3) + mw / 2 - width / 2;
         font.drawString(mx, y, monster, Color.white);
+    }
+
+    private List<String> maybeSplitString(String effectStr, int maxWidth) {
+
+        String[] parts = effectStr.split(" ");
+        List<String> splitString = new ArrayList<String>();
+        int width = 0;
+        String current = "";
+        for (String part : parts) {
+            width += font.getWidth(part + " ");
+            if (width < maxWidth) {
+                current = current + part + " ";
+            } else {
+                splitString.add(current);
+                width = 0;
+                current = part + " ";
+            }
+        }
+        splitString.add(current);
+
+        return splitString;
     }
 
     @Override
@@ -249,9 +303,7 @@ public class BattleGameState extends BasicGameState {
                 handleMonsterChosen();
                 break;
             case ANIMATION_PLAY:
-                Log.debug("ANIMATION_PLAY");
                 handleAnimation(delta);
-
                 break;
             case ANIMATION_DONE:
                 Log.debug("ANIMATION_DONE");
@@ -272,6 +324,8 @@ public class BattleGameState extends BasicGameState {
         if (monster != null) {
             lastResult = battleSystem.performBattleRound(monster);
             replayState = ReplayState.CREATE_PLAYER_CARD;
+            // clear out all of the cards in play
+            clearCardsInPlay();
             currentState = State.ANIMATION_PLAY;
         } else {
             Log.debug("Monster was null or map was out of bounds, resetting state");
@@ -279,40 +333,63 @@ public class BattleGameState extends BasicGameState {
         }
     }
 
+    private void clearCardsInPlay() {
+
+        // remove them all from the entity manager so they stop
+        // rendering
+        for (Entity entity : cardsInPlay) {
+            entityManager.removeEntity(entity);
+        }
+
+        cardsInPlay.clear();
+    }
+
     private void handleAnimation(int delta) {
         switch (replayState) {
+
             case CREATE_PLAYER_CARD:
                 Log.debug("CREATE_PLAYER_CARD");
-                Entity playerCard = createCard(lastResult.getItemUsedBy(appState.getPlayer()));
-                playerCard.addComponent(new DisplayForTimeComponent("disp3sec", 3000));
+                Entity playerCard = createCard(lastResult.getItemUsedBy(appState.getPlayer()), 42, 64);
+                //playerCard.addComponent(new DisplayForTimeComponent("disp3sec", 3000));
                 entityManager.addEntity(playerCard);
-                changeReplayState(ReplayState.SHOW_PLAYER_CARD);
-                break;
-            case SHOW_PLAYER_CARD:
-                Log.debug("SHOW_PLAYER_CARD");
-                // stay in this state until the card disappears from the entity manager
-                Entity pc = entityManager.findEntityById("playerCard");
-                if (pc == null) {
-                    changeReplayState(ReplayState.SHOW_PLAYER_DAMAGE);
-                }
-                break;
-            case SHOW_PLAYER_DAMAGE:
-                Log.debug("SHOW_PLAYER_DAMAGE");
-                changeReplayState(ReplayState.SHOW_MONSTER_CARD);
+                cardsInPlay.add(playerCard);
+                changeReplayState(ReplayState.SHOW_PLAYER_DAMAGE);
                 break;
 
-            case SHOW_MONSTER_CARD:
+            case SHOW_PLAYER_DAMAGE:
+                Log.debug("SHOW_PLAYER_DAMAGE");
+                // add the player's effects to the damage stack
+                for (BattleEffectBag bag : lastResult.playerItemEffectList()) {
+                    for (BattleEffect effect : bag.get()) {
+                        playerEffectStack.push(createDesc(bag, effect));
+                    }
+                }
+                changeReplayState(ReplayState.CREATE_MONSTER_CARD);
+                break;
+
+
+            case CREATE_MONSTER_CARD:
                 Log.debug("SHOW_MONSTER_CARD");
                 changeReplayState(ReplayState.SHOW_MONSTER_DAMAGE);
                 break;
 
             case SHOW_MONSTER_DAMAGE:
                 Log.debug("SHOW_MONSTER_DAMAGE");
+                for (BattleEffectBag bag : lastResult.monsterItemEffectList()) {
+                    for (BattleEffect effect : bag.get()) {
+                        monsterEffectStack.push(createDesc(bag, effect));
+                    }
+                }
                 currentState = State.ANIMATION_DONE;
                 break;
-
-
         }
+    }
+
+    private String createDesc(BattleEffectBag bag, BattleEffect effect) {
+        String s0 = bag.mob().name() + "'s";
+        String s1 = bag.mob().name();
+        String s2 = effect.getDelta().toString();
+        return MessageFormat.format(effect.getDesc(), new Object[]{s0, s1, s2});
     }
 
     private void changeReplayState(ReplayState newState) {
@@ -320,11 +397,11 @@ public class BattleGameState extends BasicGameState {
         replayState = newState;
     }
 
-    private Entity createCard(Item item) {
+    private Entity createCard(Item item, float x, float y) {
         ItemRenderComponent card = new ItemRenderComponent(item, font);
         Entity cardEntity = new Entity("playerCard")
                 .addComponent(card)
-                .setPosition(new Vector2f(70, 64));
+                .setPosition(new Vector2f(x, y));
         return cardEntity;
     }
 

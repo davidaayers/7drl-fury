@@ -100,9 +100,9 @@ public class BattleSystemTest {
         BattleRoundResult result = battleSystem.performBattleRound((Monster) b.getEnemies().get(0));
 
         System.out.println("========= replaying battle ==========");
-        List<BattleEffectBag> playerEffects = result.playerEffectList();
+        List<BattleEffectBag> playerEffects = result.monsterItemEffectList();
         printBattleEffectList(playerEffects);
-        List<BattleEffectBag> monsterEffects = result.monsterEffectList();
+        List<BattleEffectBag> monsterEffects = result.playerItemEffectList();
         printBattleEffectList(monsterEffects);
     }
 

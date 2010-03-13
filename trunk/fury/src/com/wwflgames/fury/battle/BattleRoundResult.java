@@ -40,7 +40,7 @@ public class BattleRoundResult {
         bagList.add(battleEffectBag);
     }
 
-    public List<BattleEffectBag> playerEffectList() {
+    public List<BattleEffectBag> monsterItemEffectList() {
         for (Mob mob : mobResultsMap.keySet()) {
             if (mob instanceof Player) {
                 return mobResultsMap.get(mob);
@@ -51,7 +51,7 @@ public class BattleRoundResult {
         return new ArrayList<BattleEffectBag>();
     }
 
-    public List<BattleEffectBag> monsterEffectList() {
+    public List<BattleEffectBag> playerItemEffectList() {
         List<BattleEffectBag> allMonsterEffectBags = new ArrayList<BattleEffectBag>();
         for (Mob mob : mobResultsMap.keySet()) {
             if (mob instanceof Monster) {
