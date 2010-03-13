@@ -42,15 +42,15 @@ public class Fury extends StateBasedGame {
         appState.setMap(new FixedMapCreator().createMap());
 
         // an an enemy
-        Monster monster = new Monster("Slavering Skeleton");
+        Monster monster = new Monster("Scary Skeleton");
         monster.setStatValue(Stat.HEALTH, 10);
-        monster.setDeck(createDeck());
+        monster.setDeck(createDeck(1));
         appState.getMap().addMob(monster, 2, 1);
 
-//        Monster monster2 = new Monster("Slavering Skeleton");
-//        monster2.setStatValue(Stat.HEALTH,10);
-//        monster2.setDeck(createDeck());
-//        appState.getMap().addMob(monster2, 2, 1);
+        Monster monster2 = new Monster("Slavering Skeleton");
+        monster2.setStatValue(Stat.HEALTH, 10);
+        monster2.setDeck(createDeck(1));
+        appState.getMap().addMob(monster2, 2, 2);
 //
 //        Monster monster3 = new Monster("Slavering Skeleton");
 //        monster3.setStatValue(Stat.HEALTH,10);
@@ -61,8 +61,8 @@ public class Fury extends StateBasedGame {
         appState.setPlayer(createPlayer());
     }
 
-    private ItemDeck createDeck() {
-        Damage crushDamage = new Damage(DamageType.MELEE_CRUSH, 5);
+    private ItemDeck createDeck(int dmg) {
+        Damage crushDamage = new Damage(DamageType.MELEE_CRUSH, dmg);
         Item mace = factory().createItemWithUsedAgainstEffects("Mace of crushing", new ItemEffect[]{crushDamage});
         ItemDeck deck = new ItemDeck();
         deck.addItem(mace);
@@ -70,11 +70,12 @@ public class Fury extends StateBasedGame {
     }
 
     private Player createPlayer() {
-        Player player = new Player("Valiant Knight");
-        player.setStatValue(Stat.HEALTH, 100);
+        Player player = new Player("Knight");
+        player.setStatValue(Stat.HEALTH, 40);
+        player.setStatValue(Stat.ARMOR, 1);
         // put the player in the upper right hand corner of the map
         appState.getMap().addMob(player, 1, 1);
-        player.setDeck(createDeck());
+        player.setDeck(createDeck(2));
 
         return player;
     }

@@ -48,8 +48,13 @@ public class CrushDamageApplier extends AbstractDamageApplier {
 
         String armorDesc = "{0} armor is crushed for {2}";
         String healthDesc = "{1} takes {2} damage!";
-        bag.add(new BattleEffect(armorDesc, Stat.ARMOR, armorDelta))
-                .add(new BattleEffect(healthDesc, Stat.HEALTH, healthDelta));
-
+        if (armorBefore != 0 && armorDelta != 0) {
+            bag.add(new BattleEffect(armorDesc, Stat.ARMOR, armorDelta));
+        }
+        if (healthDelta != 0) {
+            bag.add(new BattleEffect(healthDesc, Stat.HEALTH, healthDelta));
+        } else {
+            bag.add(new BattleEffect("{0} armor absorbed all damage!", Stat.ARMOR, armorDelta));
+        }
     }
 }
