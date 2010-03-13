@@ -17,6 +17,7 @@ public class Entity {
     private float scale;
     private float rotation;
     private Integer zIndex = 0;
+    private boolean remove = false;
     private Map<String, Object> propertyMap = new HashMap<String, Object>();
 
     private RenderComponent renderComponent;
@@ -96,6 +97,15 @@ public class Entity {
 
     public Entity setContainer(GameContainer container) {
         this.container = container;
+        return this;
+    }
+
+    public boolean shouldRemove() {
+        return remove;
+    }
+
+    public Entity setRemove(boolean remove) {
+        this.remove = remove;
         return this;
     }
 

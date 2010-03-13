@@ -1,5 +1,6 @@
 package com.wwflgames.fury.battle;
 
+import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.player.Player;
@@ -17,6 +18,7 @@ public class BattleRoundResult {
     private Mob enemy;
     private int battleRound;
     private Map<Mob, List<BattleEffectBag>> mobResultsMap = new HashMap<Mob, List<BattleEffectBag>>();
+    private Map<Mob, Item> itemUsedMap = new HashMap<Mob, Item>();
 
     public BattleRoundResult(int battleRound) {
         this.battleRound = battleRound;
@@ -57,6 +59,14 @@ public class BattleRoundResult {
             }
         }
         return allMonsterEffectBags;
+    }
+
+    public void addItemUsedBy(Mob mob, Item item) {
+        itemUsedMap.put(mob, item);
+    }
+
+    public Item getItemUsedBy(Mob mob) {
+        return itemUsedMap.get(mob);
     }
 
 

@@ -5,6 +5,7 @@ import com.wwflgames.fury.battle.Battle;
 import com.wwflgames.fury.battle.BattleRoundResult;
 import com.wwflgames.fury.battle.BattleSystem;
 import com.wwflgames.fury.entity.*;
+import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.map.Map;
 import com.wwflgames.fury.mob.Mob;
@@ -29,12 +30,14 @@ public class BattleGameState extends BasicGameState {
     enum State {
         PLAYER_CHOOSE_MONSTER,
         MONSTER_CHOSEN,
-        ROUND_FINISHED
+        ANIMATION_PLAY,
+        ANIMATION_DONE
     }
 
     ;
 
     enum ReplayState {
+        CREATE_PLAYER_CARD,
         SHOW_PLAYER_CARD,
         SHOW_PLAYER_DAMAGE,
         SHOW_MONSTER_CARD,
@@ -57,6 +60,8 @@ public class BattleGameState extends BasicGameState {
     private State currentState;
     private ReplayState replayState;
     private BattleRoundResult lastResult;
+    private boolean lastAnimationComplete;
+    private StateBag stateBag;
 
     public BattleGameState(AppState appState) {
         this.appState = appState;
@@ -89,6 +94,9 @@ public class BattleGameState extends BasicGameState {
     // called when this state is entered. Here's where we'll setup our battle 
     public void enter(GameContainer container, StateBasedGame game) throws SlickException {
         Log.debug("BattleGameState-> entered.");
+
+        // create a new state bag
+        stateBag = new StateBag();
 
         // grab the player
         Player player = appState.getPlayer();
@@ -238,29 +246,86 @@ public class BattleGameState extends BasicGameState {
 
         switch (currentState) {
             case MONSTER_CHOSEN:
-                Player player = appState.getPlayer();
-                Map map = appState.getMap();
-                int monsterX = player.getMapX() + attackX;
-                int monsterY = player.getMapY() + attackY;
-                Monster monster = null;
-                if (map.inBounds(monsterX, monsterY)) {
-                    monster = (Monster) map.getTileAt(monsterX, monsterY).getMob();
-                }
-                if (monster != null) {
-                    lastResult = battleSystem.performBattleRound(monster);
-                    currentState = State.ROUND_FINISHED;
-                } else {
-                    Log.debug("Monster was null or map was out of bounds, resetting state");
-                    currentState = State.PLAYER_CHOOSE_MONSTER;
-                }
+                handleMonsterChosen();
                 break;
-            case ROUND_FINISHED:
-                Log.debug("here is where we'd show the previous round animations");
-                // after we're done updating the UI with the battle round info,
-                // 
+            case ANIMATION_PLAY:
+                Log.debug("ANIMATION_PLAY");
+                handleAnimation(delta);
+
+                break;
+            case ANIMATION_DONE:
+                Log.debug("ANIMATION_DONE");
                 currentState = State.PLAYER_CHOOSE_MONSTER;
-                break;
         }
+    }
+
+    private void handleMonsterChosen() {
+        Log.debug("MONSTER_CHOSEN");
+        Player player = appState.getPlayer();
+        Map map = appState.getMap();
+        int monsterX = player.getMapX() + attackX;
+        int monsterY = player.getMapY() + attackY;
+        Monster monster = null;
+        if (map.inBounds(monsterX, monsterY)) {
+            monster = (Monster) map.getTileAt(monsterX, monsterY).getMob();
+        }
+        if (monster != null) {
+            lastResult = battleSystem.performBattleRound(monster);
+            replayState = ReplayState.CREATE_PLAYER_CARD;
+            currentState = State.ANIMATION_PLAY;
+        } else {
+            Log.debug("Monster was null or map was out of bounds, resetting state");
+            currentState = State.PLAYER_CHOOSE_MONSTER;
+        }
+    }
+
+    private void handleAnimation(int delta) {
+        switch (replayState) {
+            case CREATE_PLAYER_CARD:
+                Log.debug("CREATE_PLAYER_CARD");
+                Entity playerCard = createCard(lastResult.getItemUsedBy(appState.getPlayer()));
+                playerCard.addComponent(new DisplayForTimeComponent("disp3sec", 3000));
+                entityManager.addEntity(playerCard);
+                changeReplayState(ReplayState.SHOW_PLAYER_CARD);
+                break;
+            case SHOW_PLAYER_CARD:
+                Log.debug("SHOW_PLAYER_CARD");
+                // stay in this state until the card disappears from the entity manager
+                Entity pc = entityManager.findEntityById("playerCard");
+                if (pc == null) {
+                    changeReplayState(ReplayState.SHOW_PLAYER_DAMAGE);
+                }
+                break;
+            case SHOW_PLAYER_DAMAGE:
+                Log.debug("SHOW_PLAYER_DAMAGE");
+                changeReplayState(ReplayState.SHOW_MONSTER_CARD);
+                break;
+
+            case SHOW_MONSTER_CARD:
+                Log.debug("SHOW_MONSTER_CARD");
+                changeReplayState(ReplayState.SHOW_MONSTER_DAMAGE);
+                break;
+
+            case SHOW_MONSTER_DAMAGE:
+                Log.debug("SHOW_MONSTER_DAMAGE");
+                currentState = State.ANIMATION_DONE;
+                break;
+
+
+        }
+    }
+
+    private void changeReplayState(ReplayState newState) {
+        stateBag.clearAll();
+        replayState = newState;
+    }
+
+    private Entity createCard(Item item) {
+        ItemRenderComponent card = new ItemRenderComponent(item, font);
+        Entity cardEntity = new Entity("playerCard")
+                .addComponent(card)
+                .setPosition(new Vector2f(70, 64));
+        return cardEntity;
     }
 
     @Override

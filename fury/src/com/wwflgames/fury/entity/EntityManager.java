@@ -34,21 +34,38 @@ public class EntityManager {
     }
 
     public Entity removeEntity(Entity entity) {
-        entities.remove(entity);
+        //entities.remove(entity);
         entitiesToRemove.add(entity);
         return entity;
     }
 
     public Entity removeEntityById(String id) {
+        Entity e = findEntityById(id);
+        if (e != null) {
+            return removeEntity(e);
+        }
+        return null;
+    }
+
+    public Entity findEntityById(String id) {
         for (Entity entity : entities) {
             if (entity.getId().equals(id)) {
-                return removeEntity(entity);
+                return entity;
             }
         }
         return null;
     }
 
     public void update(int delta) {
+
+        // see if any entities have flagged themselves for removal
+        for (Entity entity : entities) {
+            if (entity.shouldRemove()) {
+                removeEntity(entity);
+            }
+        }
+
+
         // process our removed entities first
         if (!entitiesToRemove.isEmpty()) {
             for (Entity removed : entitiesToRemove) {

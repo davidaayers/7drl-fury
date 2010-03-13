@@ -16,4 +16,9 @@ public class Damage implements ItemEffect {
     public int getAmount() {
         return amount;
     }
+
+    @Override
+    public String getEffectDesc() {
+        return "" + amount + " " + type.getDesc() + " damage";
+    }
 }

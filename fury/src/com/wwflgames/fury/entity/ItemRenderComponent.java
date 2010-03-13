@@ -1,6 +1,8 @@
 package com.wwflgames.fury.entity;
 
 import com.wwflgames.fury.item.Item;
+import com.wwflgames.fury.item.ItemImpl;
+import com.wwflgames.fury.item.effect.ItemEffect;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.UnicodeFont;
@@ -19,11 +21,33 @@ public class ItemRenderComponent extends CardRenderComponent {
 
     @Override
     protected void maybeRenderItemText(Graphics g) {
+        // draw item name;
+        int y = 4;
+        drawString(item.name(), y, Color.white);
+
+        ItemImpl itemImpl = (ItemImpl) item;
+        // draw effects against
+        if (itemImpl.getUsedAgainstEffects() != null) {
+            for (ItemEffect effect : itemImpl.getUsedAgainstEffects()) {
+                y += 14;
+                drawString(effect.getEffectDesc(), y, Color.red);
+            }
+        }
+        // draw used by effects
+        if (itemImpl.getUsedByEffects() != null) {
+            for (ItemEffect effect : itemImpl.getUsedByEffects()) {
+                y += 14;
+                drawString(effect.getEffectDesc(), y, Color.green);
+            }
+        }
+    }
+
+    private void drawString(String text, int y, Color fontColor) {
         Vector2f pos = owner.getPosition();
         int width = 32 * 4;
-        String itemName = item.name();
-        int strWidth = font.getWidth(itemName);
-        font.drawString(pos.x + (width / 2) - (strWidth / 2), pos.y + 4, itemName, Color.white);
+        int strWidth = font.getWidth(text);
+        font.drawString(pos.x + (width / 2) - (strWidth / 2), pos.y + y, text, fontColor);
+
     }
 
 }

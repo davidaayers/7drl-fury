@@ -5,6 +5,10 @@ import com.wwflgames.fury.item.effect.EffectApplierFactory;
 import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.mob.Mob;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ItemImpl implements Item {
 
     private EffectApplierFactory effectApplierFactory;
@@ -46,6 +50,25 @@ public class ItemImpl implements Item {
                 effectApplierFactory.applierFor(effect).apply(effect, mob, bag);
             }
         }
+    }
+
+    public ItemEffect[] getUsedByEffects() {
+        return usedByEffects;
+    }
+
+    public ItemEffect[] getUsedAgainstEffects() {
+        return usedAgainstEffects;
+    }
+
+    public List<ItemEffect> allEffects() {
+        List<ItemEffect> list = new ArrayList<ItemEffect>();
+        if (usedByEffects != null) {
+            list.addAll(Arrays.asList(usedByEffects));
+        }
+        if (usedAgainstEffects != null) {
+            list.addAll(Arrays.asList(usedAgainstEffects));
+        }
+        return list;
     }
 
 }
