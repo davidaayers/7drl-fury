@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BattleEffectBag {
-    private List<BattleEffect> effects = new ArrayList<BattleEffect>();
+    private List<ItemEffect> effects = new ArrayList<ItemEffect>();
 
     private Item item;
     private Mob mob;
@@ -17,12 +17,12 @@ public class BattleEffectBag {
         this.mob = mob;
     }
 
-    public BattleEffectBag add(BattleEffect effect) {
+    public BattleEffectBag add(ItemEffect effect) {
         effects.add(effect);
         return this;
     }
 
-    public List<BattleEffect> get() {
+    public List<ItemEffect> get() {
         return effects;
     }
 

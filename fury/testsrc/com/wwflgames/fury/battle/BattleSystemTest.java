@@ -6,7 +6,6 @@ import com.wwflgames.fury.item.ItemFactory;
 import com.wwflgames.fury.item.effect.Damage;
 import com.wwflgames.fury.item.effect.DamageType;
 import com.wwflgames.fury.item.effect.EffectApplierFactory;
-import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.monster.Monster;
@@ -109,8 +108,8 @@ public class BattleSystemTest {
     private void printBattleEffectList(List<BattleEffectBag> playerEffects) {
         for (BattleEffectBag bel : playerEffects) {
             System.out.println(bel.mob().name() + " was effected by " + bel.item().name());
-            List<BattleEffect> beList = bel.get();
-            for (BattleEffect be : beList) {
+            List<ItemEffect> beList = bel.get();
+            for (ItemEffect be : beList) {
                 System.out.println(" " + be.toString());
             }
         }
@@ -159,7 +158,7 @@ public class BattleSystemTest {
 
     private Item newItem(final int damage) {
         Damage crushDamage = new Damage(DamageType.MELEE_CRUSH, damage);
-        Item mace = itemFactory.createItemWithUsedAgainstEffects("Mace of crushing", new ItemEffect[]{crushDamage});
+        Item mace = itemFactory.createItemWithUsedAgainstEffects("Mace of crushing", new com.wwflgames.fury.item.effect.ItemEffect[]{crushDamage});
         return mace;
     }
 
