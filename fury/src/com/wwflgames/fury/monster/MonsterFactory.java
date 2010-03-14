@@ -45,7 +45,7 @@ public class MonsterFactory {
 
         Monster monster = allMonsters.get(0);
         Log.debug("About to return " + monster);
-        return monster;
+        return new Monster(monster.name(), monster.getSpriteSheet());
     }
 
 
