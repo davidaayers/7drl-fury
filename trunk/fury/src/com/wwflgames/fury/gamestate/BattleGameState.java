@@ -44,7 +44,8 @@ public class BattleGameState extends BasicGameState {
         CREATE_PLAYER_CARD,
         SHOW_PLAYER_DAMAGE,
         CREATE_MONSTER_CARD,
-        SHOW_MONSTER_DAMAGE
+        SHOW_MONSTER_DAMAGE,
+        WAIT
     }
 
     ;
@@ -69,6 +70,7 @@ public class BattleGameState extends BasicGameState {
     private List<ItemLogMessage> monsterEffects;
     private List<Entity> cardsInPlay;
     private java.util.Map<Mob, Entity> mobEntities;
+    private Entity playerEntity;
 
     public BattleGameState(AppState appState) {
         this.appState = appState;
@@ -147,8 +149,9 @@ public class BattleGameState extends BasicGameState {
         MobRenderer heroSprite = new MobRenderer(player, heroSprites);
         heroSprite.useSprite(1, 2);
 
-        Entity playerEntity = createMobEntity(mapOffsetX, mapOffsetY, player, heroSprite);
+        playerEntity = createMobEntity(mapOffsetX, mapOffsetY, player, heroSprite);
         entityManager.addEntity(playerEntity);
+
 
         // Set up the battle
         //TODO: the "true" here is player initiative, it should be set somehow. For now,
@@ -361,11 +364,20 @@ public class BattleGameState extends BasicGameState {
 
             case CREATE_PLAYER_CARD:
                 Log.debug("CREATE_PLAYER_CARD");
-                Entity playerCard = createCard(lastResult.getItemUsageResultFor(appState.getPlayer()).item(), 42, 64);
+                Player player = appState.getPlayer();
+                final Entity playerCard = new Entity("playerCard");
+                ActionFinishedNotifier notifier = new ActionFinishedNotifier() {
+                    @Override
+                    public void actionComplete() {
+                        playerCard.removeComponentById("moveTo");
+                        changeReplayState(ReplayState.SHOW_PLAYER_DAMAGE);
+                    }
+                };
+                createCard(playerCard, playerEntity, lastResult.getItemUsageResultFor(player).item(), 42, 64, notifier);
                 //playerCard.addComponent(new DisplayForTimeAction("disp3sec", 3000));
                 entityManager.addEntity(playerCard);
                 cardsInPlay.add(playerCard);
-                changeReplayState(ReplayState.SHOW_PLAYER_DAMAGE);
+                changeReplayState(ReplayState.WAIT);
                 break;
 
             case SHOW_PLAYER_DAMAGE:
@@ -396,6 +408,11 @@ public class BattleGameState extends BasicGameState {
                     monsterEffects.add(0, createItemUsedString(monsterResult));
                 }
                 currentState = State.ANIMATION_DONE;
+                break;
+
+            case WAIT:
+                // do nothing
+                Log.debug("Waiting...");
                 break;
         }
     }
@@ -435,11 +452,14 @@ public class BattleGameState extends BasicGameState {
         replayState = newState;
     }
 
-    private Entity createCard(Item item, float x, float y) {
+    private Entity createCard(Entity cardEntity, Entity mobEntity, Item item, float x, float y, ActionFinishedNotifier notifier) {
         ItemRenderer card = new ItemRenderer(item, font);
-        Entity cardEntity = new Entity("playerCard")
-                .addComponent(card)
-                .setPosition(new Vector2f(x, y));
+
+        MoveToAction action = new MoveToAction("moveTo", x, y, .5f, notifier);
+        Vector2f mobPos = mobEntity.getPosition();
+        cardEntity.addComponent(card)
+                .addComponent(action)
+                .setPosition(new Vector2f(mobPos.x, mobPos.y));
         return cardEntity;
     }
 

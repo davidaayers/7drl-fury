@@ -2,7 +2,7 @@ package com.wwflgames.fury.entity;
 
 public abstract class Action extends Component {
 
-    protected boolean isActionComplete;
+    private boolean isActionComplete;
 
     public Action(String id) {
         super(id);
@@ -11,6 +11,10 @@ public abstract class Action extends Component {
 
     public boolean isActionComplete() {
         return isActionComplete;
+    }
+
+    protected void actionComplete() {
+        isActionComplete = true;
     }
 
 }

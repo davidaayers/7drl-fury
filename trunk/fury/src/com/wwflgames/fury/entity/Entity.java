@@ -22,6 +22,7 @@ public class Entity {
 
     private Renderer renderer;
     private List<Component> components = new ArrayList<Component>();
+    private List<Component> componentsToRemove = new ArrayList<Component>();
 
     private GameContainer container;
     private StateBasedGame game;
@@ -49,6 +50,12 @@ public class Entity {
             }
         }
         return null;
+    }
+
+    public Component removeComponentById(String id) {
+        Component comp = getComponent(id);
+        componentsToRemove.add(comp);
+        return comp;
     }
 
     public String getId() {
@@ -119,6 +126,12 @@ public class Entity {
     }
 
     public void update(int delta) {
+
+        for (Component component : componentsToRemove) {
+            components.remove(component);
+        }
+        componentsToRemove.clear();
+
         for (Component component : components) {
             component.update(delta);
         }
