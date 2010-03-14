@@ -14,4 +14,12 @@ public class Monster extends Mob {
     public String getSpriteSheet() {
         return spriteSheet;
     }
+
+    @Override
+    public String toString() {
+        return "Monster{" +
+                "name='" + name() + '\'' + " " +
+                "spriteSheet='" + spriteSheet + '\'' +
+                '}';
+    }
 }

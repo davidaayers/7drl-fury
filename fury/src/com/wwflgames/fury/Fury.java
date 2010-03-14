@@ -11,6 +11,7 @@ import com.wwflgames.fury.main.AppStateImpl;
 import com.wwflgames.fury.map.FixedMapCreator;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.monster.Monster;
+import com.wwflgames.fury.monster.MonsterFactory;
 import com.wwflgames.fury.player.Player;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -30,6 +31,7 @@ public class Fury extends StateBasedGame {
 
     private AppStateImpl appState;
     private SpriteSheetCache spriteSheetCache;
+    private MonsterFactory monsterFactory;
 
     public Fury() {
         super("Fury - 7DRL");
@@ -41,22 +43,6 @@ public class Fury extends StateBasedGame {
 
         //TODO: move map creation somewhere else, later
         appState.setMap(new FixedMapCreator().createMap());
-
-        // an an enemy
-        Monster monster = new Monster("Scary Skeleton", "horned_skelly.png");
-        monster.setStatValue(Stat.HEALTH, 10);
-        monster.setDeck(createDeck(1));
-        appState.getMap().addMob(monster, 2, 1);
-
-        Monster monster2 = new Monster("Slavering Skeleton", "horned_skelly.png");
-        monster2.setStatValue(Stat.HEALTH, 10);
-        monster2.setDeck(createDeck(1));
-        appState.getMap().addMob(monster2, 2, 2);
-
-        Monster monster3 = new Monster("Jane's Monster", "janes_monster.png");
-        monster3.setStatValue(Stat.HEALTH, 10);
-        monster3.setDeck(createDeck(3));
-        appState.getMap().addMob(monster3, 3, 3);
 
         //TODO: move player creation somewhere else, too
         appState.setPlayer(createPlayer());
@@ -95,7 +81,10 @@ public class Fury extends StateBasedGame {
 
         // this is cheesy, but this is the only place we can hook into the init of game
         // and do anything.
+        initMonsterFactory();
         initSpriteSheetCache();
+        // TEMP
+        initMonsters();
 
 
         //addState(new TitleGameState());
@@ -103,10 +92,33 @@ public class Fury extends StateBasedGame {
         addState(createBattleState());
     }
 
+    private void initMonsters() {
+        // an an enemy
+        Monster monster = monsterFactory.createMonster(0);
+        monster.setStatValue(Stat.HEALTH, 10);
+        monster.setDeck(createDeck(1));
+        appState.getMap().addMob(monster, 2, 1);
+
+        Monster monster2 = monsterFactory.createMonster(0);
+        monster2.setStatValue(Stat.HEALTH, 10);
+        monster2.setDeck(createDeck(1));
+        appState.getMap().addMob(monster2, 2, 2);
+
+        Monster monster3 = monsterFactory.createMonster(0);
+        monster3.setStatValue(Stat.HEALTH, 10);
+        monster3.setDeck(createDeck(3));
+        appState.getMap().addMob(monster3, 3, 3);
+    }
+
+    private void initMonsterFactory() throws SlickException {
+        monsterFactory = new MonsterFactory();
+    }
+
     private void initSpriteSheetCache() throws SlickException {
         spriteSheetCache = new SpriteSheetCache();
-        spriteSheetCache.loadSprite("horned_skelly.png");
-        spriteSheetCache.loadSprite("janes_monster.png");
+        for (String spriteSheetName : monsterFactory.getAllSpriteSheetNames()) {
+            spriteSheetCache.loadSprite(spriteSheetName);
+        }
         spriteSheetCache.loadSprite("warrior_male.png");
     }
 

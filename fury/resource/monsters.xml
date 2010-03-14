@@ -1,0 +1,26 @@
+<monsters>
+    <monster name="Skelly" sprite-sheet="horned_skelly.png">
+        <deck>
+            <item name="foo"/>
+            <item name="bar"/>
+        </deck>
+    </monster>
+    <monster name="Orc Spritualist" sprite-sheet="janes_monster.png">
+        <deck>
+            <item name="foo"/>
+            <item name="bar"/>
+        </deck>
+    </monster>
+    <monster name="Orc" sprite-sheet="orc.png">
+        <deck>
+            <item name="foo"/>
+            <item name="bar"/>
+        </deck>
+    </monster>
+    <monster name="Crazy Elf" sprite-sheet="crazy_elf.png">
+        <deck>
+            <item name="foo"/>
+            <item name="bar"/>
+        </deck>
+    </monster>
+</monsters>
