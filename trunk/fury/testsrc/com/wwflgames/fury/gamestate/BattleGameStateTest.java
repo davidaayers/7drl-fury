@@ -24,7 +24,7 @@ public class BattleGameStateTest {
     public void findMonstersActuallyFindsMonstersAndIgnoresPlayer() {
         // set up a test map
         Map map = new FixedMapCreator().createMap();
-        Player p1 = new Player("hero");
+        Player p1 = new Player("hero", null);
         Monster m1 = new Monster("foo", "foo");
         Monster m2 = new Monster("bar", "foo");
         map.addMob(m1, 1, 1);

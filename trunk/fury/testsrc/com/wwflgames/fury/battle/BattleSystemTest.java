@@ -136,7 +136,7 @@ public class BattleSystemTest {
     }
 
     private Player newPlayer(String s, int mobHealth) {
-        Player mob = new Player(s);
+        Player mob = new Player(s, null);
         mob.setStatValue(Stat.HEALTH, mobHealth);
         mob.setDeck(new ItemDeck());
         return mob;
