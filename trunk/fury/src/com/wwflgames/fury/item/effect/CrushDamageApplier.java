@@ -1,7 +1,7 @@
 package com.wwflgames.fury.item.effect;
 
-import com.wwflgames.fury.battle.BattleEffect;
 import com.wwflgames.fury.battle.BattleEffectBag;
+import com.wwflgames.fury.battle.ItemEffect;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
@@ -13,7 +13,7 @@ public class CrushDamageApplier extends AbstractDamageApplier {
     }
 
     @Override
-    public void apply(ItemEffect effect, Mob applyTo, BattleEffectBag bag) {
+    public void apply(com.wwflgames.fury.item.effect.ItemEffect effect, Mob applyTo, BattleEffectBag bag) {
         Damage damage = (Damage) effect;
         // crush damage applies first to armor (i.e. it is absorbed by armor),
         // and any remaining damage left after the armor is applied to the victim
@@ -49,12 +49,12 @@ public class CrushDamageApplier extends AbstractDamageApplier {
         String armorDesc = "{0} armor is crushed for {2}";
         String healthDesc = "{1} takes {2} damage!";
         if (armorBefore != 0 && armorDelta != 0) {
-            bag.add(new BattleEffect(armorDesc, Stat.ARMOR, armorDelta));
+            bag.add(new ItemEffect(armorDesc, Stat.ARMOR, armorDelta));
         }
         if (healthDelta != 0) {
-            bag.add(new BattleEffect(healthDesc, Stat.HEALTH, healthDelta));
+            bag.add(new com.wwflgames.fury.battle.ItemEffect(healthDesc, Stat.HEALTH, healthDelta));
         } else {
-            bag.add(new BattleEffect("{0} armor absorbed all damage!", Stat.ARMOR, armorDelta));
+            bag.add(new ItemEffect("{0} armor absorbed all damage!", Stat.ARMOR, armorDelta));
         }
     }
 }
