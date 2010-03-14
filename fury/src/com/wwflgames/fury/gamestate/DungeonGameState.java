@@ -42,11 +42,6 @@ public class DungeonGameState extends BasicGameState {
         this.gameContainer = gameContainer;
         this.stateBasedGame = stateBasedGame;
 
-        // load sprites
-        heroSprites = new SpriteSheet("warrior.png", 24, 32);
-        monsterSprites = new SpriteSheet("horned_skelly_old.png", 24, 32);
-
-
         entityManager = new EntityManager(gameContainer, stateBasedGame);
     }
 
@@ -64,7 +59,7 @@ public class DungeonGameState extends BasicGameState {
                 .setPosition(new Vector2f(0, 0))
                 .setScale(1)
                 .addComponent(new SpriteSheetRenderer("playerRender",
-                        spriteSheetCache.getSpriteSheet("warrior.png")).useSprite(1, 2))
+                        spriteSheetCache.getSpriteSheet("warrior_male.png")).useSprite(1, 2))
                 .addComponent(new MobMapPositionAction("mapPosition", appState.getPlayer()));
 
         entityManager.addEntity(player);

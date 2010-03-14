@@ -2,7 +2,6 @@ package com.wwflgames.fury.gamestate;
 
 import com.wwflgames.fury.map.FixedMapCreator;
 import com.wwflgames.fury.map.Map;
-import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.player.Player;
 import org.junit.Before;
@@ -35,7 +34,7 @@ public class BattleGameStateTest {
         assertEquals(new Integer(2), p1.getMapX());
         assertEquals(new Integer(2), p1.getMapY());
 
-        List<Mob> monsters = battleGameState.findMonsters(map, p1.getMapX(), p1.getMapY());
+        List<Monster> monsters = battleGameState.findMonsters(map, p1.getMapX(), p1.getMapY());
         assertEquals(2, monsters.size());
     }
 }

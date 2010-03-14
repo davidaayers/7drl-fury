@@ -43,12 +43,12 @@ public class Fury extends StateBasedGame {
         appState.setMap(new FixedMapCreator().createMap());
 
         // an an enemy
-        Monster monster = new Monster("Scary Skeleton", "horned_skelly_old.png");
+        Monster monster = new Monster("Scary Skeleton", "horned_skelly.png");
         monster.setStatValue(Stat.HEALTH, 10);
         monster.setDeck(createDeck(1));
         appState.getMap().addMob(monster, 2, 1);
 
-        Monster monster2 = new Monster("Slavering Skeleton", "horned_skelly_old.png");
+        Monster monster2 = new Monster("Slavering Skeleton", "horned_skelly.png");
         monster2.setStatValue(Stat.HEALTH, 10);
         monster2.setDeck(createDeck(1));
         appState.getMap().addMob(monster2, 2, 2);
@@ -105,9 +105,9 @@ public class Fury extends StateBasedGame {
 
     private void initSpriteSheetCache() throws SlickException {
         spriteSheetCache = new SpriteSheetCache();
-        spriteSheetCache.loadSprite("horned_skelly_old.png");
+        spriteSheetCache.loadSprite("horned_skelly.png");
         spriteSheetCache.loadSprite("janes_monster.png");
-        spriteSheetCache.loadSprite("warrior.png");
+        spriteSheetCache.loadSprite("warrior_male.png");
     }
 
     private GameState createDungeonState() {

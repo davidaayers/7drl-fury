@@ -121,7 +121,7 @@ public class BattleSystemTest {
         player.getDeck().addItem(newItem(playerDmg));
         Monster enemy = newMonster("Enemy 1", mobHealth);
         enemy.getDeck().addItem(newItem(mobDamage));
-        List<Mob> mobs = new ArrayList<Mob>();
+        List<Monster> mobs = new ArrayList<Monster>();
         mobs.add(enemy);
 
         Battle b = new Battle(player, mobs, playerInitiative);
