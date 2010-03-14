@@ -360,8 +360,8 @@ public class BattleGameState extends BasicGameState {
                 Log.debug("SHOW_PLAYER_DAMAGE");
                 // add the player's effects to the damage stack
                 for (ItemUsageResult bag : lastResult.playerItemEffectList()) {
-                    for (ItemEffect effect : bag.get()) {
-                        playerEffects.add(0, createDesc(bag, effect));
+                    for (ItemEffectResult effectResult : bag.get()) {
+                        playerEffects.add(0, createDesc(bag, effectResult));
                     }
                 }
                 changeReplayState(ReplayState.CREATE_MONSTER_CARD);
@@ -376,8 +376,8 @@ public class BattleGameState extends BasicGameState {
             case SHOW_MONSTER_DAMAGE:
                 Log.debug("SHOW_MONSTER_DAMAGE");
                 for (ItemUsageResult bag : lastResult.monsterItemEffectList()) {
-                    for (ItemEffect effect : bag.get()) {
-                        monsterEffects.add(0, createDesc(bag, effect));
+                    for (ItemEffectResult effectResult : bag.get()) {
+                        monsterEffects.add(0, createDesc(bag, effectResult));
                     }
                 }
                 currentState = State.ANIMATION_DONE;
@@ -385,11 +385,11 @@ public class BattleGameState extends BasicGameState {
         }
     }
 
-    private String createDesc(ItemUsageResult bag, ItemEffect effect) {
+    private String createDesc(ItemUsageResult bag, ItemEffectResult effectResult) {
         String s0 = bag.mob().name() + "'s";
         String s1 = bag.mob().name();
-        String s2 = effect.getDelta().toString();
-        return MessageFormat.format(effect.getDesc(), new Object[]{s0, s1, s2});
+        String s2 = effectResult.getDelta().toString();
+        return MessageFormat.format(effectResult.getDesc(), new Object[]{s0, s1, s2});
     }
 
     private void changeReplayState(ReplayState newState) {

@@ -11,6 +11,11 @@ import java.util.Map;
 public class NewBattleRoundResult {
 
     private Map<Mob, ItemUsageResult> mobItemUsageResults = new HashMap<Mob, ItemUsageResult>();
+    private int round;
+
+    public NewBattleRoundResult(int round) {
+        this.round = round;
+    }
 
     public void addItemUsageResultFor(Mob mob, ItemUsageResult result) {
         mobItemUsageResults.put(mob, result);
