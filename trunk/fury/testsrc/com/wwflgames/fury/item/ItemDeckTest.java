@@ -61,12 +61,12 @@ public class ItemDeckTest {
             }
 
             @Override
-            public ItemUsageResult usedBy(Mob mob) {
+            public Item usedBy(Mob mob, ItemUsageResult result) {
                 return null;
             }
 
             @Override
-            public ItemUsageResult usedAgainst(Mob mob) {
+            public Item usedAgainst(Mob mob, ItemUsageResult result) {
                 return null;
             }
         };

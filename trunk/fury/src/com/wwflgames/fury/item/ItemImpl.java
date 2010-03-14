@@ -30,24 +30,22 @@ public class ItemImpl implements Item {
     }
 
     @Override
-    public ItemUsageResult usedBy(Mob mob) {
-        ItemUsageResult bag = new ItemUsageResult(this, mob);
-        applyItemEffects(usedByEffects, mob, bag);
-        return bag;
+    public Item usedBy(Mob mob, ItemUsageResult result) {
+        applyItemEffects(usedByEffects, mob, result);
+        return this;
     }
 
     @Override
-    public ItemUsageResult usedAgainst(Mob mob) {
-        ItemUsageResult bag = new ItemUsageResult(this, mob);
-        applyItemEffects(usedAgainstEffects, mob, bag);
-        return bag;
+    public Item usedAgainst(Mob mob, ItemUsageResult result) {
+        applyItemEffects(usedAgainstEffects, mob, result);
+        return this;
 
     }
 
-    private void applyItemEffects(ItemEffect[] effects, Mob mob, ItemUsageResult bag) {
+    private void applyItemEffects(ItemEffect[] effects, Mob mob, ItemUsageResult result) {
         if (effects != null) {
             for (ItemEffect effect : effects) {
-                effectApplierFactory.applierFor(effect).apply(effect, mob, bag);
+                effectApplierFactory.applierFor(effect).apply(effect, mob, result);
             }
         }
     }
