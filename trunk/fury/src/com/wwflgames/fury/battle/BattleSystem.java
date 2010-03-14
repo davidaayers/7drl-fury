@@ -81,8 +81,8 @@ public class BattleSystem {
         result.addItemUsedBy(attacker, item);
 
         Log.debug("Item chosen from deck is " + item.name());
-        BattleEffectBag usedByBag = item.usedBy(attacker);
-        BattleEffectBag usedAgainstBag = item.usedAgainst(defender);
+        ItemUsageResult usedByBag = item.usedBy(attacker);
+        ItemUsageResult usedAgainstBag = item.usedAgainst(defender);
         //TODO: this isn't right, need to figure this out. defender and attacker are mixed
         //up in the battle results
         result.addEffectList(defender, usedByBag);

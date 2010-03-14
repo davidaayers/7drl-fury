@@ -99,14 +99,14 @@ public class BattleSystemTest {
         BattleRoundResult result = battleSystem.performBattleRound((Monster) b.getEnemies().get(0));
 
         System.out.println("========= replaying battle ==========");
-        List<BattleEffectBag> playerEffects = result.monsterItemEffectList();
+        List<ItemUsageResult> playerEffects = result.monsterItemEffectList();
         printBattleEffectList(playerEffects);
-        List<BattleEffectBag> monsterEffects = result.playerItemEffectList();
+        List<ItemUsageResult> monsterEffects = result.playerItemEffectList();
         printBattleEffectList(monsterEffects);
     }
 
-    private void printBattleEffectList(List<BattleEffectBag> playerEffects) {
-        for (BattleEffectBag bel : playerEffects) {
+    private void printBattleEffectList(List<ItemUsageResult> playerEffects) {
+        for (ItemUsageResult bel : playerEffects) {
             System.out.println(bel.mob().name() + " was effected by " + bel.item().name());
             List<ItemEffect> beList = bel.get();
             for (ItemEffect be : beList) {
