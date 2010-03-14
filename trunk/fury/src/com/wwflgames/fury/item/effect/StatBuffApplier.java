@@ -1,6 +1,6 @@
 package com.wwflgames.fury.item.effect;
 
-import com.wwflgames.fury.battle.ItemEffect;
+import com.wwflgames.fury.battle.ItemEffectResult;
 import com.wwflgames.fury.battle.ItemUsageResult;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
@@ -17,6 +17,6 @@ public class StatBuffApplier extends AbstractBuffApplier {
         applyTo.modifyBattleStatValue(buff.getStat(), buff.getAmount());
 
         String armorDesc = "{0} armor is increased by {2}";
-        bag.add(new ItemEffect(armorDesc, Stat.ARMOR, buff.getAmount()));
+        bag.add(new ItemEffectResult(armorDesc, Stat.ARMOR, buff.getAmount()));
     }
 }

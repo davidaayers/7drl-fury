@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemUsageResult {
-    private List<ItemEffect> effects = new ArrayList<ItemEffect>();
+    private List<ItemEffectResult> effectResults = new ArrayList<ItemEffectResult>();
 
     private Item item;
     private Mob mob;
@@ -17,13 +17,13 @@ public class ItemUsageResult {
         this.mob = mob;
     }
 
-    public ItemUsageResult add(ItemEffect effect) {
-        effects.add(effect);
+    public ItemUsageResult add(ItemEffectResult effectResult) {
+        effectResults.add(effectResult);
         return this;
     }
 
-    public List<ItemEffect> get() {
-        return effects;
+    public List<ItemEffectResult> get() {
+        return effectResults;
     }
 
     public Item item() {

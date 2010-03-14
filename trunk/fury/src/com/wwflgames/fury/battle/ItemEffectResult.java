@@ -2,12 +2,12 @@ package com.wwflgames.fury.battle;
 
 import com.wwflgames.fury.mob.Stat;
 
-public class ItemEffect {
+public class ItemEffectResult {
     private String desc;
     private Stat stat;
     private Integer delta;
 
-    public ItemEffect(String desc, Stat stat, Integer delta) {
+    public ItemEffectResult(String desc, Stat stat, Integer delta) {
         this.desc = desc;
         this.stat = stat;
         this.delta = delta;
@@ -27,7 +27,7 @@ public class ItemEffect {
 
     @Override
     public String toString() {
-        return "ItemEffect{" +
+        return "ItemEffectResult{" +
                 "desc='" + desc + '\'' +
                 ", stat=" + stat +
                 ", delta=" + delta +

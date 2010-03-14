@@ -1,6 +1,6 @@
 package com.wwflgames.fury.item.effect;
 
-import com.wwflgames.fury.battle.ItemEffect;
+import com.wwflgames.fury.battle.ItemEffectResult;
 import com.wwflgames.fury.battle.ItemUsageResult;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
@@ -49,12 +49,12 @@ public class CrushDamageApplier extends AbstractDamageApplier {
         String armorDesc = "{0} armor is crushed for {2}";
         String healthDesc = "{1} takes {2} damage!";
         if (armorBefore != 0 && armorDelta != 0) {
-            bag.add(new ItemEffect(armorDesc, Stat.ARMOR, armorDelta));
+            bag.add(new ItemEffectResult(armorDesc, Stat.ARMOR, armorDelta));
         }
         if (healthDelta != 0) {
-            bag.add(new com.wwflgames.fury.battle.ItemEffect(healthDesc, Stat.HEALTH, healthDelta));
+            bag.add(new ItemEffectResult(healthDesc, Stat.HEALTH, healthDelta));
         } else {
-            bag.add(new ItemEffect("{0} armor absorbed all damage!", Stat.ARMOR, armorDelta));
+            bag.add(new ItemEffectResult("{0} armor absorbed all damage!", Stat.ARMOR, armorDelta));
         }
     }
 }

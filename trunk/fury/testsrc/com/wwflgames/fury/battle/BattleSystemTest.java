@@ -108,8 +108,8 @@ public class BattleSystemTest {
     private void printBattleEffectList(List<ItemUsageResult> playerEffects) {
         for (ItemUsageResult bel : playerEffects) {
             System.out.println(bel.mob().name() + " was effected by " + bel.item().name());
-            List<ItemEffect> beList = bel.get();
-            for (ItemEffect be : beList) {
+            List<ItemEffectResult> beList = bel.get();
+            for (ItemEffectResult be : beList) {
                 System.out.println(" " + be.toString());
             }
         }
