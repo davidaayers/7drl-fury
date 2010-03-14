@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NewBattleRoundResult {
+public class BattleRoundResult {
 
     private Map<Mob, ItemUsageResult> mobItemUsageResults = new HashMap<Mob, ItemUsageResult>();
     private int round;
 
-    public NewBattleRoundResult(int round) {
+    public BattleRoundResult(int round) {
         this.round = round;
     }
 

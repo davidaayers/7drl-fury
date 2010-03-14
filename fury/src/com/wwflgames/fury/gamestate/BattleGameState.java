@@ -57,7 +57,7 @@ public class BattleGameState extends BasicGameState {
     private int attackY;
     private State currentState;
     private ReplayState replayState;
-    private NewBattleRoundResult lastResult;
+    private BattleRoundResult lastResult;
     private boolean lastAnimationComplete;
     private StateBag stateBag;
     private List<ItemEffectString> playerEffects;

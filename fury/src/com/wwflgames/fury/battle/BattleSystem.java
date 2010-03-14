@@ -30,10 +30,10 @@ public class BattleSystem {
         }
     }
 
-    public NewBattleRoundResult performBattleRound(Monster monster) {
+    public BattleRoundResult performBattleRound(Monster monster) {
         // increment the battle Round
         battleRound++;
-        NewBattleRoundResult battleRoundResult = new NewBattleRoundResult(battleRound);
+        BattleRoundResult battleRoundResult = new BattleRoundResult(battleRound);
         Log.debug("=========( Round " + battleRound + " )==============");
 
 
@@ -55,7 +55,7 @@ public class BattleSystem {
         return battleRoundResult;
     }
 
-    private void doPlayerRoundAndCheckIfPlayerWon(Monster monster, NewBattleRoundResult result) {
+    private void doPlayerRoundAndCheckIfPlayerWon(Monster monster, BattleRoundResult result) {
         doNextItemInDeck(battle.getPlayer(), monster, result);
         removeDeadMonstersFromBattle();
 
@@ -64,7 +64,7 @@ public class BattleSystem {
         }
     }
 
-    private void doEnemyRoundAndCheckIfPlayerLost(NewBattleRoundResult result) {
+    private void doEnemyRoundAndCheckIfPlayerLost(BattleRoundResult result) {
         for (Mob enemy : battle.getEnemies()) {
             doNextItemInDeck(enemy, battle.getPlayer(), result);
         }
@@ -74,7 +74,7 @@ public class BattleSystem {
         }
     }
 
-    private void doNextItemInDeck(Mob attacker, Mob defender, NewBattleRoundResult result) {
+    private void doNextItemInDeck(Mob attacker, Mob defender, BattleRoundResult result) {
         Log.debug("Next item in deck, attacker = " + attacker.name() + ", defender = " + defender.name());
         // grab the next item from the attackers deck
         Item item = attacker.getDeck().nextItem();
