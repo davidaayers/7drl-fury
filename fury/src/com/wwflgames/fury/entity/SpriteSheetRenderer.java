@@ -5,18 +5,18 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Vector2f;
 
-public class SpriteSheetRenderComponent extends RenderComponent {
+public class SpriteSheetRenderer extends Renderer {
 
     private SpriteSheet spriteSheet;
     private int spriteCol;
     private int spriteRow;
 
-    public SpriteSheetRenderComponent(String id, SpriteSheet spriteSheet) {
+    public SpriteSheetRenderer(String id, SpriteSheet spriteSheet) {
         super(id);
         this.spriteSheet = spriteSheet;
     }
 
-    public SpriteSheetRenderComponent useSprite(int spriteCol, int spriteRow) {
+    public SpriteSheetRenderer useSprite(int spriteCol, int spriteRow) {
         this.spriteCol = spriteCol;
         this.spriteRow = spriteRow;
         return this;

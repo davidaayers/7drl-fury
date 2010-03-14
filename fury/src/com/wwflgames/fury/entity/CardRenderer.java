@@ -4,14 +4,14 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
 
-public class CardRenderComponent extends RenderComponent {
+public class CardRenderer extends Renderer {
     private Color cardBgColor;
 
-    public CardRenderComponent(String id) {
+    public CardRenderer(String id) {
         this(id, Color.gray);
     }
 
-    public CardRenderComponent(String id, Color cardBgColor) {
+    public CardRenderer(String id, Color cardBgColor) {
         super(id);
         this.cardBgColor = cardBgColor;
     }

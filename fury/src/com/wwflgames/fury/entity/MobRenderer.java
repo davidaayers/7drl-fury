@@ -7,11 +7,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Vector2f;
 
-public class MobRenderComponent extends SpriteSheetRenderComponent {
+public class MobRenderer extends SpriteSheetRenderer {
     private Mob mob;
 
-    public MobRenderComponent(Mob mob, SpriteSheet spriteSheet) {
-        super(mob.name() + "RenderComponent", spriteSheet);
+    public MobRenderer(Mob mob, SpriteSheet spriteSheet) {
+        super(mob.name() + "Renderer", spriteSheet);
         this.mob = mob;
     }
 

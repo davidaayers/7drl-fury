@@ -127,7 +127,7 @@ public class BattleGameState extends BasicGameState {
         Entity mapEntity = new Entity("map")
                 .setPosition(new Vector2f(208, 32))
                 .setScale(4)
-                .addComponent(new BattleMapRenderComponent("mapRender", appState.getMap(), mapOffsetX, mapOffsetY));
+                .addComponent(new BattleMapRenderer("mapRender", appState.getMap(), mapOffsetX, mapOffsetY));
 
         entityManager.addEntity(mapEntity);
 
@@ -137,14 +137,14 @@ public class BattleGameState extends BasicGameState {
         // they can be rendered
         for (Mob monster : monsters) {
             Log.debug("monster x = " + monster.getMapX() + " , y = " + monster.getMapY());
-            MobRenderComponent sprite = new MobRenderComponent(monster, monsterSprites);
+            MobRenderer sprite = new MobRenderer(monster, monsterSprites);
             sprite.useSprite(1, 2);
             Entity mobEntity = createMobEntity(mapOffsetX, mapOffsetY, monster, sprite);
             entityManager.addEntity(mobEntity);
             mobEntities.put(monster, mobEntity);
         }
 
-        MobRenderComponent heroSprite = new MobRenderComponent(player, heroSprites);
+        MobRenderer heroSprite = new MobRenderer(player, heroSprites);
         heroSprite.useSprite(1, 2);
 
         Entity playerEntity = createMobEntity(mapOffsetX, mapOffsetY, player, heroSprite);
@@ -162,7 +162,7 @@ public class BattleGameState extends BasicGameState {
         Log.debug("BattleGameState-> complete.");
     }
 
-    private Entity createMobEntity(int mapOffsetX, int mapOffsetY, Mob mob, SpriteSheetRenderComponent sprite) {
+    private Entity createMobEntity(int mapOffsetX, int mapOffsetY, Mob mob, SpriteSheetRenderer sprite) {
         MobLocationComponent mobLocationComponent = new MobLocationComponent(mob.name() + "location")
                 .setMapOffset(mapOffsetX, mapOffsetY)
                 .setScreenOffset(208, 32)
@@ -436,7 +436,7 @@ public class BattleGameState extends BasicGameState {
     }
 
     private Entity createCard(Item item, float x, float y) {
-        ItemRenderComponent card = new ItemRenderComponent(item, font);
+        ItemRenderer card = new ItemRenderer(item, font);
         Entity cardEntity = new Entity("playerCard")
                 .addComponent(card)
                 .setPosition(new Vector2f(x, y));
