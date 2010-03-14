@@ -3,6 +3,7 @@ package com.wwflgames.fury;
 import com.wwflgames.fury.entity.SpriteSheetCache;
 import com.wwflgames.fury.gamestate.BattleGameState;
 import com.wwflgames.fury.gamestate.DungeonGameState;
+import com.wwflgames.fury.gamestate.TitleGameState;
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.item.ItemFactory;
@@ -89,8 +90,11 @@ public class Fury extends StateBasedGame {
         // TEMP
         initMonsters();
 
+        installGameStates();
+    }
 
-        //addState(new TitleGameState());
+    private void installGameStates() {
+        addState(createTitleGameState());
         addState(createDungeonState());
         addState(createBattleState());
     }
@@ -129,6 +133,10 @@ public class Fury extends StateBasedGame {
         for (String spriteSheetName : professionFactory.getAllSpriteSheetNames()) {
             spriteSheetCache.loadSprite(spriteSheetName);
         }
+    }
+
+    private TitleGameState createTitleGameState() {
+        return new TitleGameState(professionFactory, spriteSheetCache);
     }
 
     private GameState createDungeonState() {
