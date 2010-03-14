@@ -2,14 +2,14 @@ package com.wwflgames.fury.entity;
 
 import org.newdawn.slick.geom.Vector2f;
 
-public class MoveToAction extends Action {
+public class MoveToAction extends NotifyingAction {
 
     private float finalX;
     private float finalY;
     private float speed;
 
-    public MoveToAction(String id, float finalX, float finalY, float speed) {
-        super(id);
+    public MoveToAction(String id, float finalX, float finalY, float speed, ActionFinishedNotifier notifier) {
+        super(id, notifier);
         this.finalX = finalX;
         this.finalY = finalY;
         this.speed = speed;
@@ -57,7 +57,7 @@ public class MoveToAction extends Action {
 
         // have we arrived?
         if (newX == finalX && newY == finalY) {
-            isActionComplete = true;
+            actionComplete();
         }
     }
 }
