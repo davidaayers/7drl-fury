@@ -2,9 +2,9 @@ package com.wwflgames.fury.entity;
 
 import org.newdawn.slick.Graphics;
 
-public abstract class RenderComponent extends Component {
+public abstract class Renderer extends Component {
 
-    public RenderComponent(String id) {
+    public Renderer(String id) {
         super(id);
     }
 

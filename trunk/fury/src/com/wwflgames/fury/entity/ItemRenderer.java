@@ -8,12 +8,12 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.geom.Vector2f;
 
-public class ItemRenderComponent extends CardRenderComponent {
+public class ItemRenderer extends CardRenderer {
 
     private Item item;
     private UnicodeFont font;
 
-    public ItemRenderComponent(Item item, UnicodeFont font) {
+    public ItemRenderer(Item item, UnicodeFont font) {
         super(item.name());
         this.item = item;
         this.font = font;

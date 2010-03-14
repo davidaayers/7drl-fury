@@ -5,11 +5,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 
-public class ImageRenderComponent extends RenderComponent {
+public class ImageRenderer extends Renderer {
 
     private Image image;
 
-    public ImageRenderComponent(String id, Image image) {
+    public ImageRenderer(String id, Image image) {
         super(id);
         this.image = image;
     }

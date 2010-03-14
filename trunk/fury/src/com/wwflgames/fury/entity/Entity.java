@@ -20,7 +20,7 @@ public class Entity {
     private boolean remove = false;
     private Map<String, Object> propertyMap = new HashMap<String, Object>();
 
-    private RenderComponent renderComponent;
+    private Renderer renderer;
     private List<Component> components = new ArrayList<Component>();
 
     private GameContainer container;
@@ -34,8 +34,8 @@ public class Entity {
     }
 
     public Entity addComponent(Component component) {
-        if (component instanceof RenderComponent) {
-            renderComponent = (RenderComponent) component;
+        if (component instanceof Renderer) {
+            renderer = (Renderer) component;
         }
         component.installOwner(this);
         components.add(component);
@@ -125,8 +125,8 @@ public class Entity {
     }
 
     public void render(Graphics gr) {
-        if (renderComponent != null) {
-            renderComponent.render(gr);
+        if (renderer != null) {
+            renderer.render(gr);
         }
     }
 

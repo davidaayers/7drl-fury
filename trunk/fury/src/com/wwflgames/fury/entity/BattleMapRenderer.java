@@ -8,14 +8,14 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Vector2f;
 
-public class BattleMapRenderComponent extends RenderComponent {
+public class BattleMapRenderer extends Renderer {
 
     private SpriteSheet spriteSheet;
     private Map map;
     private int renderX;
     private int renderY;
 
-    public BattleMapRenderComponent(String id, Map map, int renderX, int renderY)
+    public BattleMapRenderer(String id, Map map, int renderX, int renderY)
             throws SlickException {
         super(id);
         this.map = map;
