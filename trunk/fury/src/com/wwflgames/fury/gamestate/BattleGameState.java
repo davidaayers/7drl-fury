@@ -4,6 +4,8 @@ import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.battle.*;
 import com.wwflgames.fury.entity.*;
 import com.wwflgames.fury.item.Item;
+import com.wwflgames.fury.item.effect.Buff;
+import com.wwflgames.fury.item.effect.Damage;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.map.Map;
 import com.wwflgames.fury.mob.Mob;
@@ -22,6 +24,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import java.awt.Font;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class BattleGameState extends BasicGameState {
@@ -30,7 +33,8 @@ public class BattleGameState extends BasicGameState {
         PLAYER_CHOOSE_MONSTER,
         MONSTER_CHOSEN,
         ANIMATION_PLAY,
-        ANIMATION_DONE
+        ANIMATION_DONE,
+        BATTLE_OVER;
     }
 
     ;
@@ -60,9 +64,10 @@ public class BattleGameState extends BasicGameState {
     private BattleRoundResult lastResult;
     private boolean lastAnimationComplete;
     private StateBag stateBag;
-    private List<ItemEffectString> playerEffects;
-    private List<ItemEffectString> monsterEffects;
+    private List<ItemLogMessage> playerEffects;
+    private List<ItemLogMessage> monsterEffects;
     private List<Entity> cardsInPlay;
+    private java.util.Map<Mob, Entity> mobEntities;
 
     public BattleGameState(AppState appState) {
         this.appState = appState;
@@ -100,11 +105,13 @@ public class BattleGameState extends BasicGameState {
         stateBag = new StateBag();
 
         // damage stacks
-        playerEffects = new ArrayList<ItemEffectString>();
-        monsterEffects = new ArrayList<ItemEffectString>();
+        playerEffects = new ArrayList<ItemLogMessage>();
+        monsterEffects = new ArrayList<ItemLogMessage>();
 
         // cards in play
         cardsInPlay = new ArrayList<Entity>();
+
+        mobEntities = new HashMap<Mob, Entity>();
 
         // grab the player
         Player player = appState.getPlayer();
@@ -133,6 +140,7 @@ public class BattleGameState extends BasicGameState {
             sprite.useSprite(1, 2);
             Entity mobEntity = createMobEntity(mapOffsetX, mapOffsetY, monster, sprite);
             entityManager.addEntity(mobEntity);
+            mobEntities.put(monster, mobEntity);
         }
 
         MobRenderComponent heroSprite = new MobRenderComponent(player, heroSprites);
@@ -150,36 +158,7 @@ public class BattleGameState extends BasicGameState {
 
         currentState = State.PLAYER_CHOOSE_MONSTER;
 
-        //TODO: remove this?
-        //createFaceDownItemDecks();
-
         Log.debug("BattleGameState-> complete.");
-    }
-
-    private void createFaceDownItemDecks() {
-        int deckOffset = 20;
-        int dx = 10;
-        int dy = 64;
-
-        int dx2 = 800 - (32 * 4) - 10;
-
-        for (int cnt = 0; cnt < 4; cnt++) {
-            Entity cardEntity = createBlankCard(dx, dy, cnt);
-            entityManager.addEntity(cardEntity);
-            dx += deckOffset;
-            Entity cardEntity2 = createBlankCard(dx2, dy, cnt);
-            entityManager.addEntity(cardEntity2);
-            dx2 -= deckOffset;
-        }
-
-    }
-
-    private Entity createBlankCard(int dx, int dy, int cnt) {
-        CardRenderComponent card = new CardRenderComponent("cardrender" + cnt);
-        Entity cardEntity = new Entity("card" + cnt)
-                .addComponent(card)
-                .setPosition(new Vector2f(dx, dy));
-        return cardEntity;
     }
 
     private Entity createMobEntity(int mapOffsetX, int mapOffsetY, Mob mob, SpriteSheetRenderComponent sprite) {
@@ -247,7 +226,7 @@ public class BattleGameState extends BasicGameState {
 
         // render the player's stuff
         int effectY = 32 + 32 * scale + 42;
-        for (ItemEffectString effectStr : playerEffects) {
+        for (ItemLogMessage effectStr : playerEffects) {
             List<String> splitStr = maybeSplitString(effectStr.getString(), 200);
             for (String str : splitStr) {
                 font.drawString(5, effectY, str, effectStr.getColor());
@@ -257,7 +236,7 @@ public class BattleGameState extends BasicGameState {
 
         // render the monster's stuff
         int monEeffectY = 32 + 32 * scale + 42;
-        for (ItemEffectString effectStr : monsterEffects) {
+        for (ItemLogMessage effectStr : monsterEffects) {
             List<String> splitStr = maybeSplitString(effectStr.getString(), 208);
             for (String str : splitStr) {
                 font.drawString((x + TILE_WIDTH * 3) + 5, monEeffectY, str, effectStr.getColor());
@@ -306,12 +285,36 @@ public class BattleGameState extends BasicGameState {
                 break;
             case ANIMATION_DONE:
                 Log.debug("ANIMATION_DONE");
+
+                List<Mob> deadMobs = new ArrayList<Mob>();
+                // remove any monsters that were killed during combat
+                for (Mob monster : mobEntities.keySet()) {
+                    if (monster.isDead()) {
+                        deadMobs.add(monster);
+                    }
+                }
+
+                for (Mob monster : deadMobs) {
+                    Entity mobEntity = mobEntities.remove(monster);
+                    entityManager.removeEntity(mobEntity);
+                    // remove it from the map too
+                    appState.getMap().removeMob(monster);
+                }
+
+                if (battle.allEnemiesDead()) {
+                    currentState = State.BATTLE_OVER;
+                }
+
                 currentState = State.PLAYER_CHOOSE_MONSTER;
+
+            case BATTLE_OVER:
+
         }
     }
 
     private void handleMonsterChosen() {
         Log.debug("MONSTER_CHOSEN");
+
         Player player = appState.getPlayer();
         Map map = appState.getMap();
         int monsterX = player.getMapX() + attackX;
@@ -325,6 +328,7 @@ public class BattleGameState extends BasicGameState {
             replayState = ReplayState.CREATE_PLAYER_CARD;
             // clear out all of the cards in play
             clearCardsInPlay();
+            greyOutItemMessages();
             currentState = State.ANIMATION_PLAY;
         } else {
             Log.debug("Monster was null or map was out of bounds, resetting state");
@@ -332,8 +336,16 @@ public class BattleGameState extends BasicGameState {
         }
     }
 
-    private void clearCardsInPlay() {
+    private void greyOutItemMessages() {
+        for (ItemLogMessage str : playerEffects) {
+            str.setColor(Color.darkGray);
+        }
+        for (ItemLogMessage str : monsterEffects) {
+            str.setColor(Color.darkGray);
+        }
+    }
 
+    private void clearCardsInPlay() {
         // remove them all from the entity manager so they stop
         // rendering
         for (Entity entity : cardsInPlay) {
@@ -362,6 +374,9 @@ public class BattleGameState extends BasicGameState {
                 for (ItemEffectResult effectResult : result.get()) {
                     playerEffects.add(0, createDesc(effectResult));
                 }
+
+                playerEffects.add(0, createItemUsedString(result));
+
                 changeReplayState(ReplayState.CREATE_MONSTER_CARD);
                 break;
 
@@ -383,20 +398,27 @@ public class BattleGameState extends BasicGameState {
         }
     }
 
-    private ItemEffectString createDesc(ItemEffectResult effectResult) {
-        String mobName = effectResult.getEffectedMob().name();
-        String s0 = mobName + "'s";
-        if (mobName.endsWith("s")) {
-            s0 = mobName + "'";
-        }
-        String s1 = mobName;
+    private ItemLogMessage createItemUsedString(ItemUsageResult result) {
+        String string = result.mob().name() + " uses " + result.item().name();
+        return new ItemLogMessage(string, Color.white);
+    }
+
+    private ItemLogMessage createDesc(ItemEffectResult effectResult) {
+        String s0 = effectResult.getEffectedMob().possessiveName();
+        String s1 = effectResult.getEffectedMob().name();
         String s2 = effectResult.getDelta().toString();
         String string = MessageFormat.format(effectResult.getDesc(), new Object[]{s0, s1, s2});
-        ItemEffectString str = new ItemEffectString(string, determineColor(effectResult));
+        ItemLogMessage str = new ItemLogMessage(string, determineColor(effectResult));
         return str;
     }
 
     private Color determineColor(ItemEffectResult effectResult) {
+        if (effectResult.getEffect() instanceof Damage) {
+            return Color.red;
+        }
+        if (effectResult.getEffect() instanceof Buff) {
+            return Color.green;
+        }
         return Color.white;
     }
 
@@ -479,11 +501,11 @@ public class BattleGameState extends BasicGameState {
         }
     }
 
-    private class ItemEffectString {
+    private class ItemLogMessage {
         private String string;
         private Color color;
 
-        private ItemEffectString(String string, Color color) {
+        private ItemLogMessage(String string, Color color) {
             this.string = string;
             this.color = color;
         }
@@ -494,6 +516,10 @@ public class BattleGameState extends BasicGameState {
 
         public Color getColor() {
             return color;
+        }
+
+        public void setColor(Color color) {
+            this.color = color;
         }
     }
 

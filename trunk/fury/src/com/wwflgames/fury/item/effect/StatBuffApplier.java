@@ -17,6 +17,6 @@ public class StatBuffApplier extends AbstractBuffApplier {
         applyTo.modifyBattleStatValue(buff.getStat(), buff.getAmount());
 
         String armorDesc = "{0} armor is increased by {2}";
-        bag.add(new ItemEffectResult(armorDesc, Stat.ARMOR, buff.getAmount(), applyTo));
+        bag.add(new ItemEffectResult(armorDesc, Stat.ARMOR, buff.getAmount(), applyTo, effect));
     }
 }

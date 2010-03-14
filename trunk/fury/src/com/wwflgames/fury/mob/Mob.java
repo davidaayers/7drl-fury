@@ -88,6 +88,14 @@ public class Mob {
         return name;
     }
 
+    public String possessiveName() {
+        String possessiveName = name + "'";
+        if (!name.endsWith("s")) {
+            possessiveName += "s";
+        }
+        return possessiveName;
+    }
+
     public Tile getCurrentMapTile() {
         return currentMapTile;
     }
