@@ -25,6 +25,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import java.awt.Font;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,10 +35,8 @@ public class BattleGameState extends BasicGameState {
         MONSTER_CHOSEN,
         ANIMATION_PLAY,
         ANIMATION_DONE,
-        BATTLE_OVER;
+        BATTLE_OVER
     }
-
-    ;
 
     enum ReplayState {
         CREATE_PLAYER_CARD,
@@ -46,8 +45,6 @@ public class BattleGameState extends BasicGameState {
         SHOW_MONSTER_DAMAGE,
         WAIT
     }
-
-    ;
 
     private GameContainer container;
     private StateBasedGame game;
@@ -174,12 +171,10 @@ public class BattleGameState extends BasicGameState {
                 .setScreenOffset(208, 32)
                 .setMob(mob);
 
-        Entity mobEntity = new Entity(mob.name() + "entity")
+        return new Entity(mob.name() + "entity")
                 .setScale(4)
                 .addComponent(sprite)
                 .addComponent(mobLocationAction);
-
-        return mobEntity;
     }
 
     // package private for testing
@@ -230,24 +225,10 @@ public class BattleGameState extends BasicGameState {
         font.drawString(x / 2 - width / 2, y, player, Color.white);
 
         // render the player's stuff
-        int effectY = 32 + 32 * scale + 42;
-        for (ItemLogMessage effectStr : playerEffects) {
-            List<String> splitStr = maybeSplitString(effectStr.getString(), 180);
-            for (String str : splitStr) {
-                font.drawString(5, effectY, str, effectStr.getColor());
-                effectY += 14;
-            }
-        }
+        drawBattleText(5, playerEffects);
 
         // render the monster's stuff
-        int monEeffectY = 32 + 32 * scale + 42;
-        for (ItemLogMessage effectStr : monsterEffects) {
-            List<String> splitStr = maybeSplitString(effectStr.getString(), 208);
-            for (String str : splitStr) {
-                font.drawString((x + TILE_WIDTH * 3) + 5, monEeffectY, str, effectStr.getColor());
-                monEeffectY += 14;
-            }
-        }
+        drawBattleText((x + TILE_WIDTH * 3) + 5, monsterEffects);
 
         if (currentMonster != null) {
             String monster = currentMonster.name();
@@ -259,6 +240,19 @@ public class BattleGameState extends BasicGameState {
 
         entityManager.render(g);
 
+    }
+
+    private void drawBattleText(int effectX, List<ItemLogMessage> effects) {
+        if (effects.isEmpty()) {
+            return;
+        }
+        int effectY = 32 + 32 * 4 + 42;
+        int max = effects.size() > 25 ? 25 : effects.size();
+        for (int idx = 0; idx < max; idx++) {
+            ItemLogMessage effectStr = effects.get(idx);
+            font.drawString(effectX, effectY, effectStr.getString(), effectStr.getColor());
+            effectY += 14;
+        }
     }
 
     private List<String> maybeSplitString(String effectStr, int maxWidth) {
@@ -291,6 +285,7 @@ public class BattleGameState extends BasicGameState {
                 handleMonsterChosen();
                 monstersToShowCardsFor.clear();
                 monstersToShowCardsFor.addAll(battle.getEnemies());
+                entityManager.printDebug();
                 break;
             case ANIMATION_PLAY:
                 handleAnimation(delta);
@@ -386,7 +381,6 @@ public class BattleGameState extends BasicGameState {
                     }
                 };
                 createCard(playerCard, playerEntity, lastResult.getItemUsageResultFor(player).item(), 42, 64, notifier);
-                //playerCard.addComponent(new DisplayForTimeAction("disp3sec", 3000));
                 entityManager.addEntity(playerCard);
                 cardsInPlay.add(playerCard);
                 changeReplayState(ReplayState.WAIT);
@@ -397,10 +391,9 @@ public class BattleGameState extends BasicGameState {
                 // add the player's effects to the damage stack
                 ItemUsageResult result = lastResult.getItemUsageResultFor(appState.getPlayer());
                 for (ItemEffectResult effectResult : result.get()) {
-                    playerEffects.add(0, createDesc(effectResult));
+                    addDescToEffects(playerEffects, effectResult);
                 }
-
-                playerEffects.add(0, createItemUsedString(result));
+                addStringToEffects(0, playerEffects, createItemUsedString(result), Color.white);
 
                 changeReplayState(ReplayState.CREATE_MONSTER_CARD);
                 break;
@@ -428,12 +421,10 @@ public class BattleGameState extends BasicGameState {
                 };
                 createCard(monsterCard, monsterEntity,
                         lastResult.getItemUsageResultFor(currentMonster).item(), 600 + monsterCardOffset, 64, monsterNotifier);
-                //playerCard.addComponent(new DisplayForTimeAction("disp3sec", 3000));
                 entityManager.addEntity(monsterCard);
                 cardsInPlay.add(monsterCard);
                 changeReplayState(ReplayState.WAIT);
                 monsterCardOffset += 10;
-                //changeReplayState(ReplayState.SHOW_MONSTER_DAMAGE);
                 break;
 
             case SHOW_MONSTER_DAMAGE:
@@ -441,44 +432,49 @@ public class BattleGameState extends BasicGameState {
 
                 ItemUsageResult monsterResult = lastResult.getItemUsageResultFor(currentMonster);
                 for (ItemEffectResult effectResult : monsterResult.get()) {
-                    monsterEffects.add(0, createDesc(effectResult));
+                    addDescToEffects(monsterEffects, effectResult);
                 }
-                monsterEffects.add(0, createItemUsedString(monsterResult));
+                addStringToEffects(0, monsterEffects, createItemUsedString(monsterResult), Color.white);
 
-//                for (Monster monster : lastResult.getMonsters()) {
-//                    ItemUsageResult monsterResult = lastResult.getItemUsageResultFor(monster);
-//                    for (ItemEffectResult effectResult : monsterResult.get()) {
-//                        monsterEffects.add(0, createDesc(effectResult));
-//                    }
-//                    monsterEffects.add(0, createItemUsedString(monsterResult));
-//                }
                 changeReplayState(ReplayState.CREATE_MONSTER_CARD);
-                //currentState = State.ANIMATION_DONE;
                 break;
 
             case WAIT:
                 // do nothing
-                Log.debug("Waiting...");
                 break;
         }
     }
 
-    private ItemLogMessage createItemUsedString(ItemUsageResult result) {
-        String string = result.mob().name() + " uses " + result.item().name();
-        return new ItemLogMessage(string, Color.white);
+
+    private String createItemUsedString(ItemUsageResult result) {
+        return result.mob().name() + " uses " + result.item().name();
     }
 
-    private ItemLogMessage createDesc(ItemEffectResult effectResult) {
+    private String createDescString(ItemEffectResult effectResult) {
         String s0 = effectResult.getEffectedMob().possessiveName();
         String s1 = effectResult.getEffectedMob().name();
         String s2 = "";
         if (effectResult.getDelta() != null) {
             s2 = effectResult.getDelta().toString();
         }
-        String string = MessageFormat.format(effectResult.getDesc(), new Object[]{s0, s1, s2});
-        ItemLogMessage str = new ItemLogMessage(string, determineColor(effectResult));
-        return str;
+        return MessageFormat.format(effectResult.getDesc(), s0, s1, s2);
     }
+
+
+    private void addDescToEffects(List<ItemLogMessage> effects, ItemEffectResult result) {
+        String desc = createDescString(result);
+        Color color = determineColor(result);
+        addStringToEffects(0, effects, desc, color);
+    }
+
+    private void addStringToEffects(int pos, List<ItemLogMessage> effects, String string, Color color) {
+        List<String> parts = maybeSplitString(string, 180);
+        Collections.reverse(parts);
+        for (String part : parts) {
+            effects.add(pos, new ItemLogMessage(part, color));
+        }
+    }
+
 
     private Color determineColor(ItemEffectResult effectResult) {
         if (effectResult.getEffect() instanceof Damage) {

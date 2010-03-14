@@ -1,5 +1,6 @@
 package com.wwflgames.fury.entity;
 
+import com.wwflgames.fury.util.Log;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
@@ -102,6 +103,14 @@ public class EntityManager {
     public void render(Graphics gr) {
         for (Entity entity : entities) {
             entity.render(gr);
+        }
+    }
+
+    public void printDebug() {
+        // print a list of all of our entities
+        Log.debug("Total of " + entities.size() + " entities");
+        for (Entity entity : entities) {
+            Log.debug("Entity: " + entity.getId());
         }
     }
 
