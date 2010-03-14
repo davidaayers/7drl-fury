@@ -1,11 +1,11 @@
 package com.wwflgames.fury.entity;
 
-public class DisplayForTimeComponent extends Component {
+public class DisplayForTimeAction extends Action {
 
     private int time;
     private int counter;
 
-    public DisplayForTimeComponent(String id, int time) {
+    public DisplayForTimeAction(String id, int time) {
         super(id);
         this.time = time;
         counter = 0;

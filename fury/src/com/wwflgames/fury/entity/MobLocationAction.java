@@ -4,7 +4,7 @@ import com.wwflgames.fury.map.Tile;
 import com.wwflgames.fury.mob.Mob;
 import org.newdawn.slick.geom.Vector2f;
 
-public class MobLocationComponent extends Component {
+public class MobLocationAction extends Action {
 
     private Mob mob;
     private int mapOffsetX;
@@ -12,22 +12,22 @@ public class MobLocationComponent extends Component {
     private int screenOffsetX;
     private int screenOffsetY;
 
-    public MobLocationComponent(String id) {
+    public MobLocationAction(String id) {
         super(id);
     }
 
-    public MobLocationComponent setMob(Mob mob) {
+    public MobLocationAction setMob(Mob mob) {
         this.mob = mob;
         return this;
     }
 
-    public MobLocationComponent setMapOffset(int mapOffsetX, int mapOffsetY) {
+    public MobLocationAction setMapOffset(int mapOffsetX, int mapOffsetY) {
         this.mapOffsetX = mapOffsetX;
         this.mapOffsetY = mapOffsetY;
         return this;
     }
 
-    public MobLocationComponent setScreenOffset(int screenOffsetX, int screenOffsetY) {
+    public MobLocationAction setScreenOffset(int screenOffsetX, int screenOffsetY) {
         this.screenOffsetX = screenOffsetX;
         this.screenOffsetY = screenOffsetY;
         return this;

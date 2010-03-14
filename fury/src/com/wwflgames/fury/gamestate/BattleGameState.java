@@ -163,7 +163,7 @@ public class BattleGameState extends BasicGameState {
     }
 
     private Entity createMobEntity(int mapOffsetX, int mapOffsetY, Mob mob, SpriteSheetRenderer sprite) {
-        MobLocationComponent mobLocationComponent = new MobLocationComponent(mob.name() + "location")
+        MobLocationAction mobLocationAction = new MobLocationAction(mob.name() + "location")
                 .setMapOffset(mapOffsetX, mapOffsetY)
                 .setScreenOffset(208, 32)
                 .setMob(mob);
@@ -171,7 +171,7 @@ public class BattleGameState extends BasicGameState {
         Entity mobEntity = new Entity(mob.name() + "entity")
                 .setScale(4)
                 .addComponent(sprite)
-                .addComponent(mobLocationComponent);
+                .addComponent(mobLocationAction);
 
         return mobEntity;
     }
@@ -362,7 +362,7 @@ public class BattleGameState extends BasicGameState {
             case CREATE_PLAYER_CARD:
                 Log.debug("CREATE_PLAYER_CARD");
                 Entity playerCard = createCard(lastResult.getItemUsageResultFor(appState.getPlayer()).item(), 42, 64);
-                //playerCard.addComponent(new DisplayForTimeComponent("disp3sec", 3000));
+                //playerCard.addComponent(new DisplayForTimeAction("disp3sec", 3000));
                 entityManager.addEntity(playerCard);
                 cardsInPlay.add(playerCard);
                 changeReplayState(ReplayState.SHOW_PLAYER_DAMAGE);

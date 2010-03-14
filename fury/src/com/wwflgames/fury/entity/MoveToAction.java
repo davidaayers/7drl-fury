@@ -2,13 +2,13 @@ package com.wwflgames.fury.entity;
 
 import org.newdawn.slick.geom.Vector2f;
 
-public class MoveToComponent extends Component {
+public class MoveToAction extends Action {
 
     private float finalX;
     private float finalY;
     private float speed;
 
-    public MoveToComponent(String id, float finalX, float finalY, float speed) {
+    public MoveToAction(String id, float finalX, float finalY, float speed) {
         super(id);
         this.finalX = finalX;
         this.finalY = finalY;
@@ -23,8 +23,8 @@ public class MoveToComponent extends Component {
         float x = pos.x;
         float y = pos.y;
 
-        float newX = 0;
-        float newY = 0;
+        float newX;
+        float newY;
 
         boolean isLeft = x < finalX;
         boolean isDown = y < finalY;
@@ -57,9 +57,7 @@ public class MoveToComponent extends Component {
 
         // have we arrived?
         if (newX == finalX && newY == finalY) {
-
+            isActionComplete = true;
         }
-
-
     }
 }
