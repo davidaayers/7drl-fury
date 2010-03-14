@@ -6,6 +6,7 @@ import com.wwflgames.fury.entity.*;
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.effect.Buff;
 import com.wwflgames.fury.item.effect.Damage;
+import com.wwflgames.fury.item.effect.Death;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.map.Map;
 import com.wwflgames.fury.mob.Mob;
@@ -227,7 +228,7 @@ public class BattleGameState extends BasicGameState {
         // render the player's stuff
         int effectY = 32 + 32 * scale + 42;
         for (ItemLogMessage effectStr : playerEffects) {
-            List<String> splitStr = maybeSplitString(effectStr.getString(), 200);
+            List<String> splitStr = maybeSplitString(effectStr.getString(), 180);
             for (String str : splitStr) {
                 font.drawString(5, effectY, str, effectStr.getColor());
                 effectY += 14;
@@ -392,6 +393,7 @@ public class BattleGameState extends BasicGameState {
                     for (ItemEffectResult effectResult : monsterResult.get()) {
                         monsterEffects.add(0, createDesc(effectResult));
                     }
+                    monsterEffects.add(0, createItemUsedString(monsterResult));
                 }
                 currentState = State.ANIMATION_DONE;
                 break;
@@ -406,7 +408,10 @@ public class BattleGameState extends BasicGameState {
     private ItemLogMessage createDesc(ItemEffectResult effectResult) {
         String s0 = effectResult.getEffectedMob().possessiveName();
         String s1 = effectResult.getEffectedMob().name();
-        String s2 = effectResult.getDelta().toString();
+        String s2 = "";
+        if (effectResult.getDelta() != null) {
+            s2 = effectResult.getDelta().toString();
+        }
         String string = MessageFormat.format(effectResult.getDesc(), new Object[]{s0, s1, s2});
         ItemLogMessage str = new ItemLogMessage(string, determineColor(effectResult));
         return str;
@@ -418,6 +423,9 @@ public class BattleGameState extends BasicGameState {
         }
         if (effectResult.getEffect() instanceof Buff) {
             return Color.green;
+        }
+        if (effectResult.getEffect() instanceof Death) {
+            return Color.yellow;
         }
         return Color.white;
     }

@@ -11,6 +11,12 @@ public class ItemEffectResult {
     private Mob effectedMob;
     private ItemEffect effect;
 
+    public ItemEffectResult(String desc, Mob effectedMob, ItemEffect effect) {
+        this.desc = desc;
+        this.effectedMob = effectedMob;
+        this.effect = effect;
+    }
+
     public ItemEffectResult(String desc, Stat stat, Integer delta, Mob effectedMob, ItemEffect effect) {
         this.desc = desc;
         this.stat = stat;
