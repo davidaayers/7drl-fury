@@ -8,6 +8,7 @@ import com.wwflgames.fury.item.effect.Buff;
 import com.wwflgames.fury.item.effect.Damage;
 import com.wwflgames.fury.item.effect.Death;
 import com.wwflgames.fury.main.AppState;
+import com.wwflgames.fury.map.Direction;
 import com.wwflgames.fury.map.Map;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
@@ -59,7 +60,6 @@ public class BattleGameState extends BasicGameState {
     private State currentState;
     private ReplayState replayState;
     private BattleRoundResult lastResult;
-    private boolean lastAnimationComplete;
     private StateBag stateBag;
     private List<ItemLogMessage> playerEffects;
     private List<ItemLogMessage> monsterEffects;
@@ -145,7 +145,7 @@ public class BattleGameState extends BasicGameState {
             mobEntities.put(monster, mobEntity);
         }
 
-        SpriteSheet heroSpriteSheet = spriteSheetCache.getSpriteSheet("warrior_male.png");
+        SpriteSheet heroSpriteSheet = spriteSheetCache.getSpriteSheet(player.getProfession().getSpriteSheet());
         MobRenderer heroSprite = new MobRenderer(player, heroSpriteSheet);
 
         heroSprite.useSprite(1, 2);
@@ -538,59 +538,12 @@ public class BattleGameState extends BasicGameState {
         }
 
         Log.debug("key = " + key);
-        // 7 key - NW
-        if (key == 71) {
-            attackX = -1;
-            attackY = -1;
-            currentState = State.MONSTER_CHOSEN;
-        }
 
-        // 8 key - N
-        if (key == 72) {
-            attackX = 0;
-            attackY = -1;
-            currentState = State.MONSTER_CHOSEN;
-        }
+        Direction d = Direction.forKey(key);
 
-        // 9 key - NE
-        if (key == 73) {
-            attackX = 1;
-            attackY = -1;
-            currentState = State.MONSTER_CHOSEN;
-        }
-
-        // 4 key - W
-        if (key == 75) {
-            attackX = -1;
-            attackY = 0;
-            currentState = State.MONSTER_CHOSEN;
-        }
-
-        // 6 key - E
-        if (key == 77) {
-            attackX = 1;
-            attackY = 0;
-            currentState = State.MONSTER_CHOSEN;
-        }
-
-        // 1 key - SW
-        if (key == 79) {
-            attackX = -1;
-            attackY = 1;
-            currentState = State.MONSTER_CHOSEN;
-        }
-
-        // 2 key - S
-        if (key == 80) {
-            attackX = 0;
-            attackY = 1;
-            currentState = State.MONSTER_CHOSEN;
-        }
-
-        // 3 key - SE
-        if (key == 81) {
-            attackX = 1;
-            attackY = 1;
+        if (d != null) {
+            attackX = d.getDx();
+            attackY = d.getDy();
             currentState = State.MONSTER_CHOSEN;
         }
     }
