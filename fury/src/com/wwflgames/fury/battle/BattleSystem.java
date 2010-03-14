@@ -81,13 +81,10 @@ public class BattleSystem {
         result.addItemUsedBy(attacker, item);
 
         Log.debug("Item chosen from deck is " + item.name());
-        ItemUsageResult usedByBag = item.usedBy(attacker);
-        ItemUsageResult usedAgainstBag = item.usedAgainst(defender);
-        //TODO: this isn't right, need to figure this out. defender and attacker are mixed
-        //up in the battle results
-        result.addEffectList(defender, usedByBag);
-        result.addEffectList(defender, usedAgainstBag);
-        Log.debug("Used against list = " + usedAgainstBag.get());
+
+        ItemUsageResult itemUsage = new ItemUsageResult(item, attacker);
+        item.usedBy(attacker, itemUsage).usedAgainst(defender, itemUsage);
+
     }
 
     private void removeDeadMonstersFromBattle() {

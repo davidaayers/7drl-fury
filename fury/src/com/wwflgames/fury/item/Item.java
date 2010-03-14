@@ -6,7 +6,7 @@ import com.wwflgames.fury.mob.Mob;
 public interface Item {
     String name();
 
-    ItemUsageResult usedBy(Mob mob);
+    Item usedBy(Mob mob, ItemUsageResult result);
 
-    ItemUsageResult usedAgainst(Mob mob);
+    Item usedAgainst(Mob mob, ItemUsageResult result);
 }
