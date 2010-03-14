@@ -359,7 +359,7 @@ public class BattleGameState extends BasicGameState {
             case SHOW_PLAYER_DAMAGE:
                 Log.debug("SHOW_PLAYER_DAMAGE");
                 // add the player's effects to the damage stack
-                for (BattleEffectBag bag : lastResult.playerItemEffectList()) {
+                for (ItemUsageResult bag : lastResult.playerItemEffectList()) {
                     for (ItemEffect effect : bag.get()) {
                         playerEffects.add(0, createDesc(bag, effect));
                     }
@@ -375,7 +375,7 @@ public class BattleGameState extends BasicGameState {
 
             case SHOW_MONSTER_DAMAGE:
                 Log.debug("SHOW_MONSTER_DAMAGE");
-                for (BattleEffectBag bag : lastResult.monsterItemEffectList()) {
+                for (ItemUsageResult bag : lastResult.monsterItemEffectList()) {
                     for (ItemEffect effect : bag.get()) {
                         monsterEffects.add(0, createDesc(bag, effect));
                     }
@@ -385,7 +385,7 @@ public class BattleGameState extends BasicGameState {
         }
     }
 
-    private String createDesc(BattleEffectBag bag, ItemEffect effect) {
+    private String createDesc(ItemUsageResult bag, ItemEffect effect) {
         String s0 = bag.mob().name() + "'s";
         String s1 = bag.mob().name();
         String s2 = effect.getDelta().toString();
