@@ -13,6 +13,7 @@ import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.monster.MonsterFactory;
 import com.wwflgames.fury.player.Player;
+import com.wwflgames.fury.player.ProfessionFactory;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
@@ -32,6 +33,7 @@ public class Fury extends StateBasedGame {
     private AppStateImpl appState;
     private SpriteSheetCache spriteSheetCache;
     private MonsterFactory monsterFactory;
+    private ProfessionFactory professionFactory;
 
     public Fury() {
         super("Fury - 7DRL");
@@ -82,6 +84,7 @@ public class Fury extends StateBasedGame {
         // this is cheesy, but this is the only place we can hook into the init of game
         // and do anything.
         initMonsterFactory();
+        initPlayerClassFactory();
         initSpriteSheetCache();
         // TEMP
         initMonsters();
@@ -90,6 +93,10 @@ public class Fury extends StateBasedGame {
         //addState(new TitleGameState());
         addState(createDungeonState());
         addState(createBattleState());
+    }
+
+    private void initPlayerClassFactory() throws SlickException {
+        professionFactory = new ProfessionFactory();
     }
 
     private void initMonsters() {
@@ -119,7 +126,9 @@ public class Fury extends StateBasedGame {
         for (String spriteSheetName : monsterFactory.getAllSpriteSheetNames()) {
             spriteSheetCache.loadSprite(spriteSheetName);
         }
-        spriteSheetCache.loadSprite("warrior_male.png");
+        for (String spriteSheetName : professionFactory.getAllSpriteSheetNames()) {
+            spriteSheetCache.loadSprite(spriteSheetName);
+        }
     }
 
     private GameState createDungeonState() {
