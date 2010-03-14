@@ -15,6 +15,7 @@ public class AppStateImpl implements AppState {
         return player;
     }
 
+    @Override
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -35,6 +36,7 @@ public class AppStateImpl implements AppState {
     }
 
 
+    @Override
     public void setMap(Map map) {
         this.map = map;
     }

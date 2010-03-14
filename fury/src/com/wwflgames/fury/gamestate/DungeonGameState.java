@@ -59,7 +59,7 @@ public class DungeonGameState extends BasicGameState {
                 .setPosition(new Vector2f(0, 0))
                 .setScale(1)
                 .addComponent(new SpriteSheetRenderer("playerRender",
-                        spriteSheetCache.getSpriteSheet("warrior_male.png")).useSprite(1, 2))
+                        spriteSheetCache.getSpriteSheet(appState.getPlayer().getProfession().getSpriteSheet())).useSprite(1, 2))
                 .addComponent(new MobMapPositionAction("mapPosition", appState.getPlayer()));
 
         entityManager.addEntity(player);

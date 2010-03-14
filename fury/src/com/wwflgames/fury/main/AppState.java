@@ -11,4 +11,8 @@ public interface AppState {
     boolean doesPlayerHaveInitiative();
 
     void setPlayerInitiative(boolean flag);
+
+    void setPlayer(Player player);
+
+    void setMap(Map map);
 }

@@ -2,6 +2,13 @@ package com.wwflgames.fury.gamestate;
 
 import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.entity.SpriteSheetCache;
+import com.wwflgames.fury.item.Item;
+import com.wwflgames.fury.item.ItemDeck;
+import com.wwflgames.fury.item.ItemFactory;
+import com.wwflgames.fury.item.effect.*;
+import com.wwflgames.fury.main.AppState;
+import com.wwflgames.fury.mob.Stat;
+import com.wwflgames.fury.player.Player;
 import com.wwflgames.fury.player.Profession;
 import com.wwflgames.fury.player.ProfessionFactory;
 import com.wwflgames.fury.util.Log;
@@ -19,16 +26,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TitleGameState extends BasicGameState {
+
+    enum State {
+        WAITING_FOR_PROFESSION_CHOICE,
+        START_GENERATING_MAP,
+        GENERATING_MAP,
+        GAME_START
+    }
+
+
     private GameContainer gameContainer;
     private StateBasedGame stateBasedGame;
     private Image titleImage;
     private ProfessionFactory professionFactory;
     private SpriteSheetCache spriteSheetCache;
     private List<MouseOverArea> professionChoices = new ArrayList<MouseOverArea>();
+    private State currentState;
+    private AppState appState;
 
-    public TitleGameState(ProfessionFactory professionFactory, SpriteSheetCache spriteSheetCache) {
+    public TitleGameState(ProfessionFactory professionFactory, SpriteSheetCache spriteSheetCache, AppState appState) {
         this.professionFactory = professionFactory;
         this.spriteSheetCache = spriteSheetCache;
+        this.appState = appState;
     }
 
     @Override
@@ -87,11 +106,36 @@ public class TitleGameState extends BasicGameState {
             professionChoices.add(moa);
             x += pixelsPerProfession;
         }
+    }
 
+    @Override
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+        currentState = State.WAITING_FOR_PROFESSION_CHOICE;
     }
 
     private void professionChosen(Profession profession) {
         Log.debug("Profession chosen: " + profession);
+        currentState = State.START_GENERATING_MAP;
+        Player player = new Player(profession.getName(), profession);
+        player.setStatValue(Stat.HEALTH, 40);
+        player.setStatValue(Stat.ARMOR, 5);
+        // put the player in the upper right hand corner of the map
+        appState.getMap().addMob(player, 1, 1);
+
+        ItemFactory factory = new ItemFactory(new EffectApplierFactory());
+
+        //player.setDeck(createDeck(8));
+        Damage crushDamage = new Damage(DamageType.MELEE_CRUSH, 8);
+        Item mace = factory.createItemWithUsedAgainstEffects("Mace of crushing", new ItemEffect[]{crushDamage});
+        ItemDeck deck = new ItemDeck();
+        deck.addItem(mace);
+        player.setDeck(deck);
+
+        StatBuff buff = new StatBuff(Stat.ARMOR, 4);
+        Item shield = factory.createItemWithUsedByEffects("Shield of Protection", new ItemEffect[]{buff});
+        player.getDeck().addItem(shield);
+
+        appState.setPlayer(player);
     }
 
     @Override
@@ -104,16 +148,41 @@ public class TitleGameState extends BasicGameState {
         for (MouseOverArea moa : professionChoices) {
             moa.render(gameContainer, graphics);
         }
+
+        if (currentState == State.GENERATING_MAP || currentState == State.START_GENERATING_MAP) {
+            TextUtil.centerText(gameContainer, graphics, "Generating dungeon...", 520);
+        }
+
     }
 
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
+        switch (currentState) {
+            case WAITING_FOR_PROFESSION_CHOICE:
 
+                break;
+
+            case START_GENERATING_MAP:
+                currentState = State.GENERATING_MAP;
+                break;
+
+            case GENERATING_MAP:
+                // generate the Dungeon
+                // simulate
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                currentState = State.GAME_START;
+
+                break;
+
+            case GAME_START:
+                stateBasedGame.enterState(Fury.DUNGEON_GAME_STATE, new FadeOutTransition(Color.black),
+                        new FadeInTransition(Color.black));
+                break;
+        }
     }
 
-    @Override
-    public void keyPressed(int key, char c) {
-        stateBasedGame.enterState(Fury.DUNGEON_GAME_STATE, new FadeOutTransition(Color.black),
-                new FadeInTransition(Color.black));
-    }
 }
