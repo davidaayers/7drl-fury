@@ -8,6 +8,7 @@ public class AppStateImpl implements AppState {
 
     private Player player;
     private Map map;
+    private boolean playerInitiative;
 
     @Override
     public Player getPlayer() {
@@ -22,6 +23,17 @@ public class AppStateImpl implements AppState {
     public Map getMap() {
         return map;
     }
+
+    @Override
+    public boolean doesPlayerHaveInitiative() {
+        return playerInitiative;
+    }
+
+    @Override
+    public void setPlayerInitiative(boolean flag) {
+        playerInitiative = flag;
+    }
+
 
     public void setMap(Map map) {
         this.map = map;

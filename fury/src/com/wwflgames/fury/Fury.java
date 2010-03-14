@@ -1,5 +1,6 @@
 package com.wwflgames.fury;
 
+import com.wwflgames.fury.entity.SpriteSheetCache;
 import com.wwflgames.fury.gamestate.BattleGameState;
 import com.wwflgames.fury.gamestate.DungeonGameState;
 import com.wwflgames.fury.item.Item;
@@ -22,12 +23,13 @@ import org.newdawn.slick.util.ResourceLoader;
 public class Fury extends StateBasedGame {
 
     public static final int TITLE_STATE = 1;
-    public static final int GAME_STATE = 2;
+    public static final int DUNGEON_GAME_STATE = 2;
     public static final int BATTLE_STATE = 3;
 
     private static AppGameContainer container;
 
     private AppStateImpl appState;
+    private SpriteSheetCache spriteSheetCache;
 
     public Fury() {
         super("Fury - 7DRL");
@@ -41,20 +43,20 @@ public class Fury extends StateBasedGame {
         appState.setMap(new FixedMapCreator().createMap());
 
         // an an enemy
-        Monster monster = new Monster("Scary Skeleton");
+        Monster monster = new Monster("Scary Skeleton", "horned_skelly_old.png");
         monster.setStatValue(Stat.HEALTH, 10);
         monster.setDeck(createDeck(1));
         appState.getMap().addMob(monster, 2, 1);
 
-        Monster monster2 = new Monster("Slavering Skeleton");
+        Monster monster2 = new Monster("Slavering Skeleton", "horned_skelly_old.png");
         monster2.setStatValue(Stat.HEALTH, 10);
         monster2.setDeck(createDeck(1));
         appState.getMap().addMob(monster2, 2, 2);
-//
-//        Monster monster3 = new Monster("Slavering Skeleton");
-//        monster3.setStatValue(Stat.HEALTH,10);
-//        monster3.setDeck(createDeck());
-//        appState.getMap().addMob(monster3, 2, 2);
+
+        Monster monster3 = new Monster("Jane's Monster", "janes_monster.png");
+        monster3.setStatValue(Stat.HEALTH, 10);
+        monster3.setDeck(createDeck(3));
+        appState.getMap().addMob(monster3, 3, 3);
 
         //TODO: move player creation somewhere else, too
         appState.setPlayer(createPlayer());
@@ -74,7 +76,7 @@ public class Fury extends StateBasedGame {
         player.setStatValue(Stat.ARMOR, 5);
         // put the player in the upper right hand corner of the map
         appState.getMap().addMob(player, 1, 1);
-        player.setDeck(createDeck(2));
+        player.setDeck(createDeck(8));
 
         StatBuff buff = new StatBuff(Stat.ARMOR, 4);
         Item shield = factory().createItemWithUsedByEffects("Shield of Protection", new ItemEffect[]{buff});
@@ -90,17 +92,30 @@ public class Fury extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
+
+        // this is cheesy, but this is the only place we can hook into the init of game
+        // and do anything.
+        initSpriteSheetCache();
+
+
         //addState(new TitleGameState());
         addState(createDungeonState());
         addState(createBattleState());
     }
 
+    private void initSpriteSheetCache() throws SlickException {
+        spriteSheetCache = new SpriteSheetCache();
+        spriteSheetCache.loadSprite("horned_skelly_old.png");
+        spriteSheetCache.loadSprite("janes_monster.png");
+        spriteSheetCache.loadSprite("warrior.png");
+    }
+
     private GameState createDungeonState() {
-        return new DungeonGameState(appState);
+        return new DungeonGameState(appState, spriteSheetCache);
     }
 
     private BattleGameState createBattleState() {
-        return new BattleGameState(appState);
+        return new BattleGameState(appState, spriteSheetCache);
     }
 
     public static void main(String[] args) {

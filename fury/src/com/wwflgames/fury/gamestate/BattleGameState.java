@@ -52,6 +52,7 @@ public class BattleGameState extends BasicGameState {
     private SpriteSheet monsterSprites;
     private UnicodeFont font;
     private AppState appState;
+    private SpriteSheetCache spriteSheetCache;
     private Battle battle;
     private BattleSystem battleSystem;
     private EntityManager entityManager;
@@ -70,10 +71,12 @@ public class BattleGameState extends BasicGameState {
     private List<Mob> monstersToShowCardsFor = new ArrayList<Mob>();
     private Mob currentMonster;
     private int monsterCardOffset;
+    private boolean enterCalled = false;
 
 
-    public BattleGameState(AppState appState) {
+    public BattleGameState(AppState appState, SpriteSheetCache spriteSheetCache) {
         this.appState = appState;
+        this.spriteSheetCache = spriteSheetCache;
     }
 
     @Override
@@ -88,7 +91,7 @@ public class BattleGameState extends BasicGameState {
         this.game = game;
 
         heroSprites = new SpriteSheet("warrior.png", 24, 32);
-        monsterSprites = new SpriteSheet("horned_skelly.png", 24, 32);
+        monsterSprites = new SpriteSheet("horned_skelly_old.png", 24, 32);
 
         Font jFont = new Font("Verdana", Font.PLAIN, 12);
         font = new UnicodeFont(jFont);
@@ -162,6 +165,8 @@ public class BattleGameState extends BasicGameState {
 
         currentState = State.PLAYER_CHOOSE_MONSTER;
 
+        enterCalled = true;
+
         Log.debug("BattleGameState-> complete.");
     }
 
@@ -169,6 +174,7 @@ public class BattleGameState extends BasicGameState {
     public void leave(GameContainer container, StateBasedGame game) throws SlickException {
         Log.debug("BattleGameState-> leaving state");
         entityManager.clear();
+        enterCalled = false;
     }
 
 
@@ -206,6 +212,10 @@ public class BattleGameState extends BasicGameState {
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+
+        if (!enterCalled) {
+            return;
+        }
 
         g.setColor(Color.white);
         TextUtil.centerText(container, g, "Battle Screen", 0);
@@ -285,6 +295,11 @@ public class BattleGameState extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+
+        if (!enterCalled) {
+            return;
+        }
+
         entityManager.update(delta);
 
         switch (currentState) {
@@ -317,6 +332,7 @@ public class BattleGameState extends BasicGameState {
 
                 if (battle.allEnemiesDead()) {
                     currentState = State.BATTLE_OVER;
+                    break;
                 }
 
                 // reset monster card offset
@@ -324,8 +340,11 @@ public class BattleGameState extends BasicGameState {
 
 
                 currentState = State.PLAYER_CHOOSE_MONSTER;
+                break;
 
             case BATTLE_OVER:
+                // go back to dungeon screen
+                game.enterState(Fury.DUNGEON_GAME_STATE);
 
         }
     }

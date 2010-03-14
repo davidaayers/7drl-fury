@@ -3,7 +3,15 @@ package com.wwflgames.fury.monster;
 import com.wwflgames.fury.mob.Mob;
 
 public class Monster extends Mob {
-    public Monster(String name) {
+
+    private String spriteSheet;
+
+    public Monster(String name, String spriteSheet) {
         super(name);
+        this.spriteSheet = spriteSheet;
+    }
+
+    public String getSpriteSheet() {
+        return spriteSheet;
     }
 }

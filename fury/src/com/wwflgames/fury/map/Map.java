@@ -60,13 +60,13 @@ public class Map {
         mob.setCurrentMapTile(tile);
         if (mob instanceof Monster) {
             monsterList.add((Monster) mob);
-            ;
         }
     }
 
     public void removeMob(Mob mob) {
         Tile tile = mob.getCurrentMapTile();
         tile.setMob(null);
+        mob.setCurrentMapTile(null);
         if (mob instanceof Monster) {
             monsterList.remove(mob);
         }
