@@ -22,6 +22,11 @@ public class ItemUsageResult {
         return this;
     }
 
+    public ItemUsageResult addAtFront(ItemEffectResult effectResult) {
+        effectResults.add(0, effectResult);
+        return this;
+    }
+
     public List<ItemEffectResult> get() {
         return effectResults;
     }
