@@ -8,9 +8,9 @@ import java.util.Map;
 
 public class Mob {
 
-    private Map<Stat, Integer> stats = new HashMap<Stat, Integer>();
-    private Map<Stat, Integer> battleStats;
-    private ItemDeck deck;
+    protected Map<Stat, Integer> stats = new HashMap<Stat, Integer>();
+    protected Map<Stat, Integer> battleStats;
+    protected ItemDeck deck;
     private String name;
     private Tile currentMapTile;
     private Integer mapX;

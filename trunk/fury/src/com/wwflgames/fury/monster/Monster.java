@@ -1,5 +1,6 @@
 package com.wwflgames.fury.monster;
 
+import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.mob.Mob;
 
 public class Monster extends Mob {
@@ -10,6 +11,13 @@ public class Monster extends Mob {
         super(name);
         this.spriteSheet = spriteSheet;
     }
+
+    public Monster(Monster other) {
+        this(other.name(), other.getSpriteSheet());
+        setDeck(new ItemDeck(other.getDeck()));
+        this.stats.putAll(other.stats);
+    }
+
 
     public String getSpriteSheet() {
         return spriteSheet;

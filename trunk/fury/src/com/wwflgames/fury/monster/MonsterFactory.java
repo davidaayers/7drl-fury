@@ -1,5 +1,8 @@
 package com.wwflgames.fury.monster;
 
+import com.wwflgames.fury.item.ItemDeck;
+import com.wwflgames.fury.item.ItemFactory;
+import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
 import com.wwflgames.fury.util.Shuffler;
 import org.newdawn.slick.SlickException;
@@ -12,10 +15,12 @@ import java.util.List;
 
 public class MonsterFactory {
 
-    List<Monster> allMonsters = new ArrayList<Monster>();
-    List<String> allSpriteSheetNames = new ArrayList<String>();
+    private List<Monster> allMonsters = new ArrayList<Monster>();
+    private List<String> allSpriteSheetNames = new ArrayList<String>();
+    private ItemFactory itemFactory;
 
-    public MonsterFactory() throws SlickException {
+    public MonsterFactory(ItemFactory itemFactory) throws SlickException {
+        this.itemFactory = itemFactory;
         parseXml();
     }
 
@@ -30,10 +35,33 @@ public class MonsterFactory {
             String name = childNode.getAttribute("name");
             String spriteSheet = childNode.getAttribute("sprite-sheet");
             Monster monster = new Monster(name, spriteSheet);
+            // create the monster's deck
+            monster.setDeck(createDeck(childNode));
+            setMonsterStats(childNode, monster);
             allMonsters.add(monster);
             allSpriteSheetNames.add(spriteSheet);
             Log.debug("monster created = " + monster);
         }
+    }
+
+    private void setMonsterStats(XMLElement childNode, Monster monster) {
+        //TODO: put this in the xml
+        monster.setStatValue(Stat.HEALTH, 10);
+    }
+
+    private ItemDeck createDeck(XMLElement childNode) {
+
+        XMLElementList list = childNode.getChildrenByName("deck");
+        XMLElement deckNode = list.get(0);
+        XMLElementList items = deckNode.getChildren();
+        ItemDeck deck = new ItemDeck();
+        for (int idx = 0; idx < items.size(); idx++) {
+            XMLElement item = items.get(idx);
+            deck.addItem(itemFactory.getItemByName(item.getAttribute("name")));
+        }
+        Log.debug("deck is " + deck);
+
+        return deck;
     }
 
     public List<String> getAllSpriteSheetNames() {
@@ -45,7 +73,8 @@ public class MonsterFactory {
 
         Monster monster = allMonsters.get(0);
         Log.debug("About to return " + monster);
-        return new Monster(monster.name(), monster.getSpriteSheet());
+        Monster clone = new Monster(monster);
+        return clone;
     }
 
 
