@@ -13,7 +13,7 @@ public class CrushDamageApplier extends AbstractDamageApplier {
     }
 
     @Override
-    public void apply(ItemEffect effect, Mob applyTo, ItemUsageResult bag) {
+    public void apply(ItemEffect effect, Mob applyTo, ItemUsageResult itemUsageResult) {
         Damage damage = (Damage) effect;
         // crush damage applies first to armor (i.e. it is absorbed by armor),
         // and any remaining damage left after the armor is applied to the victim
@@ -49,12 +49,12 @@ public class CrushDamageApplier extends AbstractDamageApplier {
         String armorDesc = "{0} armor is crushed for {2}";
         String healthDesc = "{1} takes {2} damage!";
         if (armorBefore != 0 && armorDelta != 0) {
-            bag.add(new ItemEffectResult(armorDesc, Stat.ARMOR, armorDelta, applyTo));
+            itemUsageResult.add(new ItemEffectResult(armorDesc, Stat.ARMOR, armorDelta, applyTo, effect));
         }
         if (healthDelta != 0) {
-            bag.add(new ItemEffectResult(healthDesc, Stat.HEALTH, healthDelta, applyTo));
+            itemUsageResult.add(new ItemEffectResult(healthDesc, Stat.HEALTH, healthDelta, applyTo, effect));
         } else {
-            bag.add(new ItemEffectResult("{0} armor absorbed all damage!", Stat.ARMOR, armorDelta, applyTo));
+            itemUsageResult.add(new ItemEffectResult("{0} armor absorbed all damage!", Stat.ARMOR, armorDelta, applyTo, effect));
         }
     }
 }

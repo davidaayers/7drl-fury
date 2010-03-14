@@ -49,4 +49,9 @@ public class Map {
         tile.setMob(mob);
         mob.setCurrentMapTile(tile);
     }
+
+    public void removeMob(Mob mob) {
+        Tile tile = mob.getCurrentMapTile();
+        tile.setMob(null);
+    }
 }
