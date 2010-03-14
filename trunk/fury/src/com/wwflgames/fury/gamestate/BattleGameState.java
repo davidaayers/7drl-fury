@@ -165,6 +165,13 @@ public class BattleGameState extends BasicGameState {
         Log.debug("BattleGameState-> complete.");
     }
 
+    @Override
+    public void leave(GameContainer container, StateBasedGame game) throws SlickException {
+        Log.debug("BattleGameState-> leaving state");
+        entityManager.clear();
+    }
+
+
     private Entity createMobEntity(int mapOffsetX, int mapOffsetY, Mob mob, SpriteSheetRenderer sprite) {
         MobLocationAction mobLocationAction = new MobLocationAction(mob.name() + "location")
                 .setMapOffset(mapOffsetX, mapOffsetY)

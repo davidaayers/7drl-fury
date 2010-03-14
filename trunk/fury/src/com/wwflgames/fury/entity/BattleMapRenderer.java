@@ -5,23 +5,18 @@ import com.wwflgames.fury.map.TileType;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Vector2f;
 
-public class BattleMapRenderer extends Renderer {
+public class BattleMapRenderer extends MapRenderer {
 
-    private SpriteSheet spriteSheet;
-    private Map map;
     private int renderX;
     private int renderY;
 
     public BattleMapRenderer(String id, Map map, int renderX, int renderY)
             throws SlickException {
-        super(id);
-        this.map = map;
+        super(id, map);
         this.renderX = renderX;
         this.renderY = renderY;
-        this.spriteSheet = new SpriteSheet("dg_dungeon32.gif", 32, 32);
     }
 
     @Override
@@ -43,11 +38,7 @@ public class BattleMapRenderer extends Renderer {
                 int mapY = renderY + y;
                 if (map.inBounds(mapX, mapY)) {
                     TileType tileType = map.getTileAt(mapX, mapY).getType();
-                    Image drawImage = floorImage;
-                    if (tileType == TileType.WALL) {
-                        drawImage = wallImage;
-                    }
-
+                    Image drawImage = determineImageForTile(tileType);
                     drawImage.draw(pos.x + (x * tw * scale), pos.y + (y * th * scale), scale);
                 }
             }

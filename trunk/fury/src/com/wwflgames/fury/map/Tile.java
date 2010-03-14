@@ -40,4 +40,8 @@ public class Tile {
     void setMob(Mob mob) {
         this.mob = mob;
     }
+
+    public boolean isWalkable() {
+        return type.isWalkable();
+    }
 }
