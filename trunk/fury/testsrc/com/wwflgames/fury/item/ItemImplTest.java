@@ -1,5 +1,6 @@
 package com.wwflgames.fury.item;
 
+import com.wwflgames.fury.battle.ItemUsageResult;
 import com.wwflgames.fury.item.effect.*;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
@@ -24,15 +25,16 @@ public class ItemImplTest {
         Damage crushDamage = new Damage(DamageType.MELEE_CRUSH, 5);
         Item mace = itemFactory.createItemWithUsedAgainstEffects("Mace of crushing", new ItemEffect[]{crushDamage});
         Mob mob = new Mob("test mob");
+        ItemUsageResult result = new ItemUsageResult(mace, mob);
         mob.setStatValue(Stat.HEALTH, 10);
         mob.setBattleStatValue(Stat.ARMOR, 5);
-        mace.usedAgainst(mob, null);
+        mace.usedAgainst(mob, result);
         assertEquals(new Integer(10), mob.getStatValue(Stat.HEALTH));
         assertEquals(new Integer(0), mob.getBattleStatValue(Stat.ARMOR));
-        mace.usedAgainst(mob, null);
+        mace.usedAgainst(mob, result);
         assertEquals(new Integer(5), mob.getStatValue(Stat.HEALTH));
         assertEquals(new Integer(0), mob.getBattleStatValue(Stat.ARMOR));
-        mace.usedAgainst(mob, null);
+        mace.usedAgainst(mob, result);
         assertEquals(new Integer(0), mob.getStatValue(Stat.HEALTH));
         assertEquals(new Integer(0), mob.getBattleStatValue(Stat.ARMOR));
         assertTrue(mob.isDead());

@@ -7,4 +7,8 @@ public interface AppState {
     Player getPlayer();
 
     Map getMap();
+
+    boolean doesPlayerHaveInitiative();
+
+    void setPlayerInitiative(boolean flag);
 }

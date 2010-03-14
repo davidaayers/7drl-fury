@@ -22,17 +22,19 @@ public class DungeonGameState extends BasicGameState {
     private StateBasedGame stateBasedGame;
     private EntityManager entityManager;
     private AppState appState;
+    private SpriteSheetCache spriteSheetCache;
     private SpriteSheet heroSprites;
-    private MobMapPositionAction playerMapPosition;
+    private SpriteSheet monsterSprites;
 
-    public DungeonGameState(AppState appState) {
+    public DungeonGameState(AppState appState, SpriteSheetCache spriteSheetCache) {
         this.appState = appState;
+        this.spriteSheetCache = spriteSheetCache;
     }
 
 
     @Override
     public int getID() {
-        return Fury.GAME_STATE;
+        return Fury.DUNGEON_GAME_STATE;
     }
 
     @Override
@@ -42,6 +44,7 @@ public class DungeonGameState extends BasicGameState {
 
         // load sprites
         heroSprites = new SpriteSheet("warrior.png", 24, 32);
+        monsterSprites = new SpriteSheet("horned_skelly_old.png", 24, 32);
 
 
         entityManager = new EntityManager(gameContainer, stateBasedGame);
@@ -56,19 +59,29 @@ public class DungeonGameState extends BasicGameState {
 
         entityManager.addEntity(mapEntity);
 
-        playerMapPosition = new MobMapPositionAction("playerMapPosition", appState.getPlayer());
-
         // player entity
         Entity player = new Entity("player")
                 .setPosition(new Vector2f(0, 0))
                 .setScale(1)
-                .addComponent(new SpriteSheetRenderer("playerRender", heroSprites).useSprite(1, 2))
-                .addComponent(playerMapPosition);
+                .addComponent(new SpriteSheetRenderer("playerRender",
+                        spriteSheetCache.getSpriteSheet("warrior.png")).useSprite(1, 2))
+                .addComponent(new MobMapPositionAction("mapPosition", appState.getPlayer()));
 
         entityManager.addEntity(player);
 
         // grab all of the monsters on the map
         for (Monster monster : appState.getMap().getMonsterList()) {
+            // player entity
+            Log.debug("monster location = " + monster.getCurrentMapTile().getX() + "," + monster.getCurrentMapTile().getY());
+
+            Entity monsterEntity = new Entity("monster" + monster.name())
+                    .setPosition(new Vector2f(0, 0))
+                    .setScale(1)
+                    .addComponent(new SpriteSheetRenderer("monsterRenderer",
+                            spriteSheetCache.getSpriteSheet(monster.getSpriteSheet())).useSprite(1, 2))
+                    .addComponent(new MobMapPositionAction("mapPosition", monster));
+
+            entityManager.addEntity(monsterEntity);
 
         }
 
@@ -149,19 +162,30 @@ public class DungeonGameState extends BasicGameState {
         int newY = currY + dy;
         Map map = appState.getMap();
 
+        Log.debug("Inspecting " + newX + "," + newY);
+
         // first, see if moving to newX,newY would cause combat
         Mob enemy = map.getTileAt(newX, newY).getMob();
+        Log.debug("Enemy present, enemy was " + enemy);
         if (enemy != null) {
-            initiateCombat(player, enemy);
+            Log.debug("about to initiate combat");
+            initiateCombat(player);
         } else if (map.inBounds(newX, newY) && map.isWalkable(newX, newY)) {
+            Log.debug("Moving to " + newX + "," + newY);
+            map.removeMob(player);
             map.addMob(player, newX, newY);
         } else {
             Log.debug("Hit a wall!");
         }
     }
 
-    private void initiateCombat(Mob initiator, Mob initialTarget) {
-
+    private void initiateCombat(Mob initiator) {
+        if (initiator instanceof Player) {
+            appState.setPlayerInitiative(true);
+        } else {
+            appState.setPlayerInitiative(false);
+        }
+        stateBasedGame.enterState(Fury.BATTLE_STATE);
     }
 
 }

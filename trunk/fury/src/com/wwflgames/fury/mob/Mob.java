@@ -13,8 +13,8 @@ public class Mob {
     private ItemDeck deck;
     private String name;
     private Tile currentMapTile;
-    private int mapX;
-    private int mapY;
+    private Integer mapX;
+    private Integer mapY;
 
     public Mob(String name) {
         this.name = name;
@@ -102,23 +102,28 @@ public class Mob {
 
     public void setCurrentMapTile(Tile currentMapTile) {
         this.currentMapTile = currentMapTile;
-        setMapX(currentMapTile.getX());
-        setMapY(currentMapTile.getY());
+        if (currentMapTile != null) {
+            setMapX(currentMapTile.getX());
+            setMapY(currentMapTile.getY());
+        } else {
+            setMapX(null);
+            setMapY(null);
+        }
     }
 
-    public int getMapX() {
+    public Integer getMapX() {
         return mapX;
     }
 
-    public void setMapX(int mapX) {
+    public void setMapX(Integer mapX) {
         this.mapX = mapX;
     }
 
-    public int getMapY() {
+    public Integer getMapY() {
         return mapY;
     }
 
-    public void setMapY(int mapY) {
+    public void setMapY(Integer mapY) {
         this.mapY = mapY;
     }
 
