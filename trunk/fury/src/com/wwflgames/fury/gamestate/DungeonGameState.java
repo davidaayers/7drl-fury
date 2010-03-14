@@ -3,6 +3,7 @@ package com.wwflgames.fury.gamestate;
 import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.entity.*;
 import com.wwflgames.fury.main.AppState;
+import com.wwflgames.fury.map.Direction;
 import com.wwflgames.fury.map.Map;
 import com.wwflgames.fury.map.Tile;
 import com.wwflgames.fury.mob.Mob;
@@ -12,7 +13,6 @@ import com.wwflgames.fury.util.Log;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -23,8 +23,6 @@ public class DungeonGameState extends BasicGameState {
     private EntityManager entityManager;
     private AppState appState;
     private SpriteSheetCache spriteSheetCache;
-    private SpriteSheet heroSprites;
-    private SpriteSheet monsterSprites;
 
     public DungeonGameState(AppState appState, SpriteSheetCache spriteSheetCache) {
         this.appState = appState;
@@ -59,7 +57,8 @@ public class DungeonGameState extends BasicGameState {
                 .setPosition(new Vector2f(0, 0))
                 .setScale(1)
                 .addComponent(new SpriteSheetRenderer("playerRender",
-                        spriteSheetCache.getSpriteSheet(appState.getPlayer().getProfession().getSpriteSheet())).useSprite(1, 2))
+                        spriteSheetCache.getSpriteSheet(appState.getPlayer().getProfession().getSpriteSheet()))
+                        .useSprite(1, 2))
                 .addComponent(new MobMapPositionAction("mapPosition", appState.getPlayer()));
 
         entityManager.addEntity(player);
@@ -67,7 +66,8 @@ public class DungeonGameState extends BasicGameState {
         // grab all of the monsters on the map
         for (Monster monster : appState.getMap().getMonsterList()) {
             // player entity
-            Log.debug("monster location = " + monster.getCurrentMapTile().getX() + "," + monster.getCurrentMapTile().getY());
+            Log.debug("monster location = " + monster.getCurrentMapTile().getX() + "," +
+                    monster.getCurrentMapTile().getY());
 
             Entity monsterEntity = new Entity("monster" + monster.name())
                     .setPosition(new Vector2f(0, 0))
@@ -107,44 +107,11 @@ public class DungeonGameState extends BasicGameState {
 
 
         Log.debug("key = " + key);
-        // 7 key - NW
-        if (key == 71) {
-            tryMoveAndMaybeAttack(-1, -1);
-        }
 
-        // 8 key - N
-        if (key == 72) {
-            tryMoveAndMaybeAttack(0, -1);
-        }
+        Direction d = Direction.forKey(key);
 
-        // 9 key - NE
-        if (key == 73) {
-            tryMoveAndMaybeAttack(1, -1);
-        }
-
-        // 4 key - W
-        if (key == 75) {
-            tryMoveAndMaybeAttack(-1, 0);
-        }
-
-        // 6 key - E
-        if (key == 77) {
-            tryMoveAndMaybeAttack(1, 0);
-        }
-
-        // 1 key - SW
-        if (key == 79) {
-            tryMoveAndMaybeAttack(-1, 1);
-        }
-
-        // 2 key - S
-        if (key == 80) {
-            tryMoveAndMaybeAttack(0, 1);
-        }
-
-        // 3 key - SE
-        if (key == 81) {
-            tryMoveAndMaybeAttack(1, 1);
+        if (d != null) {
+            tryMoveAndMaybeAttack(d.getDx(), d.getDy());
         }
     }
 
