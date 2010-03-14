@@ -30,10 +30,10 @@ public class BattleSystem {
         }
     }
 
-    public BattleRoundResult performBattleRound(Monster monster) {
+    public NewBattleRoundResult performBattleRound(Monster monster) {
         // increment the battle Round
         battleRound++;
-        BattleRoundResult battleRoundResult = new BattleRoundResult(battleRound);
+        NewBattleRoundResult battleRoundResult = new NewBattleRoundResult(battleRound);
         Log.debug("=========( Round " + battleRound + " )==============");
 
 
@@ -55,7 +55,7 @@ public class BattleSystem {
         return battleRoundResult;
     }
 
-    private void doPlayerRoundAndCheckIfPlayerWon(Monster monster, BattleRoundResult result) {
+    private void doPlayerRoundAndCheckIfPlayerWon(Monster monster, NewBattleRoundResult result) {
         doNextItemInDeck(battle.getPlayer(), monster, result);
         removeDeadMonstersFromBattle();
 
@@ -64,7 +64,7 @@ public class BattleSystem {
         }
     }
 
-    private void doEnemyRoundAndCheckIfPlayerLost(BattleRoundResult result) {
+    private void doEnemyRoundAndCheckIfPlayerLost(NewBattleRoundResult result) {
         for (Mob enemy : battle.getEnemies()) {
             doNextItemInDeck(enemy, battle.getPlayer(), result);
         }
@@ -74,17 +74,16 @@ public class BattleSystem {
         }
     }
 
-    private void doNextItemInDeck(Mob attacker, Mob defender, BattleRoundResult result) {
+    private void doNextItemInDeck(Mob attacker, Mob defender, NewBattleRoundResult result) {
         Log.debug("Next item in deck, attacker = " + attacker.name() + ", defender = " + defender.name());
         // grab the next item from the attackers deck
         Item item = attacker.getDeck().nextItem();
-        result.addItemUsedBy(attacker, item);
 
         Log.debug("Item chosen from deck is " + item.name());
 
         ItemUsageResult itemUsage = new ItemUsageResult(item, attacker);
         item.usedBy(attacker, itemUsage).usedAgainst(defender, itemUsage);
-
+        result.addItemUsageResultFor(attacker, itemUsage);
     }
 
     private void removeDeadMonstersFromBattle() {

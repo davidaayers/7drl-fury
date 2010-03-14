@@ -12,11 +12,11 @@ public class StatBuffApplier extends AbstractBuffApplier {
     }
 
     @Override
-    public void apply(com.wwflgames.fury.item.effect.ItemEffect effect, Mob applyTo, ItemUsageResult bag) {
+    public void apply(ItemEffect effect, Mob applyTo, ItemUsageResult bag) {
         StatBuff buff = (StatBuff) effect;
         applyTo.modifyBattleStatValue(buff.getStat(), buff.getAmount());
 
         String armorDesc = "{0} armor is increased by {2}";
-        bag.add(new ItemEffectResult(armorDesc, Stat.ARMOR, buff.getAmount()));
+        bag.add(new ItemEffectResult(armorDesc, Stat.ARMOR, buff.getAmount(), applyTo));
     }
 }
