@@ -48,8 +48,6 @@ public class BattleGameState extends BasicGameState {
 
     private GameContainer container;
     private StateBasedGame game;
-    private SpriteSheet heroSprites;
-    private SpriteSheet monsterSprites;
     private UnicodeFont font;
     private AppState appState;
     private SpriteSheetCache spriteSheetCache;
@@ -89,9 +87,6 @@ public class BattleGameState extends BasicGameState {
 
         this.container = container;
         this.game = game;
-
-        heroSprites = new SpriteSheet("warrior.png", 24, 32);
-        monsterSprites = new SpriteSheet("horned_skelly_old.png", 24, 32);
 
         Font jFont = new Font("Verdana", Font.PLAIN, 12);
         font = new UnicodeFont(jFont);
@@ -136,20 +131,23 @@ public class BattleGameState extends BasicGameState {
 
         entityManager.addEntity(mapEntity);
 
-        List<Mob> monsters = findMonsters(map, playerMapX, playerMapY);
+        List<Monster> monsters = findMonsters(map, playerMapX, playerMapY);
 
         // finally, create entities for all of the monsters found, and the player, so
         // they can be rendered
-        for (Mob monster : monsters) {
+        for (Monster monster : monsters) {
             Log.debug("monster x = " + monster.getMapX() + " , y = " + monster.getMapY());
-            MobRenderer sprite = new MobRenderer(monster, monsterSprites);
+            SpriteSheet monsterSpriteSheet = spriteSheetCache.getSpriteSheet(monster.getSpriteSheet());
+            MobRenderer sprite = new MobRenderer(monster, monsterSpriteSheet);
             sprite.useSprite(1, 2);
             Entity mobEntity = createMobEntity(mapOffsetX, mapOffsetY, monster, sprite);
             entityManager.addEntity(mobEntity);
             mobEntities.put(monster, mobEntity);
         }
 
-        MobRenderer heroSprite = new MobRenderer(player, heroSprites);
+        SpriteSheet heroSpriteSheet = spriteSheetCache.getSpriteSheet("warrior_male.png");
+        MobRenderer heroSprite = new MobRenderer(player, heroSpriteSheet);
+
         heroSprite.useSprite(1, 2);
 
         playerEntity = createMobEntity(mapOffsetX, mapOffsetY, player, heroSprite);
@@ -191,8 +189,8 @@ public class BattleGameState extends BasicGameState {
     }
 
     // package private for testing
-    List<Mob> findMonsters(Map map, int playerX, int playerY) {
-        List<Mob> monsters = new ArrayList<Mob>();
+    List<Monster> findMonsters(Map map, int playerX, int playerY) {
+        List<Monster> monsters = new ArrayList<Monster>();
         // look at all of the 8 squares around the player
         // and see if there are monsters there
         for (int y = -1; y < 2; y++) {
@@ -202,7 +200,7 @@ public class BattleGameState extends BasicGameState {
                 if (map.inBounds(mx, my)) {
                     Mob mob = map.getTileAt(playerX + x, playerY + y).getMob();
                     if (mob != null && mob instanceof Monster) {
-                        monsters.add(mob);
+                        monsters.add((Monster) mob);
                     }
                 }
             }

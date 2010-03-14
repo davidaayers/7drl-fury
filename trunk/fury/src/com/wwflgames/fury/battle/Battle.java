@@ -1,6 +1,7 @@
 package com.wwflgames.fury.battle;
 
 import com.wwflgames.fury.mob.Mob;
+import com.wwflgames.fury.monster.Monster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,16 +9,16 @@ import java.util.List;
 public class Battle {
 
     private Mob player;
-    private List<Mob> enemies;
-    private List<Mob> originalEnemies;
+    private List<Monster> enemies;
+    private List<Monster> originalEnemies;
     private List<Mob> allBattleParticipants;
     private boolean playerInitiate;
 
-    public Battle(Mob player, List<Mob> enemies, boolean playerInitiate) {
+    public Battle(Mob player, List<Monster> enemies, boolean playerInitiate) {
         this.player = player;
         this.enemies = enemies;
         this.playerInitiate = playerInitiate;
-        originalEnemies = new ArrayList<Mob>();
+        originalEnemies = new ArrayList<Monster>();
         originalEnemies.addAll(enemies);
         allBattleParticipants = new ArrayList<Mob>();
         allBattleParticipants.add(player);
@@ -28,11 +29,11 @@ public class Battle {
         return player;
     }
 
-    public List<Mob> getEnemies() {
+    public List<Monster> getEnemies() {
         return enemies;
     }
 
-    public List<Mob> getOriginalEnemies() {
+    public List<Monster> getOriginalEnemies() {
         return originalEnemies;
     }
 
