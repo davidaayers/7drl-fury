@@ -106,6 +106,11 @@ public class EntityManager {
         }
     }
 
+    // removes all entities
+    public void clear() {
+        entities.clear();
+    }
+
     public void printDebug() {
         // print a list of all of our entities
         Log.debug("Total of " + entities.size() + " entities");

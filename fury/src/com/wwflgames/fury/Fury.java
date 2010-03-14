@@ -1,6 +1,7 @@
 package com.wwflgames.fury;
 
 import com.wwflgames.fury.gamestate.BattleGameState;
+import com.wwflgames.fury.gamestate.DungeonGameState;
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.item.ItemFactory;
@@ -13,6 +14,7 @@ import com.wwflgames.fury.player.Player;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.ClasspathLocation;
 import org.newdawn.slick.util.ResourceLoader;
@@ -89,8 +91,12 @@ public class Fury extends StateBasedGame {
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
         //addState(new TitleGameState());
-        //addState(new DungeonGameState());
+        addState(createDungeonState());
         addState(createBattleState());
+    }
+
+    private GameState createDungeonState() {
+        return new DungeonGameState(appState);
     }
 
     private BattleGameState createBattleState() {

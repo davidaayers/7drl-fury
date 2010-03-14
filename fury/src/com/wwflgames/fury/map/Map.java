@@ -1,12 +1,17 @@
 package com.wwflgames.fury.map;
 
 import com.wwflgames.fury.mob.Mob;
+import com.wwflgames.fury.monster.Monster;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Map {
 
     private int width;
     private int height;
     private Tile[][] tiles;
+    private List<Monster> monsterList = new ArrayList<Monster>();
 
     public Map(int width, int height) {
         this.width = width;
@@ -25,6 +30,11 @@ public class Map {
 
     public boolean inBounds(int x, int y) {
         return x >= 0 && x < width && y >= 0 && y < height;
+    }
+
+    public boolean isWalkable(int x, int y) {
+        Tile t = getTileAt(x, y);
+        return t.isWalkable();
     }
 
     private void initTilesToFloor() {
@@ -48,10 +58,21 @@ public class Map {
         Tile tile = getTileAt(x, y);
         tile.setMob(mob);
         mob.setCurrentMapTile(tile);
+        if (mob instanceof Monster) {
+            monsterList.add((Monster) mob);
+            ;
+        }
     }
 
     public void removeMob(Mob mob) {
         Tile tile = mob.getCurrentMapTile();
         tile.setMob(null);
+        if (mob instanceof Monster) {
+            monsterList.remove(mob);
+        }
+    }
+
+    public List<Monster> getMonsterList() {
+        return monsterList;
     }
 }
