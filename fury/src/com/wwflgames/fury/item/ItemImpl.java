@@ -69,4 +69,10 @@ public class ItemImpl implements Item {
         return list;
     }
 
+    @Override
+    public String toString() {
+        return "ItemImpl{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

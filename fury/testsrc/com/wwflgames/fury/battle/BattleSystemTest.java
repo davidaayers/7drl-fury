@@ -35,7 +35,7 @@ public class BattleSystemTest {
         });
 
         EffectApplierFactory effectApplierFactory = new EffectApplierFactory();
-        itemFactory = new ItemFactory(effectApplierFactory);
+        itemFactory = new ItemFactory();
     }
 
     @After

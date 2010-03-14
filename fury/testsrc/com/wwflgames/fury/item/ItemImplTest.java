@@ -6,6 +6,7 @@ import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import org.junit.Before;
 import org.junit.Test;
+import org.newdawn.slick.SlickException;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -15,9 +16,9 @@ public class ItemImplTest {
     private ItemFactory itemFactory;
 
     @Before
-    public void setUp() {
+    public void setUp() throws SlickException {
         EffectApplierFactory effectApplierFactory = new EffectApplierFactory();
-        itemFactory = new ItemFactory(effectApplierFactory);
+        itemFactory = new ItemFactory();
     }
 
     @Test

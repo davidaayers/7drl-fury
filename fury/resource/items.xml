@@ -1,0 +1,32 @@
+<items>
+    <item name="Mace of Crushing">
+        <usedByEffects/>
+        <usedAgainstEffects>
+            <damage type="melee_crush" value="4"/>
+        </usedAgainstEffects>
+    </item>
+    <item name="Rusty Morningstar">
+        <usedByEffects/>
+        <usedAgainstEffects>
+            <damage type="melee_crush" value="8"/>
+        </usedAgainstEffects>
+    </item>
+    <item name="Bunch of Pretty Flowers">
+        <usedByEffects/>
+        <usedAgainstEffects>
+            <damage type="melee_crush" value="1"/>
+        </usedAgainstEffects>
+    </item>
+    <item name="Enormous Femur">
+        <usedByEffects/>
+        <usedAgainstEffects>
+            <damage type="melee_crush" value="6"/>
+        </usedAgainstEffects>
+    </item>
+    <item name="Shield of Protection">
+        <usedByEffects>
+            <stat-buff stat="armor" value="4"/>
+        </usedByEffects>
+        <usedAgainstEffects/>
+    </item>
+</items>

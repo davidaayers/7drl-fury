@@ -5,7 +5,10 @@ import com.wwflgames.fury.entity.SpriteSheetCache;
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.item.ItemFactory;
-import com.wwflgames.fury.item.effect.*;
+import com.wwflgames.fury.item.effect.Damage;
+import com.wwflgames.fury.item.effect.DamageType;
+import com.wwflgames.fury.item.effect.ItemEffect;
+import com.wwflgames.fury.item.effect.StatBuff;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.player.Player;
@@ -122,7 +125,12 @@ public class TitleGameState extends BasicGameState {
         // put the player in the upper right hand corner of the map
         appState.getMap().addMob(player, 1, 1);
 
-        ItemFactory factory = new ItemFactory(new EffectApplierFactory());
+        ItemFactory factory = null;
+        try {
+            factory = new ItemFactory();
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
 
         //player.setDeck(createDeck(8));
         Damage crushDamage = new Damage(DamageType.MELEE_CRUSH, 8);
@@ -143,7 +151,9 @@ public class TitleGameState extends BasicGameState {
             throws SlickException {
 
         graphics.drawImage(titleImage, 400 - titleImage.getWidth() / 2, 25);
-        TextUtil.centerText(gameContainer, graphics, "Choose your profession:", 220);
+        if (currentState == State.WAITING_FOR_PROFESSION_CHOICE) {
+            TextUtil.centerText(gameContainer, graphics, "Choose your profession:", 220);
+        }
 
         for (MouseOverArea moa : professionChoices) {
             moa.render(gameContainer, graphics);

@@ -14,6 +14,10 @@ public class ItemDeck {
     public ItemDeck() {
     }
 
+    public ItemDeck(ItemDeck other) {
+        deck.addAll(other.deck);
+    }
+
     public void addItem(Item item) {
         deck.add(item);
     }
@@ -37,4 +41,11 @@ public class ItemDeck {
         return item;
     }
 
+    @Override
+    public String toString() {
+        return "ItemDeck{" +
+                "deck=" + deck +
+                ", idx=" + idx +
+                '}';
+    }
 }
