@@ -2,7 +2,9 @@ package com.wwflgames.fury.map;
 
 public enum TileType {
     FLOOR(".", true),
-    WALL("#", false);
+    WALL("#", false),
+    EMPTY(" ",true)
+    ;
 
     String ascii;
     boolean walkable;

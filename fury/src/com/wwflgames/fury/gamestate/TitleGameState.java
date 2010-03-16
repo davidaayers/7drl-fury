@@ -7,6 +7,7 @@ import com.wwflgames.fury.map.DifficultyLevel;
 import com.wwflgames.fury.map.DungeonCreator;
 import com.wwflgames.fury.map.DungeonCreatorImpl;
 import com.wwflgames.fury.map.DungeonMapCreator;
+import com.wwflgames.fury.map.DungeonMapCreatorImpl;
 import com.wwflgames.fury.map.FixedDungeonMapCreator;
 import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.mob.Stat;
@@ -60,7 +61,8 @@ public class TitleGameState extends BasicGameState {
         this.appState = appState;
 
         DungeonMapCreator mapCreator = new FixedDungeonMapCreator();
-        dungeonCreator = new DungeonCreatorImpl(mapCreator);
+        DungeonMapCreator randomCreator = new DungeonMapCreatorImpl();
+        dungeonCreator = new DungeonCreatorImpl(randomCreator);
 
     }
 
