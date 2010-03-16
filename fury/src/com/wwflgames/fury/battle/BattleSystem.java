@@ -1,6 +1,7 @@
 package com.wwflgames.fury.battle;
 
 import com.wwflgames.fury.item.Item;
+import com.wwflgames.fury.item.effect.DeathEffect;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.util.Log;
@@ -86,8 +87,7 @@ public class BattleSystem {
         // if the item killed the defender, add a message about it
         if (defender.isDead()) {
             String deathBlow = defender.name() + " was killed by " + item.name();
-            //TODO: FIX FIX FIX
-            //itemUsage.addAtFront(new ItemEffectResult(deathBlow, defender, new Death()));
+            itemUsage.addAtFront(new ItemEffectResult(deathBlow, defender, new DeathEffect()));
         }
         result.addItemUsageResultFor(attacker, itemUsage);
     }

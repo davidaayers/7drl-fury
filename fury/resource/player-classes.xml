@@ -1,6 +1,8 @@
 <player-classes>
     <player-class name="Warrior" sprite-sheet="warrior_male.png">
-
+        <deck>
+            <item name="Mace of Crushing"/>
+        </deck>
     </player-class>
     <player-class name="Wizard" sprite-sheet="wizard_male.png">
 

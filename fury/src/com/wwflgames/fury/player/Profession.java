@@ -1,12 +1,16 @@
 package com.wwflgames.fury.player;
 
+import com.wwflgames.fury.item.ItemDeck;
+
 public class Profession {
     private String name;
     private String spriteSheet;
+    private ItemDeck starterDeck;
 
-    public Profession(String name, String spriteSheet) {
+    public Profession(String name, String spriteSheet, ItemDeck starterDeck) {
         this.name = name;
         this.spriteSheet = spriteSheet;
+        this.starterDeck = starterDeck;
     }
 
     public String getName() {
@@ -15,6 +19,10 @@ public class Profession {
 
     public String getSpriteSheet() {
         return spriteSheet;
+    }
+
+    public ItemDeck getStarterDeck() {
+        return starterDeck;
     }
 
     @Override
