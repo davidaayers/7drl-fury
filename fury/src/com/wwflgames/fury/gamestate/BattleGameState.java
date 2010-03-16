@@ -82,6 +82,7 @@ public class BattleGameState extends BasicGameState {
         return Fury.BATTLE_STATE;
     }
 
+    @SuppressWarnings({"unchecked"})
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
 
