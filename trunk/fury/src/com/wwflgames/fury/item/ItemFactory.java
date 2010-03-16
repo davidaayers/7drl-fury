@@ -2,8 +2,10 @@ package com.wwflgames.fury.item;
 
 import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.item.effect.MeleeDamageEffect;
+import com.wwflgames.fury.item.effect.StatBuffEffect;
 import com.wwflgames.fury.item.effect.damage.Damage;
 import com.wwflgames.fury.item.effect.damage.MeleeDamage;
+import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.xml.SlickXMLException;
@@ -84,6 +86,14 @@ public class ItemFactory {
                 Log.debug("Created meleeDamageEffect = " + damageEffect.getDesc());
                 return damageEffect;
             }
+        } else if (childNode.getName().equals("stat-buff")) {
+            Log.debug("Creating stat-buff");
+            String statName = childNode.getAttribute("stat");
+            int value = childNode.getIntAttribute("value");
+            Stat stat = Stat.valueOf(statName.toUpperCase());
+            Log.debug("stat was " + stat);
+            StatBuffEffect statBuff = new StatBuffEffect(stat, value);
+            return statBuff;
         }
         return null;
     }

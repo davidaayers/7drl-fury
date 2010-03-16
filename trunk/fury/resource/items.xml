@@ -8,7 +8,7 @@
     <item name="Rusty Morningstar">
         <usedByEffects/>
         <usedAgainstEffects>
-            <damage type="Crush" value="8"/>
+            <damage type="Crush" value="2"/>
         </usedAgainstEffects>
     </item>
     <item name="Pretty Flowers">
@@ -20,7 +20,7 @@
     <item name="Enormous Femur">
         <usedByEffects/>
         <usedAgainstEffects>
-            <damage type="Crush" value="6"/>
+            <damage type="Crush" value="3"/>
         </usedAgainstEffects>
     </item>
     <item name="Shield of Protection">
