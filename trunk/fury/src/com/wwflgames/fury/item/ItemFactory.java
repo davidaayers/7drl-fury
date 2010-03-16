@@ -1,8 +1,8 @@
 package com.wwflgames.fury.item;
 
-import com.wwflgames.fury.item.neffect.NItemEffect;
-import com.wwflgames.fury.item.neffect.NMeleeDamageEffect;
-import com.wwflgames.fury.item.neffect.damage.MeleeDamage;
+import com.wwflgames.fury.item.effect.NItemEffect;
+import com.wwflgames.fury.item.effect.NMeleeDamageEffect;
+import com.wwflgames.fury.item.effect.damage.MeleeDamage;
 import com.wwflgames.fury.util.Log;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.xml.SlickXMLException;
@@ -76,7 +76,7 @@ public class ItemFactory {
             String type = childNode.getAttribute("type");
             int value = childNode.getIntAttribute("value");
             Log.debug("Looking for damage matching: " + type);
-            com.wwflgames.fury.item.neffect.damage.Damage dmg = com.wwflgames.fury.item.neffect.damage.Damage.forType(type);
+            com.wwflgames.fury.item.effect.damage.Damage dmg = com.wwflgames.fury.item.effect.damage.Damage.forType(type);
             Log.debug("type was " + dmg);
             if (dmg instanceof MeleeDamage) {
                 NMeleeDamageEffect damageEffect = new NMeleeDamageEffect((MeleeDamage) dmg, value);

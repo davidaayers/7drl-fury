@@ -2,7 +2,7 @@ package com.wwflgames.fury.entity;
 
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.NItemImpl;
-import com.wwflgames.fury.item.neffect.NItemEffect;
+import com.wwflgames.fury.item.effect.NItemEffect;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.UnicodeFont;

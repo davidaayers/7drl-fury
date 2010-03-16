@@ -1,4 +1,4 @@
-package com.wwflgames.fury.item.neffect;
+package com.wwflgames.fury.item.effect;
 
 import com.wwflgames.fury.battle.ItemUsageResult;
 import com.wwflgames.fury.mob.Mob;

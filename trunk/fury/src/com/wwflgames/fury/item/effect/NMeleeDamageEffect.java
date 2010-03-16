@@ -1,11 +1,11 @@
-package com.wwflgames.fury.item.neffect;
+package com.wwflgames.fury.item.effect;
 
 import com.wwflgames.fury.battle.ItemEffectResult;
 import com.wwflgames.fury.battle.ItemUsageResult;
-import com.wwflgames.fury.item.neffect.damage.CrushDamage;
-import com.wwflgames.fury.item.neffect.damage.MeleeDamage;
-import com.wwflgames.fury.item.neffect.damage.SlashDamage;
-import com.wwflgames.fury.item.neffect.damage.StabDamage;
+import com.wwflgames.fury.item.effect.damage.CrushDamage;
+import com.wwflgames.fury.item.effect.damage.MeleeDamage;
+import com.wwflgames.fury.item.effect.damage.SlashDamage;
+import com.wwflgames.fury.item.effect.damage.StabDamage;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
