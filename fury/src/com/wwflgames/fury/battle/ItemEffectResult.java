@@ -1,6 +1,6 @@
 package com.wwflgames.fury.battle;
 
-import com.wwflgames.fury.item.neffect.NItemEffect;
+import com.wwflgames.fury.item.effect.NItemEffect;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 

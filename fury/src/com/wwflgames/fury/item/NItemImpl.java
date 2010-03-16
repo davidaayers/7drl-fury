@@ -1,7 +1,7 @@
 package com.wwflgames.fury.item;
 
 import com.wwflgames.fury.battle.ItemUsageResult;
-import com.wwflgames.fury.item.neffect.NItemEffect;
+import com.wwflgames.fury.item.effect.NItemEffect;
 import com.wwflgames.fury.mob.Mob;
 
 public class NItemImpl implements Item {

@@ -1,4 +1,4 @@
-package com.wwflgames.fury.item.neffect.damage;
+package com.wwflgames.fury.item.effect.damage;
 
 public abstract class Damage {
 
