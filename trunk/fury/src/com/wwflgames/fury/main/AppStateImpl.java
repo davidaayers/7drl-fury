@@ -1,13 +1,13 @@
 package com.wwflgames.fury.main;
 
-import com.wwflgames.fury.map.Map;
+import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.player.Player;
 
 // global game state object
 public class AppStateImpl implements AppState {
 
     private Player player;
-    private Map map;
+    private DungeonMap dungeonMap;
     private boolean playerInitiative;
 
     @Override
@@ -21,8 +21,8 @@ public class AppStateImpl implements AppState {
     }
 
     @Override
-    public Map getMap() {
-        return map;
+    public DungeonMap getMap() {
+        return dungeonMap;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AppStateImpl implements AppState {
 
 
     @Override
-    public void setMap(Map map) {
-        this.map = map;
+    public void setMap(DungeonMap dungeonMap) {
+        this.dungeonMap = dungeonMap;
     }
 }

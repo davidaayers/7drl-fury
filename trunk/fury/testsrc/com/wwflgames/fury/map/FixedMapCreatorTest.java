@@ -4,16 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class FixedMapCreatorTest {
-    private FixedMapCreator mapCreator;
+    private FixedDungeonMapCreator mapCreator;
 
     @Before
     public void setUp() throws Exception {
-        mapCreator = new FixedMapCreator();
+        mapCreator = new FixedDungeonMapCreator();
     }
 
     @Test
     public void testCreateMap() {
-        Map m = mapCreator.createMap();
+        DungeonMap m = mapCreator.createMap();
 
         for ( int y = 0 ; y < 5 ; y ++ ) {
             for ( int x = 0 ; x < 5 ; x ++ ) {
