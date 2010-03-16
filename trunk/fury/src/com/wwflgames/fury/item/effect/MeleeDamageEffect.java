@@ -47,13 +47,7 @@ public class MeleeDamageEffect implements ItemEffect {
         List<AttackBuffEffect> attackBuffs = findAndRemoveApplicableBuffs(itemUser, Damage.CRUSH_DAMAGE);
 
         Log.debug("Got " + attackBuffs + " attack buffs");
-        int buffAmt = 0;
-        for ( AttackBuffEffect effect : attackBuffs ) {
-            buffAmt += effect.getAmount();
-            // add message about the buff
-            String msg = "{1} attack is increased by {2}!";
-            result.add(new ItemEffectResult(msg, effect.getAmount(), mob, effect));
-        }
+        int buffAmt = calculateBuffDamageIncrease(mob, result, attackBuffs);
         Log.debug("Total Buff amount = " + buffAmt);
 
         int armor = mob.getBattleStatValue(Stat.ARMOR);
@@ -95,6 +89,17 @@ public class MeleeDamageEffect implements ItemEffect {
         } else {
             result.add(new ItemEffectResult("{0} armor absorbed all damage!", armorDelta, mob, this));
         }
+    }
+
+    private int calculateBuffDamageIncrease(Mob mob, ItemUsageResult result, List<AttackBuffEffect> attackBuffs) {
+        int buffAmt = 0;
+        for ( AttackBuffEffect effect : attackBuffs ) {
+            buffAmt += effect.getAmount();
+            // add message about the buff
+            String msg = "{1} attack is increased by {2}!";
+            result.add(new ItemEffectResult(msg, effect.getAmount(), mob, effect));
+        }
+        return buffAmt;
     }
 
     // slash damage is reduced by 10% for every 10 points of armor. So
