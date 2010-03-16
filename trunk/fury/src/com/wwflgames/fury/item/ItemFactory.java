@@ -93,7 +93,7 @@ public class ItemFactory {
     }
 
     public Item createNItem(String name, ItemEffect[] usedByEffects, ItemEffect[] usedAgainstEffects) {
-        return new NItemImpl(name, usedByEffects, usedAgainstEffects);
+        return new ItemImpl(name, usedByEffects, usedAgainstEffects);
     }
 
 

@@ -4,13 +4,13 @@ import com.wwflgames.fury.battle.ItemUsageResult;
 import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.mob.Mob;
 
-public class NItemImpl implements Item {
+public class ItemImpl implements Item {
 
     private String name;
     private ItemEffect[] usedByEffects;
     private ItemEffect[] usedAgainstEffects;
 
-    public NItemImpl(String name, ItemEffect[] usedByEffects, ItemEffect[] usedAgainstEffects) {
+    public ItemImpl(String name, ItemEffect[] usedByEffects, ItemEffect[] usedAgainstEffects) {
         this.name = name;
         this.usedByEffects = usedByEffects;
         this.usedAgainstEffects = usedAgainstEffects;
@@ -49,6 +49,6 @@ public class NItemImpl implements Item {
 
     @Override
     public String toString() {
-        return "NItemImpl: " + name;
+        return "ItemImpl: " + name;
     }
 }
