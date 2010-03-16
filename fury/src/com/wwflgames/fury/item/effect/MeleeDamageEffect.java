@@ -26,13 +26,13 @@ public class MeleeDamageEffect implements ItemEffect {
     }
 
     @Override
-    public void applyEffect(Mob mob, ItemUsageResult result) {
+    public void applyEffect(Mob itemUser, Mob itemUsedUpon, ItemUsageResult result) {
         if (damage instanceof CrushDamage) {
-            applyCrushDamage(mob, result);
+            applyCrushDamage(itemUsedUpon, result);
         } else if (damage instanceof SlashDamage) {
-            applySlashDamage(mob, result);
+            applySlashDamage(itemUsedUpon, result);
         } else if (damage instanceof StabDamage) {
-            applyStabDamage(mob, result);
+            applyStabDamage(itemUsedUpon, result);
         }
     }
 

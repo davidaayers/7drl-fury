@@ -10,7 +10,7 @@ public class DeathEffect implements ItemEffect {
     }
 
     @Override
-    public void applyEffect(Mob mob, ItemUsageResult result) {
+    public void applyEffect(Mob itemUser, Mob itemUsedUpon, ItemUsageResult result) {
         // they are already dead
     }
 }

@@ -83,7 +83,7 @@ public class BattleSystem {
         Log.debug("Item chosen from deck is " + item.name());
 
         ItemUsageResult itemUsage = new ItemUsageResult(item, attacker);
-        item.usedBy(attacker, itemUsage).usedAgainst(defender, itemUsage);
+        item.usedBy(attacker, itemUsage).usedAgainst(attacker, defender, itemUsage);
         // if the item killed the defender, add a message about it
         if (defender.isDead()) {
             String deathBlow = defender.name() + " was killed by " + item.name();
