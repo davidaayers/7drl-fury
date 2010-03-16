@@ -41,7 +41,7 @@ public class DungeonMap {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 // default tiles to floor
-                tiles[x][y] = new Tile(TileType.FLOOR, x, y);
+                tiles[x][y] = new Tile(TileType.EMPTY, x, y);
             }
         }
     }

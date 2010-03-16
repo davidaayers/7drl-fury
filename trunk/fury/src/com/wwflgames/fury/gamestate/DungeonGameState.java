@@ -123,6 +123,10 @@ public class DungeonGameState extends BasicGameState {
         Log.debug("Inspecting " + newX + "," + newY);
 
         // first, see if moving to newX,newY would cause combat
+        if ( !dungeonMap.inBounds(newX,newY)) {
+            Log.debug("Out of bounds");
+            return;
+        }
         Mob enemy = dungeonMap.getTileAt(newX, newY).getMob();
         Log.debug("Enemy present, enemy was " + enemy);
         if (enemy != null) {
