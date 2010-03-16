@@ -80,14 +80,14 @@ public class TitleGameState extends BasicGameState {
 
             Image realImage = new Image(imgWidth, imgHeight + 20);
             Graphics g1 = realImage.getGraphics();
-            g1.drawImage(img, 0, 0);
+            g1.drawImage(img, 0, 0, Color.gray);
             g1.flush();
 
             // create an image for the mouse over Image, which includes the name of
             // the profession
             Image mouseOver = new Image(imgWidth, imgHeight + 20);
             Graphics g = mouseOver.getGraphics();
-            g.drawImage(img, 0, 0, Color.red);
+            g.drawImage(img, 0, 0);
             g.setColor(Color.white);
             String prof = profession.getName();
             int strWidth = g.getFont().getWidth(prof);
@@ -177,21 +177,35 @@ public class TitleGameState extends BasicGameState {
                 break;
 
             case GENERATING_MAP:
-                // generate the Dungeon
-                // simulate
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                currentState = State.GAME_START;
-
+                // spin off a thread to generate the map, so the game will keep updaing
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        disableMouseOverAreas();
+                        generateMap();
+                        currentState = State.GAME_START;
+                    }
+                }).start();
                 break;
 
             case GAME_START:
                 stateBasedGame.enterState(Fury.DUNGEON_GAME_STATE, new FadeOutTransition(Color.black),
                         new FadeInTransition(Color.black));
                 break;
+        }
+    }
+
+    private void disableMouseOverAreas() {
+        for (MouseOverArea moa : professionChoices) {
+            moa.setAcceptingInput(false);
+        }
+    }
+
+    private void generateMap() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
