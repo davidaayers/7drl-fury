@@ -2,11 +2,13 @@ package com.wwflgames.fury.item.effect.damage;
 
 public abstract class Damage {
 
+    public static final Damage MELEE_DAMAGE = new MeleeDamage("Melee");
     public static final Damage CRUSH_DAMAGE = new CrushDamage();
     public static final Damage SLASH_DAMAGE = new SlashDamage();
     public static final Damage STAB_DAMAGE = new StabDamage();
 
     public static final Damage[] ALL_DAMAGE_TYPES = {
+            MELEE_DAMAGE,
             CRUSH_DAMAGE,
             SLASH_DAMAGE,
             STAB_DAMAGE

@@ -2,13 +2,13 @@ package com.wwflgames.fury.item.effect;
 
 import com.wwflgames.fury.battle.ItemEffectResult;
 import com.wwflgames.fury.battle.ItemUsageResult;
-import com.wwflgames.fury.item.effect.damage.CrushDamage;
-import com.wwflgames.fury.item.effect.damage.MeleeDamage;
-import com.wwflgames.fury.item.effect.damage.SlashDamage;
-import com.wwflgames.fury.item.effect.damage.StabDamage;
+import com.wwflgames.fury.item.effect.damage.*;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MeleeDamageEffect implements ItemEffect {
 
@@ -39,6 +39,11 @@ public class MeleeDamageEffect implements ItemEffect {
     // crush damage gets applied to armor first (and destroys it, at least
     // for this combat round), then to health
     private void applyCrushDamage(Mob mob, ItemUsageResult result) {
+
+        List<AttackBuffEffect> attackBuffs = findAndRemoveApplicableBuffs(mob, Damage.CRUSH_DAMAGE);
+
+        Log.debug("Got " + attackBuffs + " attack buffs");
+
         int armor = mob.getBattleStatValue(Stat.ARMOR);
         int healthBefore = mob.getStatValue(Stat.HEALTH);
         int armorBefore = armor;
@@ -71,13 +76,33 @@ public class MeleeDamageEffect implements ItemEffect {
         String armorDesc = "{0} armor is crushed for {2}";
         String healthDesc = "{1} takes {2} damage!";
         if (armorBefore != 0 && armorDelta != 0) {
-            result.add(new ItemEffectResult(armorDesc, Stat.ARMOR, armorDelta, mob, this));
+            result.add(new ItemEffectResult(armorDesc, armorDelta, mob, this));
         }
         if (healthDelta != 0) {
-            result.add(new ItemEffectResult(healthDesc, Stat.HEALTH, healthDelta, mob, this));
+            result.add(new ItemEffectResult(healthDesc, healthDelta, mob, this));
         } else {
-            result.add(new ItemEffectResult("{0} armor absorbed all damage!", Stat.ARMOR, armorDelta, mob, this));
+            result.add(new ItemEffectResult("{0} armor absorbed all damage!", armorDelta, mob, this));
         }
+    }
+
+    private List<AttackBuffEffect> findAndRemoveApplicableBuffs(Mob mob, Damage damageType) {
+        List<AttackBuffEffect> applicableBuffs = new ArrayList<AttackBuffEffect>();
+        for (BuffEffect buff : mob.getBuffs()) {
+            if (buff instanceof AttackBuffEffect) {
+                AttackBuffEffect attackBuff = (AttackBuffEffect) buff;
+                Log.debug("attackBuff = " + attackBuff.getDesc());
+                if (attackBuff.getClass().isAssignableFrom(damageType.getClass())) {
+                    Log.debug("It's assignable");
+                    applicableBuffs.add(attackBuff);
+                }
+
+            }
+        }
+        // now, remove the buffs from the mob, because we're about to use them
+        for (AttackBuffEffect buff : applicableBuffs) {
+            mob.removeBuff(buff);
+        }
+        return applicableBuffs;
     }
 
     // slash damage is reduced by 10% for every 10 points of armor. So
