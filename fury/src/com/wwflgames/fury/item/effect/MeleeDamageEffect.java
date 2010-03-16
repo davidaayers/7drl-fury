@@ -2,7 +2,11 @@ package com.wwflgames.fury.item.effect;
 
 import com.wwflgames.fury.battle.ItemEffectResult;
 import com.wwflgames.fury.battle.ItemUsageResult;
-import com.wwflgames.fury.item.effect.damage.*;
+import com.wwflgames.fury.item.effect.damage.CrushDamage;
+import com.wwflgames.fury.item.effect.damage.Damage;
+import com.wwflgames.fury.item.effect.damage.MeleeDamage;
+import com.wwflgames.fury.item.effect.damage.SlashDamage;
+import com.wwflgames.fury.item.effect.damage.StabDamage;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
@@ -28,27 +32,35 @@ public class MeleeDamageEffect implements ItemEffect {
     @Override
     public void applyEffect(Mob itemUser, Mob itemUsedUpon, ItemUsageResult result) {
         if (damage instanceof CrushDamage) {
-            applyCrushDamage(itemUsedUpon, result);
+            applyCrushDamage(itemUser, itemUsedUpon, result);
         } else if (damage instanceof SlashDamage) {
-            applySlashDamage(itemUsedUpon, result);
+            applySlashDamage(itemUser, itemUsedUpon, result);
         } else if (damage instanceof StabDamage) {
-            applyStabDamage(itemUsedUpon, result);
+            applyStabDamage(itemUser, itemUsedUpon, result);
         }
     }
 
     // crush damage gets applied to armor first (and destroys it, at least
     // for this combat round), then to health
-    private void applyCrushDamage(Mob mob, ItemUsageResult result) {
+    private void applyCrushDamage(Mob itemUser, Mob mob, ItemUsageResult result) {
 
-        List<AttackBuffEffect> attackBuffs = findAndRemoveApplicableBuffs(mob, Damage.CRUSH_DAMAGE);
+        List<AttackBuffEffect> attackBuffs = findAndRemoveApplicableBuffs(itemUser, Damage.CRUSH_DAMAGE);
 
         Log.debug("Got " + attackBuffs + " attack buffs");
+        int buffAmt = 0;
+        for ( AttackBuffEffect effect : attackBuffs ) {
+            buffAmt += effect.getAmount();
+            // add message about the buff
+            String msg = "{1} attack is increased by {2}!";
+            result.add(new ItemEffectResult(msg, effect.getAmount(), mob, effect));
+        }
+        Log.debug("Total Buff amount = " + buffAmt);
 
         int armor = mob.getBattleStatValue(Stat.ARMOR);
         int healthBefore = mob.getStatValue(Stat.HEALTH);
         int armorBefore = armor;
 
-        int dmg = damageAmount;
+        int dmg = damageAmount + buffAmt;
 
         Log.debug("Armor before: " + armor);
         Log.debug("Dmg before  : " + dmg);
@@ -85,13 +97,29 @@ public class MeleeDamageEffect implements ItemEffect {
         }
     }
 
-    private List<AttackBuffEffect> findAndRemoveApplicableBuffs(Mob mob, Damage damageType) {
+    // slash damage is reduced by 10% for every 10 points of armor. So
+    // if the mob has 100 armor or more, they are basically immune to
+    // slash damage
+    private void applySlashDamage(Mob itemUser, Mob mob, ItemUsageResult result) {
+
+    }
+
+    // not sure how stab damage should work. Ignore armor?
+    private void applyStabDamage(Mob itemUser, Mob mob, ItemUsageResult result) {
+
+    }
+
+    List<AttackBuffEffect> findAndRemoveApplicableBuffs(Mob mob, Damage damageType) {
         List<AttackBuffEffect> applicableBuffs = new ArrayList<AttackBuffEffect>();
-        for (BuffEffect buff : mob.getBuffs()) {
+        List<BuffEffect> buffEffects = mob.getBuffs();
+        Log.debug("Buff effects for " + mob + " were " + buffEffects);
+        for (BuffEffect buff : buffEffects) {
+            Log.debug("Looking at buff " + buff);
             if (buff instanceof AttackBuffEffect) {
                 AttackBuffEffect attackBuff = (AttackBuffEffect) buff;
                 Log.debug("attackBuff = " + attackBuff.getDesc());
-                if (attackBuff.getClass().isAssignableFrom(damageType.getClass())) {
+
+                if (attackBuff.getDamage().getClass().isAssignableFrom(damageType.getClass())) {
                     Log.debug("It's assignable");
                     applicableBuffs.add(attackBuff);
                 }
@@ -104,17 +132,5 @@ public class MeleeDamageEffect implements ItemEffect {
         }
         return applicableBuffs;
     }
-
-    // slash damage is reduced by 10% for every 10 points of armor. So
-    // if the mob has 100 armor or more, they are basically immune to
-    // slash damage
-    private void applySlashDamage(Mob mob, ItemUsageResult result) {
-
-    }
-
-    // not sure how stab damage should work. Ignore armor?
-    private void applyStabDamage(Mob mob, ItemUsageResult result) {
-
-    }
-
+    
 }
