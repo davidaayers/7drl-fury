@@ -165,9 +165,6 @@ public class TitleGameState extends BasicGameState {
 
             case START_GENERATING_MAP:
                 currentState = State.GENERATING_MAP;
-                break;
-
-            case GENERATING_MAP:
                 // spin off a thread to generate the dungeonMap, so the game will keep updaing
                 new Thread(new Runnable() {
                     @Override
@@ -177,6 +174,10 @@ public class TitleGameState extends BasicGameState {
                         currentState = State.GAME_START;
                     }
                 }).start();
+                break;
+
+            case GENERATING_MAP:
+                // just wait
                 break;
 
             case GAME_START:
