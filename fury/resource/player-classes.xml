@@ -2,12 +2,17 @@
     <player-class name="Warrior" sprite-sheet="warrior_male.png">
         <deck>
             <item name="Mace of Crushing"/>
+            <item name="Shield of Protection"/>
         </deck>
     </player-class>
     <player-class name="Wizard" sprite-sheet="wizard_male.png">
-
+        <deck>
+            <item name="Mace of Crushing"/>
+        </deck>
     </player-class>
     <player-class name="Thief" sprite-sheet="rogue_male.png">
-
+        <deck>
+            <item name="Mace of Crushing"/>
+        </deck>
     </player-class>
 </player-classes>
