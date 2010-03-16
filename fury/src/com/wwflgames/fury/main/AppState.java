@@ -1,12 +1,12 @@
 package com.wwflgames.fury.main;
 
-import com.wwflgames.fury.map.Map;
+import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.player.Player;
 
 public interface AppState {
     Player getPlayer();
 
-    Map getMap();
+    DungeonMap getMap();
 
     boolean doesPlayerHaveInitiative();
 
@@ -14,5 +14,5 @@ public interface AppState {
 
     void setPlayer(Player player);
 
-    void setMap(Map map);
+    void setMap(DungeonMap dungeonMap);
 }

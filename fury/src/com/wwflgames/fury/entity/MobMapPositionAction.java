@@ -14,7 +14,7 @@ public class MobMapPositionAction extends Action {
 
     @Override
     public void update(int delta) {
-        // get the mob's current position on the map, and update the entity
+        // get the mob's current position on the dungeonMap, and update the entity
         // based on it
         int mapX = mob.getCurrentMapTile().getX();
         int mapY = mob.getCurrentMapTile().getY();

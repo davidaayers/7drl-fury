@@ -1,6 +1,6 @@
 package com.wwflgames.fury.entity;
 
-import com.wwflgames.fury.map.Map;
+import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.map.TileType;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -12,16 +12,16 @@ public class BattleMapRenderer extends MapRenderer {
     private int renderX;
     private int renderY;
 
-    public BattleMapRenderer(String id, Map map, int renderX, int renderY)
+    public BattleMapRenderer(String id, DungeonMap dungeonMap, int renderX, int renderY)
             throws SlickException {
-        super(id, map);
+        super(id, dungeonMap);
         this.renderX = renderX;
         this.renderY = renderY;
     }
 
     @Override
     public void render(Graphics gr) {
-        // starting at renderX, render Y, we're going to render 9 squares of the map
+        // starting at renderX, render Y, we're going to render 9 squares of the dungeonMap
         // if any of the squares would be out of bounds, don't draw them
         Vector2f pos = owner.getPosition();
         float scale = owner.getScale();
@@ -36,8 +36,8 @@ public class BattleMapRenderer extends MapRenderer {
             for (int x = 0; x < 3; x++) {
                 int mapX = renderX + x;
                 int mapY = renderY + y;
-                if (map.inBounds(mapX, mapY)) {
-                    TileType tileType = map.getTileAt(mapX, mapY).getType();
+                if (dungeonMap.inBounds(mapX, mapY)) {
+                    TileType tileType = dungeonMap.getTileAt(mapX, mapY).getType();
                     Image drawImage = determineImageForTile(tileType);
                     drawImage.draw(pos.x + (x * tw * scale), pos.y + (y * th * scale), scale);
                 }
