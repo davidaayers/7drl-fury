@@ -1,7 +1,6 @@
 package com.wwflgames.fury.battle;
 
 import com.wwflgames.fury.item.Item;
-import com.wwflgames.fury.item.effect.Death;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.util.Log;
