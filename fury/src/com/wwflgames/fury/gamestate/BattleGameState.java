@@ -9,7 +9,7 @@ import com.wwflgames.fury.item.effect.DeathEffect;
 import com.wwflgames.fury.item.effect.MeleeDamageEffect;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.map.Direction;
-import com.wwflgames.fury.map.Map;
+import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.player.Player;
@@ -117,7 +117,7 @@ public class BattleGameState extends BasicGameState {
 
         // grab the player
         Player player = appState.getPlayer();
-        Map map = appState.getMap();
+        DungeonMap dungeonMap = appState.getMap();
 
         int playerMapX = player.getMapX();
         int playerMapY = player.getMapY();
@@ -125,14 +125,14 @@ public class BattleGameState extends BasicGameState {
         int mapOffsetX = playerMapX - 1;
         int mapOffsetY = playerMapY - 1;
 
-        Entity mapEntity = new Entity("map")
+        Entity mapEntity = new Entity("dungeonMap")
                 .setPosition(new Vector2f(208, 32))
                 .setScale(4)
                 .addComponent(new BattleMapRenderer("mapRender", appState.getMap(), mapOffsetX, mapOffsetY));
 
         entityManager.addEntity(mapEntity);
 
-        List<Monster> monsters = findMonsters(map, playerMapX, playerMapY);
+        List<Monster> monsters = findMonsters(dungeonMap, playerMapX, playerMapY);
 
         // finally, create entities for all of the monsters found, and the player, so
         // they can be rendered
@@ -190,7 +190,7 @@ public class BattleGameState extends BasicGameState {
     }
 
     // package private for testing
-    List<Monster> findMonsters(Map map, int playerX, int playerY) {
+    List<Monster> findMonsters(DungeonMap dungeonMap, int playerX, int playerY) {
         List<Monster> monsters = new ArrayList<Monster>();
         // look at all of the 8 squares around the player
         // and see if there are monsters there
@@ -198,8 +198,8 @@ public class BattleGameState extends BasicGameState {
             for (int x = -1; x < 2; x++) {
                 int mx = playerX + x;
                 int my = playerY + y;
-                if (map.inBounds(mx, my)) {
-                    Mob mob = map.getTileAt(playerX + x, playerY + y).getMob();
+                if (dungeonMap.inBounds(mx, my)) {
+                    Mob mob = dungeonMap.getTileAt(playerX + x, playerY + y).getMob();
                     if (mob != null && mob instanceof Monster) {
                         monsters.add((Monster) mob);
                     }
@@ -325,7 +325,7 @@ public class BattleGameState extends BasicGameState {
                 for (Mob monster : deadMobs) {
                     Entity mobEntity = mobEntities.remove(monster);
                     entityManager.removeEntity(mobEntity);
-                    // remove it from the map too
+                    // remove it from the dungeonMap too
                     appState.getMap().removeMob(monster);
                 }
 
@@ -352,12 +352,12 @@ public class BattleGameState extends BasicGameState {
         Log.debug("MONSTER_CHOSEN");
 
         Player player = appState.getPlayer();
-        Map map = appState.getMap();
+        DungeonMap dungeonMap = appState.getMap();
         int monsterX = player.getMapX() + attackX;
         int monsterY = player.getMapY() + attackY;
         Monster monster = null;
-        if (map.inBounds(monsterX, monsterY)) {
-            monster = (Monster) map.getTileAt(monsterX, monsterY).getMob();
+        if (dungeonMap.inBounds(monsterX, monsterY)) {
+            monster = (Monster) dungeonMap.getTileAt(monsterX, monsterY).getMob();
         }
         if (monster != null) {
             lastResult = battleSystem.performBattleRound(monster);
@@ -367,7 +367,7 @@ public class BattleGameState extends BasicGameState {
             greyOutItemMessages();
             currentState = State.ANIMATION_PLAY;
         } else {
-            Log.debug("Monster was null or map was out of bounds, resetting state");
+            Log.debug("Monster was null or dungeonMap was out of bounds, resetting state");
             currentState = State.PLAYER_CHOOSE_MONSTER;
         }
     }

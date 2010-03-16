@@ -6,14 +6,14 @@ import com.wwflgames.fury.monster.Monster;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Map {
+public class DungeonMap {
 
     private int width;
     private int height;
     private Tile[][] tiles;
     private List<Monster> monsterList = new ArrayList<Monster>();
 
-    public Map(int width, int height) {
+    public DungeonMap(int width, int height) {
         this.width = width;
         this.height = height;
         tiles = new Tile[width][height];

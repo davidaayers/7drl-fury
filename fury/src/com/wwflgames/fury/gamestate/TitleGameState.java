@@ -3,8 +3,8 @@ package com.wwflgames.fury.gamestate;
 import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.entity.SpriteSheetCache;
 import com.wwflgames.fury.main.AppState;
-import com.wwflgames.fury.map.FixedMapCreator;
-import com.wwflgames.fury.map.Map;
+import com.wwflgames.fury.map.FixedDungeonMapCreator;
+import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.monster.MonsterFactory;
@@ -156,7 +156,7 @@ public class TitleGameState extends BasicGameState {
                 break;
 
             case GENERATING_MAP:
-                // spin off a thread to generate the map, so the game will keep updaing
+                // spin off a thread to generate the dungeonMap, so the game will keep updaing
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -181,8 +181,8 @@ public class TitleGameState extends BasicGameState {
     }
 
     private void generateMap() {
-        Map map = new FixedMapCreator().createMap();
-        appState.setMap(map);
+        DungeonMap dungeonMap = new FixedDungeonMapCreator().createMap();
+        appState.setMap(dungeonMap);
         initMonsters();
         putPlayerOnMap();
     }
@@ -200,7 +200,7 @@ public class TitleGameState extends BasicGameState {
     }
 
     private void putPlayerOnMap() {
-        // put the player in the upper right hand corner of the map
+        // put the player in the upper right hand corner of the dungeonMap
         appState.getMap().addMob(appState.getPlayer(), 1, 1);
     }
 

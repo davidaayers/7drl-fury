@@ -4,7 +4,7 @@ import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.entity.*;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.map.Direction;
-import com.wwflgames.fury.map.Map;
+import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.map.Tile;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
@@ -44,8 +44,8 @@ public class DungeonGameState extends BasicGameState {
     }
 
     public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-        // create a map entity
-        Entity mapEntity = new Entity("map")
+        // create a dungeonMap entity
+        Entity mapEntity = new Entity("dungeonMap")
                 .setPosition(new Vector2f(0, 0))
                 .setScale(1)
                 .addComponent(new DungeonMapRenderer("mapRender", appState.getMap()));
@@ -63,7 +63,7 @@ public class DungeonGameState extends BasicGameState {
 
         entityManager.addEntity(player);
 
-        // grab all of the monsters on the map
+        // grab all of the monsters on the dungeonMap
         for (Monster monster : appState.getMap().getMonsterList()) {
             // player entity
             Log.debug("monster location = " + monster.getCurrentMapTile().getX() + "," +
@@ -122,20 +122,20 @@ public class DungeonGameState extends BasicGameState {
         int currY = tile.getY();
         int newX = currX + dx;
         int newY = currY + dy;
-        Map map = appState.getMap();
+        DungeonMap dungeonMap = appState.getMap();
 
         Log.debug("Inspecting " + newX + "," + newY);
 
         // first, see if moving to newX,newY would cause combat
-        Mob enemy = map.getTileAt(newX, newY).getMob();
+        Mob enemy = dungeonMap.getTileAt(newX, newY).getMob();
         Log.debug("Enemy present, enemy was " + enemy);
         if (enemy != null) {
             Log.debug("about to initiate combat");
             initiateCombat(player);
-        } else if (map.inBounds(newX, newY) && map.isWalkable(newX, newY)) {
+        } else if (dungeonMap.inBounds(newX, newY) && dungeonMap.isWalkable(newX, newY)) {
             Log.debug("Moving to " + newX + "," + newY);
-            map.removeMob(player);
-            map.addMob(player, newX, newY);
+            dungeonMap.removeMob(player);
+            dungeonMap.addMob(player, newX, newY);
         } else {
             Log.debug("Hit a wall!");
         }
