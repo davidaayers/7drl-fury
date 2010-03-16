@@ -29,4 +29,10 @@
         </usedByEffects>
         <usedAgainstEffects/>
     </item>
+    <item name="Furious Roar">
+        <usedByEffects>
+            <attack-buff type="Melee" value="4"/>
+        </usedByEffects>
+        <usedAgainstEffects/>
+    </item>
 </items>

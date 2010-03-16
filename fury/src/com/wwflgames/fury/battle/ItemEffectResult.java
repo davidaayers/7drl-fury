@@ -2,11 +2,9 @@ package com.wwflgames.fury.battle;
 
 import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.mob.Mob;
-import com.wwflgames.fury.mob.Stat;
 
 public class ItemEffectResult {
     private String desc;
-    private Stat stat;
     private Integer delta;
     private Mob effectedMob;
     private ItemEffect effect;
@@ -17,9 +15,8 @@ public class ItemEffectResult {
         this.effect = effect;
     }
 
-    public ItemEffectResult(String desc, Stat stat, Integer delta, Mob effectedMob, ItemEffect effect) {
+    public ItemEffectResult(String desc, Integer delta, Mob effectedMob, ItemEffect effect) {
         this.desc = desc;
-        this.stat = stat;
         this.delta = delta;
         this.effectedMob = effectedMob;
         this.effect = effect;
@@ -27,10 +24,6 @@ public class ItemEffectResult {
 
     public String getDesc() {
         return desc;
-    }
-
-    public Stat getStat() {
-        return stat;
     }
 
     public Integer getDelta() {
@@ -49,7 +42,6 @@ public class ItemEffectResult {
     public String toString() {
         return "ItemEffectResult{" +
                 "desc='" + desc + '\'' +
-                ", stat=" + stat +
                 ", delta=" + delta +
                 '}';
     }

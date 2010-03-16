@@ -1,5 +1,6 @@
 package com.wwflgames.fury.item;
 
+import com.wwflgames.fury.item.effect.AttackBuffEffect;
 import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.item.effect.MeleeDamageEffect;
 import com.wwflgames.fury.item.effect.StatBuffEffect;
@@ -94,6 +95,13 @@ public class ItemFactory {
             Log.debug("stat was " + stat);
             StatBuffEffect statBuff = new StatBuffEffect(stat, value);
             return statBuff;
+        } else if (childNode.getName().equals("attack-buff")) {
+            Log.debug("Creating attack-buff");
+            String attackType = childNode.getAttribute("type");
+            int value = childNode.getIntAttribute("value");
+            Damage damage = Damage.forType(attackType);
+            AttackBuffEffect attackBuff = new AttackBuffEffect(damage, value);
+            return attackBuff;
         }
         return null;
     }

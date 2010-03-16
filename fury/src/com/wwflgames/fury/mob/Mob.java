@@ -1,9 +1,12 @@
 package com.wwflgames.fury.mob;
 
 import com.wwflgames.fury.item.ItemDeck;
+import com.wwflgames.fury.item.effect.BuffEffect;
 import com.wwflgames.fury.map.Tile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Mob {
@@ -11,6 +14,7 @@ public class Mob {
     protected Map<Stat, Integer> stats = new HashMap<Stat, Integer>();
     protected Map<Stat, Integer> battleStats;
     protected ItemDeck deck;
+    private List<BuffEffect> buffs = new ArrayList<BuffEffect>();
     private String name;
     private Tile currentMapTile;
     private Integer mapX;
@@ -125,6 +129,18 @@ public class Mob {
 
     public void setMapY(Integer mapY) {
         this.mapY = mapY;
+    }
+
+    public void addBuff(BuffEffect buff) {
+        buffs.add(buff);
+    }
+
+    public void removeBuff(BuffEffect buff) {
+        buffs.remove(buff);
+    }
+
+    public List<BuffEffect> getBuffs() {
+        return buffs;
     }
 
     @Override
