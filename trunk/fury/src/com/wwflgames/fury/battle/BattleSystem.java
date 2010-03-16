@@ -87,7 +87,8 @@ public class BattleSystem {
         // if the item killed the defender, add a message about it
         if (defender.isDead()) {
             String deathBlow = defender.name() + " was killed by " + item.name();
-            itemUsage.addAtFront(new ItemEffectResult(deathBlow, defender, new Death()));
+            //TODO: FIX FIX FIX
+            //itemUsage.addAtFront(new ItemEffectResult(deathBlow, defender, new Death()));
         }
         result.addItemUsageResultFor(attacker, itemUsage);
     }
