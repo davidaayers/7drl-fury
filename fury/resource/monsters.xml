@@ -6,7 +6,7 @@
     </monster>
     <monster name="Orc Spritualist" sprite-sheet="janes_monster.png">
         <deck>
-            <item name="Bunch of Pretty Flowers"/>
+            <item name="Pretty Flowers"/>
         </deck>
     </monster>
     <monster name="Orc" sprite-sheet="orc.png">

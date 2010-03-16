@@ -11,7 +11,7 @@
             <damage type="melee_crush" value="8"/>
         </usedAgainstEffects>
     </item>
-    <item name="Bunch of Pretty Flowers">
+    <item name="Pretty Flowers">
         <usedByEffects/>
         <usedAgainstEffects>
             <damage type="melee_crush" value="1"/>
