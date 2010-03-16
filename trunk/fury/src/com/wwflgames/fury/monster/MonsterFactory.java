@@ -1,6 +1,5 @@
 package com.wwflgames.fury.monster;
 
-import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.item.ItemFactory;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
@@ -12,6 +11,8 @@ import org.newdawn.slick.util.xml.XMLParser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.wwflgames.fury.item.ItemDeckXmlHelper.createDeck;
 
 public class MonsterFactory {
 
@@ -36,7 +37,7 @@ public class MonsterFactory {
             String spriteSheet = childNode.getAttribute("sprite-sheet");
             Monster monster = new Monster(name, spriteSheet);
             // create the monster's deck
-            monster.setDeck(createDeck(childNode));
+            monster.setDeck(createDeck(childNode, itemFactory));
             setMonsterStats(childNode, monster);
             allMonsters.add(monster);
             allSpriteSheetNames.add(spriteSheet);
@@ -49,20 +50,20 @@ public class MonsterFactory {
         monster.setStatValue(Stat.HEALTH, 10);
     }
 
-    private ItemDeck createDeck(XMLElement childNode) {
-
-        XMLElementList list = childNode.getChildrenByName("deck");
-        XMLElement deckNode = list.get(0);
-        XMLElementList items = deckNode.getChildren();
-        ItemDeck deck = new ItemDeck();
-        for (int idx = 0; idx < items.size(); idx++) {
-            XMLElement item = items.get(idx);
-            deck.addItem(itemFactory.getItemByName(item.getAttribute("name")));
-        }
-        Log.debug("deck is " + deck);
-
-        return deck;
-    }
+//    private ItemDeck createDeck(XMLElement childNode) {
+//
+//        XMLElementList list = childNode.getChildrenByName("deck");
+//        XMLElement deckNode = list.get(0);
+//        XMLElementList items = deckNode.getChildren();
+//        ItemDeck deck = new ItemDeck();
+//        for (int idx = 0; idx < items.size(); idx++) {
+//            XMLElement item = items.get(idx);
+//            deck.addItem(itemFactory.getItemByName(item.getAttribute("name")));
+//        }
+//        Log.debug("deck is " + deck);
+//
+//        return deck;
+//    }
 
     public List<String> getAllSpriteSheetNames() {
         return allSpriteSheetNames;

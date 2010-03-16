@@ -2,10 +2,12 @@ package com.wwflgames.fury.gamestate;
 
 import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.entity.SpriteSheetCache;
-import com.wwflgames.fury.item.ItemDeck;
-import com.wwflgames.fury.item.ItemFactory;
 import com.wwflgames.fury.main.AppState;
+import com.wwflgames.fury.map.FixedMapCreator;
+import com.wwflgames.fury.map.Map;
 import com.wwflgames.fury.mob.Stat;
+import com.wwflgames.fury.monster.Monster;
+import com.wwflgames.fury.monster.MonsterFactory;
 import com.wwflgames.fury.player.Player;
 import com.wwflgames.fury.player.Profession;
 import com.wwflgames.fury.player.ProfessionFactory;
@@ -32,7 +34,6 @@ public class TitleGameState extends BasicGameState {
         GAME_START
     }
 
-
     private GameContainer gameContainer;
     private StateBasedGame stateBasedGame;
     private Image titleImage;
@@ -40,11 +41,14 @@ public class TitleGameState extends BasicGameState {
     private SpriteSheetCache spriteSheetCache;
     private List<MouseOverArea> professionChoices = new ArrayList<MouseOverArea>();
     private State currentState;
+    private MonsterFactory monsterFactory;
     private AppState appState;
 
-    public TitleGameState(ProfessionFactory professionFactory, SpriteSheetCache spriteSheetCache, AppState appState) {
+    public TitleGameState(ProfessionFactory professionFactory, SpriteSheetCache spriteSheetCache,
+                          MonsterFactory monsterFactory, AppState appState) {
         this.professionFactory = professionFactory;
         this.spriteSheetCache = spriteSheetCache;
+        this.monsterFactory = monsterFactory;
         this.appState = appState;
     }
 
@@ -117,19 +121,7 @@ public class TitleGameState extends BasicGameState {
         Player player = new Player(profession.getName(), profession);
         player.setStatValue(Stat.HEALTH, 40);
         player.setStatValue(Stat.ARMOR, 5);
-        // put the player in the upper right hand corner of the map
-        appState.getMap().addMob(player, 1, 1);
-
-        ItemFactory factory = null;
-        try {
-            factory = new ItemFactory();
-        } catch (SlickException e) {
-            e.printStackTrace();
-        }
-
-        ItemDeck deck = new ItemDeck();
-        player.setDeck(deck);
-
+        player.setDeck(profession.getStarterDeck());
         appState.setPlayer(player);
     }
 
@@ -189,11 +181,28 @@ public class TitleGameState extends BasicGameState {
     }
 
     private void generateMap() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Map map = new FixedMapCreator().createMap();
+        appState.setMap(map);
+        initMonsters();
+        putPlayerOnMap();
     }
+
+    private void initMonsters() {
+        // an an enemy
+        Monster monster = monsterFactory.createMonster(0);
+        appState.getMap().addMob(monster, 2, 1);
+
+        Monster monster2 = monsterFactory.createMonster(0);
+        appState.getMap().addMob(monster2, 2, 2);
+
+        Monster monster3 = monsterFactory.createMonster(0);
+        appState.getMap().addMob(monster3, 3, 3);
+    }
+
+    private void putPlayerOnMap() {
+        // put the player in the upper right hand corner of the map
+        appState.getMap().addMob(appState.getPlayer(), 1, 1);
+    }
+
 
 }

@@ -23,13 +23,17 @@ public class ItemImpl implements Item {
 
     @Override
     public Item usedBy(Mob mob, ItemUsageResult result) {
-        applyEffects(usedByEffects, mob, result);
+        if (usedByEffects != null) {
+            applyEffects(usedByEffects, mob, result);
+        }
         return this;
     }
 
     @Override
     public Item usedAgainst(Mob mob, ItemUsageResult result) {
-        applyEffects(usedAgainstEffects, mob, result);
+        if (usedAgainstEffects != null) {
+            applyEffects(usedAgainstEffects, mob, result);
+        }
         return this;
     }
 

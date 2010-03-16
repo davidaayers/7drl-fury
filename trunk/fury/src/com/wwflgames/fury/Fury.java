@@ -4,11 +4,8 @@ import com.wwflgames.fury.entity.SpriteSheetCache;
 import com.wwflgames.fury.gamestate.BattleGameState;
 import com.wwflgames.fury.gamestate.DungeonGameState;
 import com.wwflgames.fury.gamestate.TitleGameState;
-import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.item.ItemFactory;
 import com.wwflgames.fury.main.AppStateImpl;
-import com.wwflgames.fury.map.FixedMapCreator;
-import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.monster.MonsterFactory;
 import com.wwflgames.fury.player.ProfessionFactory;
 import org.newdawn.slick.AppGameContainer;
@@ -40,13 +37,6 @@ public class Fury extends StateBasedGame {
 
     private void initAppState() {
         appState = new AppStateImpl();
-
-        //TODO: move map creation somewhere else, later
-        appState.setMap(new FixedMapCreator().createMap());
-    }
-
-    private ItemDeck createDeck(int dmg) throws SlickException {
-        return new ItemDeck();
     }
 
     @Override
@@ -58,9 +48,8 @@ public class Fury extends StateBasedGame {
         initMonsterFactory();
         initPlayerClassFactory();
         initSpriteSheetCache();
-        // TEMP
-        initMonsters();
 
+        // now, actually create the game states like we're supposed to in this method. ugh.
         installGameStates();
     }
 
@@ -75,25 +64,7 @@ public class Fury extends StateBasedGame {
     }
 
     private void initPlayerClassFactory() throws SlickException {
-        professionFactory = new ProfessionFactory();
-    }
-
-    private void initMonsters() throws SlickException {
-        // an an enemy
-        Monster monster = monsterFactory.createMonster(0);
-//        monster.setStatValue(Stat.HEALTH, 10);
-//        monster.setDeck(createDeck(1));
-        appState.getMap().addMob(monster, 2, 1);
-
-        Monster monster2 = monsterFactory.createMonster(0);
-//        monster2.setStatValue(Stat.HEALTH, 10);
-//        monster2.setDeck(createDeck(1));
-        appState.getMap().addMob(monster2, 2, 2);
-
-        Monster monster3 = monsterFactory.createMonster(0);
-//        monster3.setStatValue(Stat.HEALTH, 10);
-//        monster3.setDeck(createDeck(3));
-        appState.getMap().addMob(monster3, 3, 3);
+        professionFactory = new ProfessionFactory(itemFactory);
     }
 
     private void initMonsterFactory() throws SlickException {
@@ -111,7 +82,7 @@ public class Fury extends StateBasedGame {
     }
 
     private TitleGameState createTitleGameState() {
-        return new TitleGameState(professionFactory, spriteSheetCache, appState);
+        return new TitleGameState(professionFactory, spriteSheetCache, monsterFactory, appState);
     }
 
     private GameState createDungeonState() {
