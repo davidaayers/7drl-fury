@@ -2,13 +2,8 @@ package com.wwflgames.fury.gamestate;
 
 import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.entity.SpriteSheetCache;
-import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.item.ItemFactory;
-import com.wwflgames.fury.item.effect.Damage;
-import com.wwflgames.fury.item.effect.DamageType;
-import com.wwflgames.fury.item.effect.ItemEffect;
-import com.wwflgames.fury.item.effect.StatBuff;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.player.Player;
@@ -132,16 +127,8 @@ public class TitleGameState extends BasicGameState {
             e.printStackTrace();
         }
 
-        //player.setDeck(createDeck(8));
-        Damage crushDamage = new Damage(DamageType.MELEE_CRUSH, 8);
-        Item mace = factory.createItemWithUsedAgainstEffects("Mace of crushing", new ItemEffect[]{crushDamage});
         ItemDeck deck = new ItemDeck();
-        deck.addItem(mace);
         player.setDeck(deck);
-
-        StatBuff buff = new StatBuff(Stat.ARMOR, 4);
-        Item shield = factory.createItemWithUsedByEffects("Shield of Protection", new ItemEffect[]{buff});
-        player.getDeck().addItem(shield);
 
         appState.setPlayer(player);
     }
