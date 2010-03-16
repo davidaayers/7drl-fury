@@ -1,6 +1,7 @@
 package com.wwflgames.fury.battle;
 
 import com.wwflgames.fury.item.effect.ItemEffect;
+import com.wwflgames.fury.item.neffect.NItemEffect;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 
@@ -9,15 +10,15 @@ public class ItemEffectResult {
     private Stat stat;
     private Integer delta;
     private Mob effectedMob;
-    private ItemEffect effect;
+    private NItemEffect effect;
 
-    public ItemEffectResult(String desc, Mob effectedMob, ItemEffect effect) {
+    public ItemEffectResult(String desc, Mob effectedMob, NItemEffect effect) {
         this.desc = desc;
         this.effectedMob = effectedMob;
         this.effect = effect;
     }
 
-    public ItemEffectResult(String desc, Stat stat, Integer delta, Mob effectedMob, ItemEffect effect) {
+    public ItemEffectResult(String desc, Stat stat, Integer delta, Mob effectedMob, NItemEffect effect) {
         this.desc = desc;
         this.stat = stat;
         this.delta = delta;
@@ -41,7 +42,7 @@ public class ItemEffectResult {
         return effectedMob;
     }
 
-    public ItemEffect getEffect() {
+    public NItemEffect getEffect() {
         return effect;
     }
 

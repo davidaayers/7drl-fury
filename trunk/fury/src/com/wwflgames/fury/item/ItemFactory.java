@@ -1,7 +1,8 @@
 package com.wwflgames.fury.item;
 
-import com.wwflgames.fury.item.effect.*;
-import com.wwflgames.fury.mob.Stat;
+import com.wwflgames.fury.item.neffect.NItemEffect;
+import com.wwflgames.fury.item.neffect.NMeleeDamageEffect;
+import com.wwflgames.fury.item.neffect.damage.MeleeDamage;
 import com.wwflgames.fury.util.Log;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.xml.SlickXMLException;
@@ -16,11 +17,9 @@ import java.util.Map;
 
 public class ItemFactory {
 
-    private EffectApplierFactory effectsApplierFactory;
     private Map<String, Item> itemNameMap = new HashMap<String, Item>();
 
     public ItemFactory() throws SlickException {
-        this.effectsApplierFactory = new EffectApplierFactory();
         parseXml();
     }
 
@@ -34,78 +33,69 @@ public class ItemFactory {
             Log.debug("childNode = " + childNode.getName());
             String itemName = childNode.getAttribute("name");
             Log.debug("itemName = " + itemName);
-            createItemFromXml(childNode);
-
+            createNItemFromXml(childNode);
         }
     }
 
-    private void createItemFromXml(XMLElement itemNode) throws SlickXMLException {
+    private void createNItemFromXml(XMLElement itemNode) throws SlickXMLException {
         // grab the usedByEffects
         String itemName = itemNode.getAttribute("name");
-        ItemEffect[] usedByEffects = getEffectsForNode(itemNode, "usedByEffects");
-        ItemEffect[] usedAgainstEffects = getEffectsForNode(itemNode, "usedAgainstEffects");
-        Item item = createItem(itemName, usedByEffects, usedAgainstEffects);
+        NItemEffect[] usedByEffects = getNEffectsForNode(itemNode, "usedByEffects");
+        NItemEffect[] usedAgainstEffects = getNEffectsForNode(itemNode, "usedAgainstEffects");
+        Item item = createNItem(itemName, usedByEffects, usedAgainstEffects);
         itemNameMap.put(item.name(), item);
         Log.debug("created item " + item);
     }
 
-    private ItemEffect[] getEffectsForNode(XMLElement itemNode, String nodeName) throws SlickXMLException {
-        List<ItemEffect> effectsList = new ArrayList<ItemEffect>();
+    private NItemEffect[] getNEffectsForNode(XMLElement itemNode, String nodeName) throws SlickXMLException {
+        List<NItemEffect> effectsList = new ArrayList<NItemEffect>();
         XMLElementList usedByParent = itemNode.getChildrenByName(nodeName);
         XMLElement usedBy = usedByParent.get(0);
-        Log.debug("usedBy = " + usedBy.getName());
+        Log.debug(nodeName + " = " + usedBy.getName());
         XMLElementList usedByChildren = usedBy.getChildren();
-        Log.debug("usedByChildren.size() = " + usedByChildren.size());
+        Log.debug(nodeName + "Children.size() = " + usedByChildren.size());
         if (usedByChildren.size() != 0) {
             for (int idx = 0; idx < usedByChildren.size(); idx++) {
                 XMLElement usedByChild = usedByChildren.get(idx);
                 String name = usedByChild.getName();
-                Log.debug("usedByChild.name = " + name);
-                ItemEffect effect = createItemEffectFromNode(usedByChild);
+                Log.debug(nodeName + "Child.name = " + name);
+                NItemEffect effect = createNItemEffectFromNode(usedByChild);
                 effectsList.add(effect);
             }
         }
-        ItemEffect[] effects = null;
+        NItemEffect[] effects = null;
         if (!effectsList.isEmpty()) {
-            effects = effectsList.toArray(new ItemEffect[effectsList.size()]);
+            effects = effectsList.toArray(new NItemEffect[effectsList.size()]);
         }
         return effects;
 
     }
 
-
-    private ItemEffect createItemEffectFromNode(XMLElement childNode) throws SlickXMLException {
-        if (childNode.getName().equals("stat-buff")) {
-            Stat stat = Stat.valueOf(childNode.getAttribute("stat").toUpperCase());
-            Log.debug("stat = " + stat);
-            int value = childNode.getIntAttribute("value");
-            Log.debug("value = " + value);
-            return new StatBuff(stat, value);
-        }
+    private NItemEffect createNItemEffectFromNode(XMLElement childNode) throws SlickXMLException {
         if (childNode.getName().equals("damage")) {
             String type = childNode.getAttribute("type");
             int value = childNode.getIntAttribute("value");
-            DamageType damageType = DamageType.valueOf(type.toUpperCase());
-            return new Damage(damageType, value);
+            Log.debug("Looking for damage matching: " + type);
+            com.wwflgames.fury.item.neffect.damage.Damage dmg = com.wwflgames.fury.item.neffect.damage.Damage.forType(type);
+            Log.debug("type was " + dmg);
+            if (dmg instanceof MeleeDamage) {
+                NMeleeDamageEffect damageEffect = new NMeleeDamageEffect((MeleeDamage) dmg, value);
+                Log.debug("Created meleeDamageEffect = " + damageEffect.getDesc());
+                return damageEffect;
+            }
         }
         return null;
     }
+
 
     public static void main(String[] args) throws Exception {
         new ItemFactory();
     }
 
-    public Item createItemWithUsedAgainstEffects(String name, ItemEffect[] effects) {
-        return new ItemImpl(effectsApplierFactory, name, null, effects);
+    public Item createNItem(String name, NItemEffect[] usedByEffects, NItemEffect[] usedAgainstEffects) {
+        return new NItemImpl(name, usedByEffects, usedAgainstEffects);
     }
 
-    public Item createItemWithUsedByEffects(String name, ItemEffect[] effects) {
-        return new ItemImpl(effectsApplierFactory, name, effects, null);
-    }
-
-    public Item createItem(String name, ItemEffect[] usedByEffects, ItemEffect[] usedAgainstEffects) {
-        return new ItemImpl(effectsApplierFactory, name, usedByEffects, usedAgainstEffects);
-    }
 
     public Item getItemByName(String name) {
         return itemNameMap.get(name);

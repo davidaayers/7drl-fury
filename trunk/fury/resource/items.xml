@@ -2,25 +2,25 @@
     <item name="Mace of Crushing">
         <usedByEffects/>
         <usedAgainstEffects>
-            <damage type="melee_crush" value="4"/>
+            <damage type="Crush" value="4"/>
         </usedAgainstEffects>
     </item>
     <item name="Rusty Morningstar">
         <usedByEffects/>
         <usedAgainstEffects>
-            <damage type="melee_crush" value="8"/>
+            <damage type="Crush" value="8"/>
         </usedAgainstEffects>
     </item>
     <item name="Pretty Flowers">
         <usedByEffects/>
         <usedAgainstEffects>
-            <damage type="melee_crush" value="1"/>
+            <damage type="Crush" value="1"/>
         </usedAgainstEffects>
     </item>
     <item name="Enormous Femur">
         <usedByEffects/>
         <usedAgainstEffects>
-            <damage type="melee_crush" value="6"/>
+            <damage type="Crush" value="6"/>
         </usedAgainstEffects>
     </item>
     <item name="Shield of Protection">

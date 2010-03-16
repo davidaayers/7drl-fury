@@ -4,12 +4,8 @@ import com.wwflgames.fury.entity.SpriteSheetCache;
 import com.wwflgames.fury.gamestate.BattleGameState;
 import com.wwflgames.fury.gamestate.DungeonGameState;
 import com.wwflgames.fury.gamestate.TitleGameState;
-import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.item.ItemFactory;
-import com.wwflgames.fury.item.effect.Damage;
-import com.wwflgames.fury.item.effect.DamageType;
-import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.main.AppStateImpl;
 import com.wwflgames.fury.map.FixedMapCreator;
 import com.wwflgames.fury.monster.Monster;
@@ -50,11 +46,7 @@ public class Fury extends StateBasedGame {
     }
 
     private ItemDeck createDeck(int dmg) throws SlickException {
-        Damage crushDamage = new Damage(DamageType.MELEE_CRUSH, dmg);
-        Item mace = itemFactory.createItemWithUsedAgainstEffects("Mace of crushing", new ItemEffect[]{crushDamage});
-        ItemDeck deck = new ItemDeck();
-        deck.addItem(mace);
-        return deck;
+        return new ItemDeck();
     }
 
     @Override
