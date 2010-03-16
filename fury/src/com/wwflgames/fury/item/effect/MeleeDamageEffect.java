@@ -10,12 +10,12 @@ import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
 
-public class NMeleeDamageEffect implements NItemEffect {
+public class MeleeDamageEffect implements ItemEffect {
 
     private MeleeDamage damage;
     private int damageAmount;
 
-    public NMeleeDamageEffect(MeleeDamage damage, int damageAmount) {
+    public MeleeDamageEffect(MeleeDamage damage, int damageAmount) {
         this.damage = damage;
         this.damageAmount = damageAmount;
     }

@@ -4,9 +4,9 @@ import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.battle.*;
 import com.wwflgames.fury.entity.*;
 import com.wwflgames.fury.item.Item;
-import com.wwflgames.fury.item.effect.NBuffEffect;
-import com.wwflgames.fury.item.effect.NDeathEffect;
-import com.wwflgames.fury.item.effect.NMeleeDamageEffect;
+import com.wwflgames.fury.item.effect.BuffEffect;
+import com.wwflgames.fury.item.effect.DeathEffect;
+import com.wwflgames.fury.item.effect.MeleeDamageEffect;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.map.Direction;
 import com.wwflgames.fury.map.Map;
@@ -501,13 +501,13 @@ public class BattleGameState extends BasicGameState {
 
 
     private Color determineColor(ItemEffectResult effectResult) {
-        if (effectResult.getEffect() instanceof NMeleeDamageEffect) {
+        if (effectResult.getEffect() instanceof MeleeDamageEffect) {
             return Color.red;
         }
-        if (effectResult.getEffect() instanceof NBuffEffect) {
+        if (effectResult.getEffect() instanceof BuffEffect) {
             return Color.green;
         }
-        if (effectResult.getEffect() instanceof NDeathEffect) {
+        if (effectResult.getEffect() instanceof DeathEffect) {
             return Color.yellow;
         }
         return Color.white;

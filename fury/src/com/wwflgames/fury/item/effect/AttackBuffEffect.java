@@ -3,14 +3,14 @@ package com.wwflgames.fury.item.effect;
 import com.wwflgames.fury.battle.ItemUsageResult;
 import com.wwflgames.fury.mob.Mob;
 
-public class NDeathEffect implements NItemEffect {
+public class AttackBuffEffect extends BuffEffect {
     @Override
     public String getDesc() {
-        return "Death";
+        return null;
     }
 
     @Override
     public void applyEffect(Mob mob, ItemUsageResult result) {
-        // they are already dead
+
     }
 }

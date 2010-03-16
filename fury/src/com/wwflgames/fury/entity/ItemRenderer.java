@@ -2,7 +2,7 @@ package com.wwflgames.fury.entity;
 
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.NItemImpl;
-import com.wwflgames.fury.item.effect.NItemEffect;
+import com.wwflgames.fury.item.effect.ItemEffect;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.UnicodeFont;
@@ -28,14 +28,14 @@ public class ItemRenderer extends CardRenderer {
         NItemImpl itemImpl = (NItemImpl) item;
         // draw effects against
         if (itemImpl.getUsedAgainstEffects() != null) {
-            for (NItemEffect effect : itemImpl.getUsedAgainstEffects()) {
+            for (ItemEffect effect : itemImpl.getUsedAgainstEffects()) {
                 y += 14;
                 drawString(effect.getDesc(), y, Color.red);
             }
         }
         // draw used by effects
         if (itemImpl.getUsedByEffects() != null) {
-            for (NItemEffect effect : itemImpl.getUsedByEffects()) {
+            for (ItemEffect effect : itemImpl.getUsedByEffects()) {
                 y += 14;
                 drawString(effect.getDesc(), y, Color.green);
             }
