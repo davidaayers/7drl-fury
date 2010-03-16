@@ -3,7 +3,7 @@ package com.wwflgames.fury.item.effect;
 import com.wwflgames.fury.battle.ItemUsageResult;
 import com.wwflgames.fury.mob.Mob;
 
-public class NAttackBuffEffect extends NBuffEffect {
+public class StatBuffEffect extends BuffEffect {
     @Override
     public String getDesc() {
         return null;

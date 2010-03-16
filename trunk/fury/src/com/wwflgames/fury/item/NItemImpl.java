@@ -1,16 +1,16 @@
 package com.wwflgames.fury.item;
 
 import com.wwflgames.fury.battle.ItemUsageResult;
-import com.wwflgames.fury.item.effect.NItemEffect;
+import com.wwflgames.fury.item.effect.ItemEffect;
 import com.wwflgames.fury.mob.Mob;
 
 public class NItemImpl implements Item {
 
     private String name;
-    private NItemEffect[] usedByEffects;
-    private NItemEffect[] usedAgainstEffects;
+    private ItemEffect[] usedByEffects;
+    private ItemEffect[] usedAgainstEffects;
 
-    public NItemImpl(String name, NItemEffect[] usedByEffects, NItemEffect[] usedAgainstEffects) {
+    public NItemImpl(String name, ItemEffect[] usedByEffects, ItemEffect[] usedAgainstEffects) {
         this.name = name;
         this.usedByEffects = usedByEffects;
         this.usedAgainstEffects = usedAgainstEffects;
@@ -33,17 +33,17 @@ public class NItemImpl implements Item {
         return this;
     }
 
-    private void applyEffects(NItemEffect[] effects, Mob mob, ItemUsageResult result) {
-        for (NItemEffect effect : effects) {
+    private void applyEffects(ItemEffect[] effects, Mob mob, ItemUsageResult result) {
+        for (ItemEffect effect : effects) {
             effect.applyEffect(mob, result);
         }
     }
 
-    public NItemEffect[] getUsedByEffects() {
+    public ItemEffect[] getUsedByEffects() {
         return usedByEffects;
     }
 
-    public NItemEffect[] getUsedAgainstEffects() {
+    public ItemEffect[] getUsedAgainstEffects() {
         return usedAgainstEffects;
     }
 
