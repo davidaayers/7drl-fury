@@ -1,5 +1,6 @@
 package com.wwflgames.fury.gamestate;
 
+import com.wwflgames.fury.map.DifficultyLevel;
 import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.map.FixedDungeonMapCreator;
 import com.wwflgames.fury.monster.Monster;
@@ -23,7 +24,7 @@ public class BattleGameStateTest {
     @Test
     public void findMonstersActuallyFindsMonstersAndIgnoresPlayer() {
         // set up a test dungeonMap
-        DungeonMap dungeonMap = new FixedDungeonMapCreator().createMap();
+        DungeonMap dungeonMap = new FixedDungeonMapCreator().createMap(DifficultyLevel.EASY,1);
         Player p1 = new Player("hero", null);
         Monster m1 = new Monster("foo", "foo");
         Monster m2 = new Monster("bar", "foo");

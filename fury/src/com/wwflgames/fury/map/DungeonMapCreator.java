@@ -1,5 +1,5 @@
 package com.wwflgames.fury.map;
 
 public interface DungeonMapCreator {
-    DungeonMap createMap();
+    DungeonMap createMap(DifficultyLevel difficulty,int level);
 }
