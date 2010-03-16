@@ -3,9 +3,6 @@ package com.wwflgames.fury.battle;
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.item.ItemFactory;
-import com.wwflgames.fury.item.effect.Damage;
-import com.wwflgames.fury.item.effect.DamageType;
-import com.wwflgames.fury.item.effect.EffectApplierFactory;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.monster.Monster;
@@ -34,7 +31,6 @@ public class BattleSystemTest {
             }
         });
 
-        EffectApplierFactory effectApplierFactory = new EffectApplierFactory();
         itemFactory = new ItemFactory();
     }
 
@@ -157,9 +153,7 @@ public class BattleSystemTest {
     }
 
     private Item newItem(final int damage) {
-        Damage crushDamage = new Damage(DamageType.MELEE_CRUSH, damage);
-        Item mace = itemFactory.createItemWithUsedAgainstEffects("Mace of crushing", new com.wwflgames.fury.item.effect.ItemEffect[]{crushDamage});
-        return mace;
+        return null;
     }
 
 }
