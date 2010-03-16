@@ -104,12 +104,8 @@ public class DungeonGameState extends BasicGameState {
     }
 
     public void keyPressed(int key, char c) {
-
-
         Log.debug("key = " + key);
-
         Direction d = Direction.forKey(key);
-
         if (d != null) {
             tryMoveAndMaybeAttack(d.getDx(), d.getDy());
         }

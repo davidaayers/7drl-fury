@@ -1,5 +1,6 @@
 package com.wwflgames.fury.main;
 
+import com.wwflgames.fury.map.Dungeon;
 import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.player.Player;
 
@@ -7,8 +8,8 @@ import com.wwflgames.fury.player.Player;
 public class AppStateImpl implements AppState {
 
     private Player player;
-    private DungeonMap dungeonMap;
     private boolean playerInitiative;
+    private Dungeon dungeon;
 
     @Override
     public Player getPlayer() {
@@ -22,7 +23,7 @@ public class AppStateImpl implements AppState {
 
     @Override
     public DungeonMap getMap() {
-        return dungeonMap;
+        return dungeon.currentLevelMap();
     }
 
     @Override
@@ -35,9 +36,15 @@ public class AppStateImpl implements AppState {
         playerInitiative = flag;
     }
 
+    @Override
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
 
     @Override
-    public void setMap(DungeonMap dungeonMap) {
-        this.dungeonMap = dungeonMap;
+    public void setDungeon(Dungeon dungeon) {
+        this.dungeon = dungeon;
     }
+
+
 }

@@ -3,6 +3,10 @@ package com.wwflgames.fury.gamestate;
 import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.entity.SpriteSheetCache;
 import com.wwflgames.fury.main.AppState;
+import com.wwflgames.fury.map.DifficultyLevel;
+import com.wwflgames.fury.map.DungeonCreator;
+import com.wwflgames.fury.map.DungeonCreatorImpl;
+import com.wwflgames.fury.map.DungeonMapCreator;
 import com.wwflgames.fury.map.FixedDungeonMapCreator;
 import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.mob.Stat;
@@ -25,6 +29,8 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.wwflgames.fury.map.DifficultyLevel.EASY;
+
 public class TitleGameState extends BasicGameState {
 
     enum State {
@@ -43,6 +49,8 @@ public class TitleGameState extends BasicGameState {
     private State currentState;
     private MonsterFactory monsterFactory;
     private AppState appState;
+    private DungeonCreator dungeonCreator;
+
 
     public TitleGameState(ProfessionFactory professionFactory, SpriteSheetCache spriteSheetCache,
                           MonsterFactory monsterFactory, AppState appState) {
@@ -50,6 +58,10 @@ public class TitleGameState extends BasicGameState {
         this.spriteSheetCache = spriteSheetCache;
         this.monsterFactory = monsterFactory;
         this.appState = appState;
+
+        DungeonMapCreator mapCreator = new FixedDungeonMapCreator();
+        dungeonCreator = new DungeonCreatorImpl(mapCreator);
+
     }
 
     @Override
@@ -181,8 +193,7 @@ public class TitleGameState extends BasicGameState {
     }
 
     private void generateMap() {
-        DungeonMap dungeonMap = new FixedDungeonMapCreator().createMap();
-        appState.setMap(dungeonMap);
+        appState.setDungeon(dungeonCreator.createDungeon(EASY));
         initMonsters();
         putPlayerOnMap();
     }

@@ -13,7 +13,7 @@ public class FixedMapCreatorTest {
 
     @Test
     public void testCreateMap() {
-        DungeonMap m = mapCreator.createMap();
+        DungeonMap m = mapCreator.createMap(DifficultyLevel.EASY,1);
 
         for ( int y = 0 ; y < 5 ; y ++ ) {
             for ( int x = 0 ; x < 5 ; x ++ ) {
