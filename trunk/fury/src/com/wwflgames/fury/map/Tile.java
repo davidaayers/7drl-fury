@@ -36,7 +36,7 @@ public class Tile {
         return mob;
     }
 
-    // package private so it can only be called from Map
+    // package private so it can only be called from DungeonMap
     void setMob(Mob mob) {
         this.mob = mob;
     }
