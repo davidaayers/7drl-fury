@@ -8,5 +8,5 @@ public interface Item {
 
     Item usedBy(Mob mob, ItemUsageResult result);
 
-    Item usedAgainst(Mob mob, ItemUsageResult result);
+    Item usedAgainst(Mob usedBy, Mob usedAgainst, ItemUsageResult result);
 }

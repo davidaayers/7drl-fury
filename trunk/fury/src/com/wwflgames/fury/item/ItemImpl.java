@@ -22,24 +22,24 @@ public class ItemImpl implements Item {
     }
 
     @Override
-    public Item usedBy(Mob mob, ItemUsageResult result) {
+    public Item usedBy(Mob usedBy, ItemUsageResult result) {
         if (usedByEffects != null) {
-            applyEffects(usedByEffects, mob, result);
+            applyEffects(usedByEffects, usedBy, null, result);
         }
         return this;
     }
 
     @Override
-    public Item usedAgainst(Mob mob, ItemUsageResult result) {
+    public Item usedAgainst(Mob usedBy, Mob usedAgainst, ItemUsageResult result) {
         if (usedAgainstEffects != null) {
-            applyEffects(usedAgainstEffects, mob, result);
+            applyEffects(usedAgainstEffects, usedBy, usedAgainst, result);
         }
         return this;
     }
 
-    private void applyEffects(ItemEffect[] effects, Mob mob, ItemUsageResult result) {
+    private void applyEffects(ItemEffect[] effects, Mob usedBy, Mob usedAgainst, ItemUsageResult result) {
         for (ItemEffect effect : effects) {
-            effect.applyEffect(mob, result);
+            effect.applyEffect(usedBy, usedAgainst, result);
         }
     }
 

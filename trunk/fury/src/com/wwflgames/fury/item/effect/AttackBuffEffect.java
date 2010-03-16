@@ -21,11 +21,11 @@ public class AttackBuffEffect extends BuffEffect {
     }
 
     @Override
-    public void applyEffect(Mob mob, ItemUsageResult result) {
-        // add the buff to the mob, and report it
-        mob.addBuff(this);
+    public void applyEffect(Mob itemUser, Mob itemUsedUpon, ItemUsageResult result) {
+        // add the buff to the itemUser, and report it
+        itemUser.addBuff(this);
         String desc = "{0} next " + damage.getType() + " is increased by {2}";
-        result.add(new ItemEffectResult(desc, amount, mob, this));
+        result.add(new ItemEffectResult(desc, amount, itemUser, this));
     }
 
     public Damage getDamage() {

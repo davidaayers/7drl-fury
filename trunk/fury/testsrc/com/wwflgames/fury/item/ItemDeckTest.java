@@ -66,7 +66,7 @@ public class ItemDeckTest {
             }
 
             @Override
-            public Item usedAgainst(Mob mob, ItemUsageResult result) {
+            public Item usedAgainst(Mob mob, Mob mob2, ItemUsageResult result) {
                 return null;
             }
         };

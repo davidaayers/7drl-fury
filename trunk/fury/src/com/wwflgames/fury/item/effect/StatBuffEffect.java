@@ -21,10 +21,10 @@ public class StatBuffEffect extends BuffEffect {
     }
 
     @Override
-    public void applyEffect(Mob mob, ItemUsageResult result) {
-        mob.modifyBattleStatValue(stat, amount);
+    public void applyEffect(Mob itemUser, Mob itemUsedUpon, ItemUsageResult result) {
+        itemUser.modifyBattleStatValue(stat, amount);
         // add a message
         String desc = "{0} " + stat.getDesc() + " is increased by {2}";
-        result.add(new ItemEffectResult(desc, amount, mob, this));
+        result.add(new ItemEffectResult(desc, amount, itemUser, this));
     }
 }

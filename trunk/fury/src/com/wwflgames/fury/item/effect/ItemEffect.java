@@ -6,5 +6,5 @@ import com.wwflgames.fury.mob.Mob;
 public interface ItemEffect {
     String getDesc();
 
-    void applyEffect(Mob mob, ItemUsageResult result);
+    void applyEffect(Mob itemUser, Mob itemUsedUpon, ItemUsageResult result);
 }
