@@ -3,8 +3,8 @@ package com.wwflgames.fury.map;
 public enum TileType {
     FLOOR(".", true),
     WALL("#", false),
-    EMPTY(" ",true)
-    ;
+    EMPTY(" ", true),
+    JOIN("J", false);
 
     String ascii;
     boolean walkable;
