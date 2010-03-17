@@ -2,11 +2,7 @@ package com.wwflgames.fury.item.effect;
 
 import com.wwflgames.fury.battle.ItemEffectResult;
 import com.wwflgames.fury.battle.ItemUsageResult;
-import com.wwflgames.fury.item.effect.damage.CrushDamage;
-import com.wwflgames.fury.item.effect.damage.Damage;
-import com.wwflgames.fury.item.effect.damage.MeleeDamage;
-import com.wwflgames.fury.item.effect.damage.SlashDamage;
-import com.wwflgames.fury.item.effect.damage.StabDamage;
+import com.wwflgames.fury.item.effect.damage.*;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
@@ -42,16 +38,16 @@ public class MeleeDamageEffect implements ItemEffect {
 
     // crush damage gets applied to armor first (and destroys it, at least
     // for this combat round), then to health
-    private void applyCrushDamage(Mob itemUser, Mob mob, ItemUsageResult result) {
+    private void applyCrushDamage(Mob itemUser, Mob usedOn, ItemUsageResult result) {
 
         List<AttackBuffEffect> attackBuffs = findAndRemoveApplicableBuffs(itemUser, Damage.CRUSH_DAMAGE);
 
         Log.debug("Got " + attackBuffs + " attack buffs");
-        int buffAmt = calculateBuffDamageIncrease(mob, result, attackBuffs);
+        int buffAmt = calculateBuffDamageIncrease(itemUser, result, attackBuffs);
         Log.debug("Total Buff amount = " + buffAmt);
 
-        int armor = mob.getBattleStatValue(Stat.ARMOR);
-        int healthBefore = mob.getStatValue(Stat.HEALTH);
+        int armor = usedOn.getBattleStatValue(Stat.ARMOR);
+        int healthBefore = usedOn.getStatValue(Stat.HEALTH);
         int armorBefore = armor;
 
         int dmg = damageAmount + buffAmt;
@@ -70,11 +66,11 @@ public class MeleeDamageEffect implements ItemEffect {
         Log.debug("Armor after : " + armor);
         Log.debug("Dmg after   : " + dmg);
 
-        mob.modifyStatValue(Stat.HEALTH, -dmg);
-        mob.setBattleStatValue(Stat.ARMOR, armor);
+        usedOn.modifyStatValue(Stat.HEALTH, -dmg);
+        usedOn.setBattleStatValue(Stat.ARMOR, armor);
 
-        int armorAfter = mob.getBattleStatValue(Stat.ARMOR);
-        int healthAfter = mob.getStatValue(Stat.HEALTH);
+        int armorAfter = usedOn.getBattleStatValue(Stat.ARMOR);
+        int healthAfter = usedOn.getStatValue(Stat.HEALTH);
 
         int armorDelta = armorBefore - armorAfter;
         int healthDelta = healthBefore - healthAfter;
@@ -82,24 +78,13 @@ public class MeleeDamageEffect implements ItemEffect {
         String armorDesc = "{0} armor is crushed for {2}";
         String healthDesc = "{1} takes {2} damage!";
         if (armorBefore != 0 && armorDelta != 0) {
-            result.add(new ItemEffectResult(armorDesc, armorDelta, mob, this));
+            result.add(new ItemEffectResult(armorDesc, armorDelta, usedOn, this));
         }
         if (healthDelta != 0) {
-            result.add(new ItemEffectResult(healthDesc, healthDelta, mob, this));
+            result.add(new ItemEffectResult(healthDesc, healthDelta, usedOn, this));
         } else {
-            result.add(new ItemEffectResult("{0} armor absorbed all damage!", armorDelta, mob, this));
+            result.add(new ItemEffectResult("{0} armor absorbed all damage!", armorDelta, usedOn, this));
         }
-    }
-
-    private int calculateBuffDamageIncrease(Mob mob, ItemUsageResult result, List<AttackBuffEffect> attackBuffs) {
-        int buffAmt = 0;
-        for ( AttackBuffEffect effect : attackBuffs ) {
-            buffAmt += effect.getAmount();
-            // add message about the buff
-            String msg = "{1} attack is increased by {2}!";
-            result.add(new ItemEffectResult(msg, effect.getAmount(), mob, effect));
-        }
-        return buffAmt;
     }
 
     // slash damage is reduced by 10% for every 10 points of armor. So
@@ -137,5 +122,16 @@ public class MeleeDamageEffect implements ItemEffect {
         }
         return applicableBuffs;
     }
-    
+
+    private int calculateBuffDamageIncrease(Mob mob, ItemUsageResult result, List<AttackBuffEffect> attackBuffs) {
+        int buffAmt = 0;
+        for (AttackBuffEffect effect : attackBuffs) {
+            buffAmt += effect.getAmount();
+            // add message about the buff
+            String msg = "{1} attack is increased by {2}!";
+            result.add(new ItemEffectResult(msg, effect.getAmount(), mob, effect));
+        }
+        return buffAmt;
+    }
+
 }

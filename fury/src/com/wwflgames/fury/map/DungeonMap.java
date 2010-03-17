@@ -6,7 +6,7 @@ import com.wwflgames.fury.monster.Monster;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DungeonMap {
+public class DungeonMap implements Cloneable {
 
     private int width;
     private int height;
@@ -75,4 +75,12 @@ public class DungeonMap {
     public List<Monster> getMonsterList() {
         return monsterList;
     }
+
+    public DungeonMap duplicate() {
+        DungeonMap copy = new DungeonMap(this.width, this.height);
+        copy.tiles = this.tiles;
+        copy.monsterList.addAll(this.monsterList);
+        return copy;
+    }
+
 }
