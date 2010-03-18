@@ -1,44 +1,44 @@
 package com.wwflgames.fury.map.generation;
 
 import com.wwflgames.fury.map.DungeonMap;
-import com.wwflgames.fury.map.Tile;
 import com.wwflgames.fury.map.TileType;
 import com.wwflgames.fury.util.Rand;
+
+import java.awt.Dimension;
 
 import static com.wwflgames.fury.map.Direction.E;
 import static com.wwflgames.fury.map.Direction.N;
 
-public class RoomDigger implements Digger {
+public class RoomDigger extends AbstractDigger {
 
-    private int width;
-    private int height;
+    private int minWidth;
+    private int maxWidth;
+    private int minHeight;
+    private int maxHeight;
 
-    public RoomDigger(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public RoomDigger(int minWidth, int minHeight, int maxWidth, int maxHeight) {
+        this.minWidth = minWidth;
+        this.minHeight = minHeight;
+        this.maxWidth = maxWidth;
+        this.maxHeight = maxHeight;
     }
 
     @Override
-    public boolean canDig(DungeonMap map, JoinPoint joinPoint) {
-        DungeonMap mapClone = map.duplicate();
-        return doDigging(mapClone, joinPoint);
+    public Feature dig(DungeonMap map, JoinPoint joinPoint) throws DigException {
+        return doDigging(map, joinPoint);
     }
 
-    @Override
-    public JoinPoint[] dig(DungeonMap map, JoinPoint joinPoint) {
-        doDigging(map, joinPoint);
-
-        // now, add new join points
-
-        return null;
-    }
-
-    private boolean doDigging(DungeonMap map, JoinPoint joinPoint) {
+    private Feature doDigging(DungeonMap map, JoinPoint joinPoint) throws DigException {
 
         int startX = 0;
         int endX = 0;
         int startY = 0;
         int endY = 0;
+
+        // choose a random width and height
+        Dimension d = determineDimension();
+        int width = d.width;
+        int height = d.height;
 
         switch (joinPoint.getDirection()) {
             case N:
@@ -74,71 +74,24 @@ public class RoomDigger implements Digger {
                 break;
         }
 
-        boolean didDig = maybeDigRoom(map, startX, endX, startY, endY);
+        Feature feature = maybeDigFeature(map, startX, endX, startY, endY);
 
-        if (!didDig) {
-            return false;
-        }
+        addJoinPoints(3, feature , map);
+
 
         // finally, draw the join point
         map.getTileAt(joinPoint.getX(), joinPoint.getY()).setType(TileType.JOIN);
-        return true;
 
+        // set the join point as connected
+        joinPoint.setConnected(true);
 
-//        if (joinPoint.getDirection() == N) {
-//            // pick a point in the middle of "width"
-//            int halfWidth = width / 2;
-//            int startX = joinPoint.getX() - Rand.between(1, width - halfWidth + 1);
-//            int endX = startX + width;
-//            int startY = joinPoint.getY() - height + 1;
-//            int endY = joinPoint.getY() + 1;
-//
-//            boolean didDig = maybeDigRoom(map, startX, endX, startY, endY);
-//
-//            if (!didDig) {
-//                return false;
-//            }
-//
-//            // finally, draw the join point
-//            map.getTileAt(joinPoint.getX(), joinPoint.getY()).setType(TileType.JOIN);
-//        }
+        // add the join point to the list of join points for this room
+        feature.addJoinPoint(joinPoint);
+        return feature;
     }
 
-    private boolean maybeDigRoom(DungeonMap map, int startX, int endX, int startY, int endY) {
-        for (int y = startY; y < endY; y++) {
-            for (int x = startX; x < endX; x++) {
-                // see what's already there on the map
-                // what are we drawing?
-                TileType drawTile = TileType.FLOOR;
-                if (y == startY || y == endY - 1 || x == startX || x == endX - 1) {
-                    drawTile = TileType.WALL;
-                }
-
-                if (!map.inBounds(x, y)) {
-                    return false;
-                }
-
-                Tile tile = map.getTileAt(x, y);
-                TileType existing = tile.getType();
-
-                boolean okToDraw = false;
-
-                if (drawTile == TileType.WALL) {
-                    // walls can be drawn on empty squares, or on top of existing walls
-                    okToDraw = existing == TileType.EMPTY || existing == TileType.WALL;
-                } else {
-                    okToDraw = existing == TileType.EMPTY;
-                }
-
-                if (okToDraw) {
-                    map.getTileAt(x, y).setType(drawTile);
-                } else {
-                    return false;
-                }
-            }
-        }
-        return true;
+    protected Dimension determineDimension() {
+        return new Dimension(Rand.between(minWidth, maxWidth), Rand.between(minHeight, maxHeight));
     }
-
 
 }

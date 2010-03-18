@@ -11,6 +11,8 @@ public enum Direction {
     W(75, -1, 0, "West"),
     NW(71, -1, -1, "Northwest");
 
+    public static Direction[] CARDINALS = new Direction[] { N, S, E, W };
+
     private int key;
     private int dx;
     private int dy;

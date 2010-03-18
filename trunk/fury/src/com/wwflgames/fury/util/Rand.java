@@ -21,6 +21,9 @@ public class Rand {
 
     public static int between(int min, int max) {
         int delta = max - min;
+        if ( delta <= 0 ) {
+            return min;
+        }
         return min + get().nextInt(delta);
     }
 
