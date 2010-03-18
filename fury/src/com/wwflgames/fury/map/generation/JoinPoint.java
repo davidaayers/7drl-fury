@@ -6,6 +6,7 @@ public class JoinPoint {
     private int x;
     private int y;
     private Direction direction;
+    boolean connected = false;
 
     public JoinPoint(int x, int y, Direction direction) {
         this.x = x;
@@ -24,4 +25,13 @@ public class JoinPoint {
     public Direction getDirection() {
         return direction;
     }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
 }

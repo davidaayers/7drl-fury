@@ -18,8 +18,14 @@ public class RoomDiggerTest {
 //        });
 
         DungeonMap map = new DungeonMap(20, 20);
-        RoomDigger roomDigger = new RoomDigger(5, 5);
-        roomDigger.dig(map, new JoinPoint(10, 10, Direction.W));
+        //RoomDigger roomDigger = new RoomDigger(5, 5, 8, 8);
+        SquareRoomDigger roomDigger = new SquareRoomDigger(5,8);
+
+        try {
+            roomDigger.dig(map, new JoinPoint(10, 10, Direction.N));
+        } catch (DigException e) {
+            e.printStackTrace();
+        }
         //AsciiMapPrinter.printMap(map);
 //        RoomDigger roomDigger2 = new RoomDigger(5,5);
 //        roomDigger2.dig(map,new JoinPoint(10,6, Direction.N));
