@@ -63,7 +63,7 @@ public class TitleGameState extends BasicGameState {
         this.appState = appState;
 
         DungeonMapCreator mapCreator = new FixedDungeonMapCreator();
-        DungeonMapCreator randomCreator = new DungeonMapCreatorImpl();
+        DungeonMapCreator randomCreator = new DungeonMapCreatorImpl(monsterFactory);
         dungeonCreator = new DungeonCreatorImpl(randomCreator);
 
     }
@@ -199,7 +199,7 @@ public class TitleGameState extends BasicGameState {
 
     private void generateMap() {
         appState.setDungeon(dungeonCreator.createDungeon(EASY));
-        initMonsters();
+        //initMonsters();
         putPlayerOnMap();
     }
 
