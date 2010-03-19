@@ -68,7 +68,8 @@ public abstract class AbstractDigger implements Digger {
     protected void addJoinPoints(int howMany, Feature feature, DungeonMap map) {
         Tile[] wallTiles = feature.getWallTiles();
         int c = 0;
-        while ( c < howMany ) {
+        int trys = 0;
+        while ( c < howMany && trys < 20 ) {
             int idx = Rand.get().nextInt(wallTiles.length);
             Tile t = wallTiles[idx];
             if ( t.getType() != TileType.JOIN ) {
@@ -84,6 +85,7 @@ public abstract class AbstractDigger implements Digger {
                     c ++;
                 }
             }
+            trys++;
         }
     }
 

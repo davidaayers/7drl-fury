@@ -10,6 +10,8 @@ import com.wwflgames.fury.map.DungeonMapCreator;
 import com.wwflgames.fury.map.DungeonMapCreatorImpl;
 import com.wwflgames.fury.map.FixedDungeonMapCreator;
 import com.wwflgames.fury.map.DungeonMap;
+import com.wwflgames.fury.map.Tile;
+import com.wwflgames.fury.map.generation.Feature;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.monster.MonsterFactory;
@@ -214,8 +216,14 @@ public class TitleGameState extends BasicGameState {
     }
 
     private void putPlayerOnMap() {
-        // put the player in the upper right hand corner of the dungeonMap
-        appState.getMap().addMob(appState.getPlayer(), 1, 1);
+        // grab the map.
+        DungeonMap map = appState.getDungeon().currentLevelMap();
+        Feature f = map.getFeatureList().get(0);
+        Tile floor = f.getFloorTiles()[0];
+        int x = floor.getX();
+        int y = floor.getY();
+        Log.debug("player location is " + x + "," + y);
+        appState.getMap().addMob(appState.getPlayer(), x, y);
     }
 
 

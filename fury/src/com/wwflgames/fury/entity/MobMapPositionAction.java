@@ -19,7 +19,7 @@ public class MobMapPositionAction extends Action {
         int mapX = mob.getCurrentMapTile().getX();
         int mapY = mob.getCurrentMapTile().getY();
 
-        float drawX = mapX * 32;
+        float drawX = mapX * 32 + 4;
         float drawY = mapY * 32;
         owner.setPosition(new Vector2f(drawX, drawY));
     }

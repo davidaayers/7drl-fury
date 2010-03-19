@@ -1,7 +1,7 @@
 package com.wwflgames.fury.map;
 
 public enum DifficultyLevel {
-    EASY(5,40,60),
+    EASY(5,20,30),
     NORMAL(10,60,80),
     HARD(15,80,100)
     ;
