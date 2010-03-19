@@ -1,4 +1,6 @@
-package com.wwflgames.fury.map;
+package com.wwflgames.fury.util;
+
+import com.wwflgames.fury.map.DungeonMap;
 
 public class AsciiMapPrinter {
 

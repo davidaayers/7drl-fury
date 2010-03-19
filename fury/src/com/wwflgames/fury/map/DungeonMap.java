@@ -78,8 +78,12 @@ public class DungeonMap implements Cloneable {
 
     public DungeonMap duplicate() {
         DungeonMap copy = new DungeonMap(this.width, this.height);
-        copy.tiles = this.tiles;
-        copy.monsterList.addAll(this.monsterList);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Tile existing = this.getTileAt(x,y);
+                copy.tiles[x][y] = new Tile(existing.getType(), x, y);
+            }
+        }
         return copy;
     }
 

@@ -34,4 +34,13 @@ public class JoinPoint {
         this.connected = connected;
     }
 
+    @Override
+    public String toString() {
+        return "JoinPoint{" +
+                "x=" + x +
+                ", y=" + y +
+                ", direction=" + direction +
+                ", connected=" + connected +
+                '}';
+    }
 }

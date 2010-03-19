@@ -44,4 +44,14 @@ public class Tile {
     public boolean isWalkable() {
         return type.isWalkable();
     }
+
+    @Override
+    public String toString() {
+        return "Tile{" +
+                "type=" + type +
+                ", x=" + x +
+                ", y=" + y +
+                ", mob=" + mob +
+                '}';
+    }
 }
