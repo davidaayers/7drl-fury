@@ -6,6 +6,8 @@ import com.wwflgames.fury.map.generation.Feature;
 import com.wwflgames.fury.map.generation.JoinPoint;
 import com.wwflgames.fury.map.generation.RoomDigger;
 import com.wwflgames.fury.map.generation.SquareRoomDigger;
+import com.wwflgames.fury.monster.Monster;
+import com.wwflgames.fury.monster.MonsterFactory;
 import com.wwflgames.fury.util.AsciiMapPrinter;
 import com.wwflgames.fury.util.Log;
 import com.wwflgames.fury.util.Rand;
@@ -15,6 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DungeonMapCreatorImpl implements DungeonMapCreator {
+
+    private MonsterFactory monsterFactory;
+
+    public DungeonMapCreatorImpl(MonsterFactory monsterFactory) {
+        this.monsterFactory = monsterFactory;
+    }
+
     @Override
     public DungeonMap createMap(DifficultyLevel difficulty, int level) {
 
@@ -57,7 +66,7 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
                 // grab a random unconnected point
                 Shuffler.shuffle(unconnectedPoints);
                 JoinPoint p = unconnectedPoints.get(0);
-                Log.debug("Trying join point " + p );
+                Log.debug("Trying join point " + p);
                 Feature f = d.dig(map, p);
                 if (f != null) {
                     map.addFeature(f);
@@ -72,6 +81,10 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
                         }
                     }
                     numFeatures++;
+
+                    // populate the newly created feature with monsters
+                    populateFeature(map, f, difficulty, level);
+
                 }
             } catch (DigException e) {
                 Log.debug("Couldn't dig");
@@ -79,12 +92,12 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
             tryCount++;
         }
 
-        for ( JoinPoint jp : unconnectedPoints ) {
-            map.getTileAt(jp.getX(),jp.getY()).setType(TileType.WALL);
+        for (JoinPoint jp : unconnectedPoints) {
+            map.getTileAt(jp.getX(), jp.getY()).setType(TileType.WALL);
         }
 
-        for ( JoinPoint jp : connectedPoints ) {
-            map.getTileAt(jp.getX(),jp.getY()).setType(TileType.FLOOR);
+        for (JoinPoint jp : connectedPoints) {
+            map.getTileAt(jp.getX(), jp.getY()).setType(TileType.FLOOR);
         }
 
 //        // go through the map and replace all the join points
@@ -99,8 +112,23 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
 //        }
 
         AsciiMapPrinter.printMap(map);
-        
+
         return map;
+    }
+
+    private void populateFeature(DungeonMap map, Feature feature, DifficultyLevel difficulty, int level) {
+        //TODO: stuff based on difficulty.
+        Tile[] floorTiles = feature.getFloorTiles();
+        int numMonsters = floorTiles.length / 6;
+        int cnt = 0;
+        while ( cnt < numMonsters ) {
+            Tile randomTile = floorTiles[Rand.get().nextInt(floorTiles.length)];
+            if ( randomTile.getMob() == null ) {
+                Monster monster = monsterFactory.createMonster(level);
+                map.addMob(monster, randomTile.getX(), randomTile.getY());
+                cnt ++;
+            }
+        }
     }
 
 }
