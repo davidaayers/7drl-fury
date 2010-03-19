@@ -41,12 +41,13 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
         Log.debug("middleX = " + middleX);
         Log.debug("middleY = " + middleY);
 
-        //TODO: random starting direction        
-        JoinPoint starterPoint = new JoinPoint(middleX, middleY, Direction.N);
+        Direction startingDir = Direction.CARDINALS[Rand.get().nextInt(4)];
+        JoinPoint starterPoint = new JoinPoint(middleX, middleY, startingDir);
 
         int numFeatures = 0;
         int tryCount = 0;
         List<JoinPoint> unconnectedPoints = new ArrayList<JoinPoint>();
+        List<JoinPoint> connectedPoints = new ArrayList<JoinPoint>();
         unconnectedPoints.add(starterPoint);
         while (numFeatures < 10 && tryCount < 100) {
             Shuffler.shuffle(diggers);
@@ -59,8 +60,12 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
                 Log.debug("Trying join point " + p );
                 Feature f = d.dig(map, p);
                 if (f != null) {
+                    map.addFeature(f);
                     Log.debug("Sucessfully dug a feature!");
                     AsciiMapPrinter.printMap(map);
+                    connectedPoints.add(p);
+                    unconnectedPoints.remove(p);
+                    p.setConnected(true);
                     for (JoinPoint point : f.getJoinPoints()) {
                         if (!point.isConnected()) {
                             unconnectedPoints.add(point);
@@ -74,7 +79,27 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
             tryCount++;
         }
 
+        for ( JoinPoint jp : unconnectedPoints ) {
+            map.getTileAt(jp.getX(),jp.getY()).setType(TileType.WALL);
+        }
 
+        for ( JoinPoint jp : connectedPoints ) {
+            map.getTileAt(jp.getX(),jp.getY()).setType(TileType.FLOOR);
+        }
+
+//        // go through the map and replace all the join points
+//        //TODO: make these be doors and such
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                Tile existing = map.getTileAt(x,y);
+//                if ( existing.getType() == TileType.JOIN ) {
+//                    existing.setType(TileType.FLOOR);
+//                }
+//            }
+//        }
+
+        AsciiMapPrinter.printMap(map);
+        
         return map;
     }
 

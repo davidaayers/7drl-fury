@@ -1,5 +1,6 @@
 package com.wwflgames.fury.map;
 
+import com.wwflgames.fury.map.generation.Feature;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
 
@@ -12,6 +13,7 @@ public class DungeonMap implements Cloneable {
     private int height;
     private Tile[][] tiles;
     private List<Monster> monsterList = new ArrayList<Monster>();
+    private List<Feature> features = new ArrayList<Feature>();
 
     public DungeonMap(int width, int height) {
         this.width = width;
@@ -74,6 +76,14 @@ public class DungeonMap implements Cloneable {
 
     public List<Monster> getMonsterList() {
         return monsterList;
+    }
+
+    public void addFeature(Feature feature) {
+        features.add(feature);
+    }
+
+    public List<Feature> getFeatureList() {
+        return features;
     }
 
     public DungeonMap duplicate() {
