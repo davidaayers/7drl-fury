@@ -2,6 +2,7 @@ package com.wwflgames.fury.map.generation;
 
 import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.map.TileType;
+import com.wwflgames.fury.util.Log;
 import com.wwflgames.fury.util.Rand;
 
 import java.awt.Dimension;
@@ -39,6 +40,8 @@ public class RoomDigger extends AbstractDigger {
         Dimension d = determineDimension();
         int width = d.width;
         int height = d.height;
+
+        Log.debug("Trying to build a room " + width + " x " + height);
 
         switch (joinPoint.getDirection()) {
             case N:

@@ -6,6 +6,7 @@ import com.wwflgames.fury.map.generation.Feature;
 import com.wwflgames.fury.map.generation.JoinPoint;
 import com.wwflgames.fury.map.generation.RoomDigger;
 import com.wwflgames.fury.map.generation.SquareRoomDigger;
+import com.wwflgames.fury.util.AsciiMapPrinter;
 import com.wwflgames.fury.util.Log;
 import com.wwflgames.fury.util.Rand;
 import com.wwflgames.fury.util.Shuffler;
@@ -26,9 +27,9 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
         DungeonMap map = new DungeonMap(width, height);
 
         List<Digger> diggers = new ArrayList<Digger>();
-        diggers.add(new RoomDigger(3, 3, 7, 7));
+        diggers.add(new RoomDigger(5, 5, 8, 8));
         diggers.add(new RoomDigger(6, 6, 10, 10));
-        diggers.add(new SquareRoomDigger(3, 7));
+        diggers.add(new SquareRoomDigger(4, 7));
 
         Log.debug("width = " + width);
         Log.debug("height = " + height);
@@ -47,7 +48,7 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
         int tryCount = 0;
         List<JoinPoint> unconnectedPoints = new ArrayList<JoinPoint>();
         unconnectedPoints.add(starterPoint);
-        while (numFeatures < 4 && tryCount < 20) {
+        while (numFeatures < 10 && tryCount < 100) {
             Shuffler.shuffle(diggers);
             Digger d = diggers.get(0);
             Log.debug("Using digger " + d);
@@ -55,8 +56,11 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
                 // grab a random unconnected point
                 Shuffler.shuffle(unconnectedPoints);
                 JoinPoint p = unconnectedPoints.get(0);
+                Log.debug("Trying join point " + p );
                 Feature f = d.dig(map, p);
                 if (f != null) {
+                    Log.debug("Sucessfully dug a feature!");
+                    AsciiMapPrinter.printMap(map);
                     for (JoinPoint point : f.getJoinPoints()) {
                         if (!point.isConnected()) {
                             unconnectedPoints.add(point);

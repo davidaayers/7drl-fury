@@ -1,5 +1,6 @@
 package com.wwflgames.fury.map;
 
+import com.wwflgames.fury.util.AsciiMapPrinter;
 import org.junit.Test;
 
 public class DungeonMapCreatorImplTest {

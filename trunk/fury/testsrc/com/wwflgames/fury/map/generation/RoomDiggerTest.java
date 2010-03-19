@@ -1,6 +1,6 @@
 package com.wwflgames.fury.map.generation;
 
-import com.wwflgames.fury.map.AsciiMapPrinter;
+import com.wwflgames.fury.util.AsciiMapPrinter;
 import com.wwflgames.fury.map.Direction;
 import com.wwflgames.fury.map.DungeonMap;
 import org.junit.Test;
