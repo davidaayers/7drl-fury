@@ -29,8 +29,14 @@ public class DungeonMapRenderer extends MapRenderer {
                 if (mapx > dungeonMap.getWidth() - 1) {
                     mapx = dungeonMap.getWidth() - 1;
                 }
+                if (mapx < 0) {
+                    mapx = 0;
+                }
                 if (mapy > dungeonMap.getHeight() - 1) {
                     mapy = dungeonMap.getHeight() - 1;
+                }
+                if (mapy < 0) {
+                    mapy = 0;
                 }
                 Tile mapTile = dungeonMap.getTileAt(mapx, mapy);
                 Image drawImage = determineImageForTile(mapTile.getType());
