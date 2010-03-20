@@ -1,5 +1,6 @@
 package com.wwflgames.fury.entity;
 
+import com.wwflgames.fury.gamestate.PlayerController;
 import com.wwflgames.fury.map.DungeonMap;
 import com.wwflgames.fury.map.Tile;
 import org.newdawn.slick.Graphics;
@@ -9,8 +10,11 @@ import org.newdawn.slick.geom.Vector2f;
 
 public class DungeonMapRenderer extends MapRenderer {
 
-    public DungeonMapRenderer(String id, DungeonMap dungeonMap) throws SlickException {
+    private PlayerController playerController;
+
+    public DungeonMapRenderer(String id, DungeonMap dungeonMap, PlayerController playerController) throws SlickException {
         super(id, dungeonMap);
+        this.playerController = playerController;
     }
 
     @Override
@@ -20,7 +24,15 @@ public class DungeonMapRenderer extends MapRenderer {
 
         for (int y = 0; y < dungeonMap.getHeight(); y++) {
             for (int x = 0; x < dungeonMap.getWidth(); x++) {
-                Tile mapTile = dungeonMap.getTileAt(x, y);
+                int mapx = x + playerController.getOffsetX();
+                int mapy = y + playerController.getOffsetY();
+                if (mapx > dungeonMap.getWidth() - 1) {
+                    mapx = dungeonMap.getWidth() - 1;
+                }
+                if (mapy > dungeonMap.getHeight() - 1) {
+                    mapy = dungeonMap.getHeight() - 1;
+                }
+                Tile mapTile = dungeonMap.getTileAt(mapx, mapy);
                 Image drawImage = determineImageForTile(mapTile.getType());
                 int tw = drawImage.getWidth();
                 int th = drawImage.getHeight();
@@ -31,6 +43,8 @@ public class DungeonMapRenderer extends MapRenderer {
 
     @Override
     public void update(int delta) {
-        // nothing to do
+        // based on the player's location on the map, determine our offsets
+
+
     }
 }

@@ -9,6 +9,8 @@ import java.util.List;
 
 public class DungeonMap implements Cloneable {
 
+    private int offsetX;
+    private int offsetY;
     private int width;
     private int height;
     private Tile[][] tiles;
@@ -90,7 +92,7 @@ public class DungeonMap implements Cloneable {
         DungeonMap copy = new DungeonMap(this.width, this.height);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                Tile existing = this.getTileAt(x,y);
+                Tile existing = this.getTileAt(x, y);
                 copy.tiles[x][y] = new Tile(existing.getType(), x, y);
             }
         }
