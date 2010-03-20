@@ -23,6 +23,7 @@ public class DungeonGameState extends BasicGameState {
     private EntityManager entityManager;
     private AppState appState;
     private SpriteSheetCache spriteSheetCache;
+    private PlayerController playerController;
 
     public DungeonGameState(AppState appState, SpriteSheetCache spriteSheetCache) {
         this.appState = appState;
@@ -44,11 +45,14 @@ public class DungeonGameState extends BasicGameState {
     }
 
     public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+
+        playerController = new PlayerController(appState.getPlayer(), appState.getMap());
+
         // create a dungeonMap entity
         Entity mapEntity = new Entity("dungeonMap")
                 .setPosition(new Vector2f(0, 0))
                 .setScale(1)
-                .addComponent(new DungeonMapRenderer("mapRender", appState.getMap()));
+                .addComponent(new DungeonMapRenderer("mapRender", appState.getMap(), playerController));
 
         entityManager.addEntity(mapEntity);
 
@@ -59,27 +63,21 @@ public class DungeonGameState extends BasicGameState {
                 .addComponent(new SpriteSheetRenderer("playerRender",
                         spriteSheetCache.getSpriteSheet(appState.getPlayer().getProfession().getSpriteSheet()))
                         .useSprite(1, 2))
-                .addComponent(new MobMapPositionAction("mapPosition", appState.getPlayer()));
+                .addComponent(new MobMapPositionAction("mapPosition", appState.getPlayer(), playerController));
 
         entityManager.addEntity(player);
 
         // grab all of the monsters on the dungeonMap
         for (Monster monster : appState.getMap().getMonsterList()) {
-            // player entity
-            Log.debug("monster location = " + monster.getCurrentMapTile().getX() + "," +
-                    monster.getCurrentMapTile().getY());
-
             Entity monsterEntity = new Entity("monster" + monster.name())
                     .setPosition(new Vector2f(0, 0))
                     .setScale(1)
                     .addComponent(new SpriteSheetRenderer("monsterRenderer",
                             spriteSheetCache.getSpriteSheet(monster.getSpriteSheet())).useSprite(1, 2))
-                    .addComponent(new MobMapPositionAction("mapPosition", monster));
+                    .addComponent(new MobMapPositionAction("mapPosition", monster, playerController));
 
             entityManager.addEntity(monsterEntity);
-
         }
-
     }
 
     @Override
@@ -123,7 +121,7 @@ public class DungeonGameState extends BasicGameState {
         Log.debug("Inspecting " + newX + "," + newY);
 
         // first, see if moving to newX,newY would cause combat
-        if ( !dungeonMap.inBounds(newX,newY)) {
+        if (!dungeonMap.inBounds(newX, newY)) {
             Log.debug("Out of bounds");
             return;
         }
@@ -133,9 +131,7 @@ public class DungeonGameState extends BasicGameState {
             Log.debug("about to initiate combat");
             initiateCombat(player);
         } else if (dungeonMap.inBounds(newX, newY) && dungeonMap.isWalkable(newX, newY)) {
-            Log.debug("Moving to " + newX + "," + newY);
-            dungeonMap.removeMob(player);
-            dungeonMap.addMob(player, newX, newY);
+            playerController.movePlayerTo(newX, newY);
         } else {
             Log.debug("Hit a wall!");
         }
