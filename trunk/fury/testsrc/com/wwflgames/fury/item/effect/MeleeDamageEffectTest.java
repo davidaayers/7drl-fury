@@ -24,7 +24,7 @@ public class MeleeDamageEffectTest {
         AttackBuffEffect effect = new AttackBuffEffect(Damage.CRUSH_DAMAGE, 8);
         player.addBuff(effect);
 
-        List<AttackBuffEffect> foundBuffs = damageEffect.findAndRemoveApplicableBuffs(player, Damage.CRUSH_DAMAGE);
+        List<AttackBuffEffect> foundBuffs = EffectHelper.findAndRemoveApplicableBuffs(player, Damage.CRUSH_DAMAGE);
         assertEquals(1, foundBuffs.size());
         assertEquals(effect, foundBuffs.get(0));
     }
@@ -40,7 +40,7 @@ public class MeleeDamageEffectTest {
         AttackBuffEffect effect = new AttackBuffEffect(Damage.MELEE_DAMAGE, 8);
         player.addBuff(effect);
 
-        List<AttackBuffEffect> foundBuffs = damageEffect.findAndRemoveApplicableBuffs(player, Damage.CRUSH_DAMAGE);
+        List<AttackBuffEffect> foundBuffs = EffectHelper.findAndRemoveApplicableBuffs(player, Damage.CRUSH_DAMAGE);
         assertEquals(1, foundBuffs.size());
         assertEquals(effect, foundBuffs.get(0));
     }
