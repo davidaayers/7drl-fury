@@ -90,7 +90,7 @@ public class Fury extends StateBasedGame {
     }
 
     private BattleGameState createBattleState() {
-        return new BattleGameState(appState, spriteSheetCache);
+        return new BattleGameState(appState, spriteSheetCache, itemFactory);
     }
 
     public static void main(String[] args) {

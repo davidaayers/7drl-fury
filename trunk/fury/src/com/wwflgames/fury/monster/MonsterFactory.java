@@ -35,7 +35,7 @@ public class MonsterFactory {
             Log.debug("childNode = " + childNode.getName());
             String name = childNode.getAttribute("name");
             String spriteSheet = childNode.getAttribute("sprite-sheet");
-            Monster monster = new Monster(name, spriteSheet);
+            Monster monster = new Monster(name, spriteSheet, 0);
             // create the monster's deck
             monster.setDeck(createDeck(childNode, itemFactory));
             setMonsterStats(childNode, monster);
@@ -74,7 +74,7 @@ public class MonsterFactory {
 
         Monster monster = allMonsters.get(0);
         Log.debug("About to return " + monster);
-        Monster clone = new Monster(monster);
+        Monster clone = new Monster(monster, points);
         return clone;
     }
 

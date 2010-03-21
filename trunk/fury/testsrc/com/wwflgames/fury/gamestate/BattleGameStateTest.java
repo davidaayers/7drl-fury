@@ -18,16 +18,16 @@ public class BattleGameStateTest {
     @Before
     public void setUp() throws Exception {
         // don't need app state for anything yet in this test
-        battleGameState = new BattleGameState(null, null);
+        battleGameState = new BattleGameState(null, null, null);
     }
 
     @Test
     public void findMonstersActuallyFindsMonstersAndIgnoresPlayer() {
         // set up a test dungeonMap
-        DungeonMap dungeonMap = new FixedDungeonMapCreator().createMap(DifficultyLevel.EASY,1);
+        DungeonMap dungeonMap = new FixedDungeonMapCreator().createMap(DifficultyLevel.EASY, 1);
         Player p1 = new Player("hero", null);
-        Monster m1 = new Monster("foo", "foo");
-        Monster m2 = new Monster("bar", "foo");
+        Monster m1 = new Monster("foo", "foo", 0);
+        Monster m2 = new Monster("bar", "foo", 0);
         dungeonMap.addMob(m1, 1, 1);
         dungeonMap.addMob(m2, 3, 3);
         dungeonMap.addMob(p1, 2, 2);
