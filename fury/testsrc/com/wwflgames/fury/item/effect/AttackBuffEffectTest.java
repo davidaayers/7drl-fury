@@ -8,22 +8,23 @@ import com.wwflgames.fury.player.Player;
 import com.wwflgames.fury.player.Profession;
 import org.junit.Test;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 public class AttackBuffEffectTest {
 
     @Test
     public void shouldAddBuffToMob() throws Exception {
         Profession profession = null;
-        Player player = new Player("foo",profession);
-        Monster monster = new Monster("bar","sprite-sheet");
+        Player player = new Player("foo", profession);
+        Monster monster = new Monster("bar", "sprite-sheet", 0);
 
-        AttackBuffEffect effect = new AttackBuffEffect(Damage.MELEE_DAMAGE,8);
+        AttackBuffEffect effect = new AttackBuffEffect(Damage.MELEE_DAMAGE, 8);
         Item item = null;
-        ItemUsageResult result = new ItemUsageResult(item,player);
-        effect.applyEffect(player,monster,result);
+        ItemUsageResult result = new ItemUsageResult(item, player);
+        effect.applyEffect(player, monster, result);
 
-        assertEquals(1,player.getBuffs().size());
+        assertEquals(1, player.getBuffs().size());
         assertTrue(monster.getBuffs().isEmpty());
     }
 

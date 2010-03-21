@@ -52,4 +52,12 @@ public class Battle {
     public boolean allEnemiesDead() {
         return enemies.isEmpty();
     }
+
+    public int totalMonsterValue() {
+        int value = 0;
+        for (Monster monster : originalEnemies) {
+            value += monster.monsterValue();
+        }
+        return value;
+    }
 }

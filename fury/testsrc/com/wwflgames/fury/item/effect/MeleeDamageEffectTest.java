@@ -1,13 +1,10 @@
 package com.wwflgames.fury.item.effect;
 
-import com.wwflgames.fury.battle.ItemUsageResult;
-import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.effect.damage.Damage;
 import com.wwflgames.fury.item.effect.damage.MeleeDamage;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.player.Player;
 import com.wwflgames.fury.player.Profession;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -18,34 +15,34 @@ public class MeleeDamageEffectTest {
 
     @Test
     public void findAndRemoveApplicableBuffsWithSameDamageType() throws Exception {
-        MeleeDamageEffect damageEffect = new MeleeDamageEffect((MeleeDamage) Damage.CRUSH_DAMAGE,8);
+        MeleeDamageEffect damageEffect = new MeleeDamageEffect((MeleeDamage) Damage.CRUSH_DAMAGE, 8);
         Profession profession = null;
-        Player player = new Player("foo",profession);
-        Monster monster = new Monster("bar","sprite-sheet");
+        Player player = new Player("foo", profession);
+        Monster monster = new Monster("bar", "sprite-sheet", 0);
 
         // add a buff to the player
-        AttackBuffEffect effect = new AttackBuffEffect(Damage.CRUSH_DAMAGE,8);
+        AttackBuffEffect effect = new AttackBuffEffect(Damage.CRUSH_DAMAGE, 8);
         player.addBuff(effect);
 
-        List<AttackBuffEffect> foundBuffs = damageEffect.findAndRemoveApplicableBuffs(player,Damage.CRUSH_DAMAGE);
-        assertEquals(1,foundBuffs.size());
-        assertEquals(effect,foundBuffs.get(0));
+        List<AttackBuffEffect> foundBuffs = damageEffect.findAndRemoveApplicableBuffs(player, Damage.CRUSH_DAMAGE);
+        assertEquals(1, foundBuffs.size());
+        assertEquals(effect, foundBuffs.get(0));
     }
 
     @Test
     public void testFindAndRemoveApplicableBuffsWithSubclassDamageType() throws Exception {
-        MeleeDamageEffect damageEffect = new MeleeDamageEffect((MeleeDamage) Damage.CRUSH_DAMAGE,8);
+        MeleeDamageEffect damageEffect = new MeleeDamageEffect((MeleeDamage) Damage.CRUSH_DAMAGE, 8);
         Profession profession = null;
-        Player player = new Player("foo",profession);
-        Monster monster = new Monster("bar","sprite-sheet");
+        Player player = new Player("foo", profession);
+        Monster monster = new Monster("bar", "sprite-sheet", 0);
 
         // add a buff to the player
-        AttackBuffEffect effect = new AttackBuffEffect(Damage.MELEE_DAMAGE,8);
+        AttackBuffEffect effect = new AttackBuffEffect(Damage.MELEE_DAMAGE, 8);
         player.addBuff(effect);
 
-        List<AttackBuffEffect> foundBuffs = damageEffect.findAndRemoveApplicableBuffs(player,Damage.CRUSH_DAMAGE);
-        assertEquals(1,foundBuffs.size());
-        assertEquals(effect,foundBuffs.get(0));
+        List<AttackBuffEffect> foundBuffs = damageEffect.findAndRemoveApplicableBuffs(player, Damage.CRUSH_DAMAGE);
+        assertEquals(1, foundBuffs.size());
+        assertEquals(effect, foundBuffs.get(0));
     }
 
 }

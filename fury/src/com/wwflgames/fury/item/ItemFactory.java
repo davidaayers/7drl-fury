@@ -8,6 +8,7 @@ import com.wwflgames.fury.item.effect.damage.Damage;
 import com.wwflgames.fury.item.effect.damage.MeleeDamage;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
+import com.wwflgames.fury.util.Shuffler;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.xml.SlickXMLException;
 import org.newdawn.slick.util.xml.XMLElement;
@@ -117,6 +118,12 @@ public class ItemFactory {
 
     public Item getItemByName(String name) {
         return itemNameMap.get(name);
+    }
+
+    public Item randomItem(int value) {
+        List<Item> allItems = new ArrayList<Item>(itemNameMap.values());
+        Shuffler.shuffle(allItems);
+        return allItems.get(0);
     }
 
 }

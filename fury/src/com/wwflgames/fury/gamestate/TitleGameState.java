@@ -3,14 +3,7 @@ package com.wwflgames.fury.gamestate;
 import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.entity.SpriteSheetCache;
 import com.wwflgames.fury.main.AppState;
-import com.wwflgames.fury.map.DifficultyLevel;
-import com.wwflgames.fury.map.DungeonCreator;
-import com.wwflgames.fury.map.DungeonCreatorImpl;
-import com.wwflgames.fury.map.DungeonMapCreator;
-import com.wwflgames.fury.map.DungeonMapCreatorImpl;
-import com.wwflgames.fury.map.FixedDungeonMapCreator;
-import com.wwflgames.fury.map.DungeonMap;
-import com.wwflgames.fury.map.Tile;
+import com.wwflgames.fury.map.*;
 import com.wwflgames.fury.map.generation.Feature;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.monster.Monster;
@@ -111,7 +104,7 @@ public class TitleGameState extends BasicGameState {
             g.flush();
 
             int imgx = (int) x - img.getWidth() / 2;
-            MouseOverArea moa = new MouseOverArea(gameContainer, realImage, imgx, (int) y, new ComponentListener() {
+            MouseOverArea moa = new MouseOverArea(gameContainer, mouseOver, imgx, (int) y, new ComponentListener() {
                 @Override
                 public void componentActivated(AbstractComponent source) {
                     professionChosen(profession);

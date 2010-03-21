@@ -6,14 +6,15 @@ import com.wwflgames.fury.mob.Mob;
 public class Monster extends Mob {
 
     private String spriteSheet;
+    private int monsterValue;
 
-    public Monster(String name, String spriteSheet) {
+    public Monster(String name, String spriteSheet, int monsterValue) {
         super(name);
         this.spriteSheet = spriteSheet;
     }
 
-    public Monster(Monster other) {
-        this(other.name(), other.getSpriteSheet());
+    public Monster(Monster other, int monsterValue) {
+        this(other.name(), other.getSpriteSheet(), monsterValue);
         setDeck(new ItemDeck(other.getDeck()));
         this.stats.putAll(other.stats);
     }
@@ -29,5 +30,9 @@ public class Monster extends Mob {
                 "name='" + name() + '\'' + " " +
                 "spriteSheet='" + spriteSheet + '\'' +
                 '}';
+    }
+
+    public int monsterValue() {
+        return monsterValue;
     }
 }

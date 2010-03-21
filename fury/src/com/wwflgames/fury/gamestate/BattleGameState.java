@@ -4,6 +4,7 @@ import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.battle.*;
 import com.wwflgames.fury.entity.*;
 import com.wwflgames.fury.item.Item;
+import com.wwflgames.fury.item.ItemFactory;
 import com.wwflgames.fury.item.effect.BuffEffect;
 import com.wwflgames.fury.item.effect.DeathEffect;
 import com.wwflgames.fury.item.effect.MeleeDamageEffect;
@@ -14,10 +15,12 @@ import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.player.Player;
 import com.wwflgames.fury.util.Log;
+import com.wwflgames.fury.util.Rand;
 import com.wwflgames.fury.util.TextUtil;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
@@ -31,12 +34,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BattleGameState extends BasicGameState {
+
     enum State {
         PLAYER_CHOOSE_MONSTER,
         MONSTER_CHOSEN,
         ANIMATION_PLAY,
         ANIMATION_DONE,
-        BATTLE_OVER
+        BATTLE_OVER,
+        SHOW_ITEMS_WON
     }
 
     enum ReplayState {
@@ -52,6 +57,7 @@ public class BattleGameState extends BasicGameState {
     private UnicodeFont font;
     private AppState appState;
     private SpriteSheetCache spriteSheetCache;
+    private ItemFactory itemFactory;
     private Battle battle;
     private BattleSystem battleSystem;
     private EntityManager entityManager;
@@ -70,11 +76,12 @@ public class BattleGameState extends BasicGameState {
     private Mob currentMonster;
     private int monsterCardOffset;
     private boolean enterCalled = false;
+    private Image victoryImage;
 
-
-    public BattleGameState(AppState appState, SpriteSheetCache spriteSheetCache) {
+    public BattleGameState(AppState appState, SpriteSheetCache spriteSheetCache, ItemFactory itemFactory) {
         this.appState = appState;
         this.spriteSheetCache = spriteSheetCache;
+        this.itemFactory = itemFactory;
     }
 
     @Override
@@ -96,6 +103,8 @@ public class BattleGameState extends BasicGameState {
         font.loadGlyphs();
 
         entityManager = new EntityManager(container, game);
+
+        victoryImage = new Image("victory.png");
 
     }
 
@@ -256,6 +265,15 @@ public class BattleGameState extends BasicGameState {
 
         entityManager.render(g);
 
+        if (currentState == State.SHOW_ITEMS_WON) {
+            g.drawImage(victoryImage, 400 - victoryImage.getWidth() / 2, 60);
+            String itemStr = "You find the following item(s):";
+            int strWidth = g.getFont().getWidth(itemStr);
+            g.drawString(itemStr, 400 - strWidth / 2, victoryImage.getHeight() + 60 + 10);
+            String continueStr = "Press any key to continue";
+            strWidth = g.getFont().getWidth(continueStr);
+            g.drawString(continueStr, 400 - strWidth / 2, victoryImage.getHeight() + 60 + 10 + 128 + 65);
+        }
     }
 
     private void drawBattleText(int effectX, List<ItemLogMessage> effects) {
@@ -342,9 +360,46 @@ public class BattleGameState extends BasicGameState {
                 break;
 
             case BATTLE_OVER:
-                // go back to dungeon screen
-                game.enterState(Fury.DUNGEON_GAME_STATE);
 
+                generateItemsWon();
+
+                currentState = State.SHOW_ITEMS_WON;
+
+                break;
+
+            case SHOW_ITEMS_WON:
+
+                // do nothing - we are waiting here for the player
+                // to press a key
+                break;
+
+        }
+    }
+
+    private void generateItemsWon() {
+        int itemsToCreate = Rand.get().nextInt(3) + 1;
+        int itemValue = battle.totalMonsterValue() / itemsToCreate;
+
+        List<Item> itemsWon = new ArrayList<Item>();
+        for (int cnt = 0; cnt < itemsToCreate; cnt++) {
+            Item item = itemFactory.randomItem(itemValue);
+            itemsWon.add(item);
+            appState.getPlayer().getDeck().addItem(item);
+        }
+
+        displayItemsWon(itemsWon);
+    }
+
+    private void displayItemsWon(List<Item> itemsWon) {
+        // allow 128 + 10 for each card to be displayed
+        int displayWidth = itemsWon.size() * (128 + 10);
+        int displayX = 400 - displayWidth / 2;
+        for (Item item : itemsWon) {
+            ItemRenderer card = new ItemRenderer(item, font);
+            Entity cardEntity = new Entity(item.name() + "won").addComponent(card)
+                    .setPosition(new Vector2f(displayX, 300 - 64));
+            entityManager.addEntity(cardEntity);
+            displayX += 138;
         }
     }
 
@@ -532,6 +587,11 @@ public class BattleGameState extends BasicGameState {
 
     @Override
     public void keyPressed(int key, char c) {
+
+        if (currentState == State.SHOW_ITEMS_WON) {
+            // go back to dungeon screen
+            game.enterState(Fury.DUNGEON_GAME_STATE);
+        }
 
         if (currentState != State.PLAYER_CHOOSE_MONSTER) {
             Log.debug("Key pressed when it's not time to press keys!");
