@@ -10,6 +10,8 @@ import org.newdawn.slick.geom.Vector2f;
 
 public class MapFogOfWarRenderer extends AbstractDungeonMapRenderer {
 
+    public static float START_ALPHA = .65f;
+
     public MapFogOfWarRenderer(String id, DungeonMap dungeonMap, PlayerController playerController)
             throws SlickException {
         super(id, dungeonMap, playerController);
@@ -27,20 +29,22 @@ public class MapFogOfWarRenderer extends AbstractDungeonMapRenderer {
 
         int visibility = mapTile.getPlayerVisibility();
 
-        float alpha = 1f;
+        float alpha = START_ALPHA;
 
         switch (visibility) {
+            case 0:
+                alpha = 1.0f;
+                break;
             case 1:
-                alpha = .50f;
                 break;
             case 2:
-                alpha = .40f;
+                alpha -= .1f;
                 break;
             case 3:
-                alpha = .30f;
+                alpha -= .1f;
                 break;
             case 4:
-                alpha = .20f;
+                alpha -= .1f;
                 break;
             case 5:
             case 6:
@@ -51,8 +55,8 @@ public class MapFogOfWarRenderer extends AbstractDungeonMapRenderer {
 
         // if the player has "seen" a square, it always gets rendered at the lowest alpha, so the parts
         // of the map the player has visited are always visible (i.e. automapping)
-        if (mapTile.hasPlayerSeen() && alpha > .50f) {
-            alpha = .50f;
+        if (mapTile.hasPlayerSeen() && alpha > START_ALPHA) {
+            alpha = START_ALPHA;
         }
 
         Color saveColor = graphics.getColor();

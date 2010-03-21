@@ -16,6 +16,9 @@ public class DungeonMapRenderer extends AbstractDungeonMapRenderer {
 
     @Override
     protected void doRender(int x, int y, Tile mapTile, Graphics graphics) {
+        if (!owner.isVisible()) {
+            return;
+        }
         Vector2f pos = owner.getPosition();
         float scale = owner.getScale();
 
@@ -31,7 +34,5 @@ public class DungeonMapRenderer extends AbstractDungeonMapRenderer {
 
         //debug map visibility
         //graphics.drawString(""+mapTile.getPlayerVisibility(),drawX+7,drawY+7);
-
     }
-
 }
