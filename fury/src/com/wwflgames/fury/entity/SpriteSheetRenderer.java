@@ -24,9 +24,11 @@ public class SpriteSheetRenderer extends Renderer {
 
     @Override
     public void render(Graphics gr) {
-        Vector2f pos = owner.getPosition();
-        float scale = owner.getScale();
-        current().draw(pos.x, pos.y, scale);
+        if (owner.isVisible()) {
+            Vector2f pos = owner.getPosition();
+            float scale = owner.getScale();
+            current().draw(pos.x, pos.y, scale);
+        }
     }
 
     @Override

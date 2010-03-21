@@ -1,6 +1,7 @@
 package com.wwflgames.fury.entity;
 
 import com.wwflgames.fury.gamestate.PlayerController;
+import com.wwflgames.fury.map.Tile;
 import com.wwflgames.fury.mob.Mob;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -19,8 +20,9 @@ public class MobMapPositionAction extends Action {
     public void update(int delta) {
         // get the mob's current position on the dungeonMap, and update the entity
         // based on it
-        int mapX = mob.getCurrentMapTile().getX();
-        int mapY = mob.getCurrentMapTile().getY();
+        Tile currentMapTile = mob.getCurrentMapTile();
+        int mapX = currentMapTile.getX();
+        int mapY = currentMapTile.getY();
 
         // adjust mapX and mapY based on the offset from the playerController
         mapX -= playerController.getOffsetX();
@@ -30,5 +32,8 @@ public class MobMapPositionAction extends Action {
         float drawX = mapX * 32 + 4;
         float drawY = mapY * 32;
         owner.setPosition(new Vector2f(drawX, drawY));
+
+        //boolean visible = currentMapTile.getPlayerVisibility() != Tile.NOT_VISIBLE && currentMapTile.hasPlayerSeen();
+        owner.setVisible(currentMapTile.isVisible());
     }
 }

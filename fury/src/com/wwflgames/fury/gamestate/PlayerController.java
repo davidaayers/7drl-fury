@@ -1,8 +1,13 @@
 package com.wwflgames.fury.gamestate;
 
 import com.wwflgames.fury.map.DungeonMap;
+import com.wwflgames.fury.map.Tile;
 import com.wwflgames.fury.player.Player;
+import com.wwflgames.fury.util.BresenhamLine;
 import com.wwflgames.fury.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerController {
 
@@ -19,6 +24,7 @@ public class PlayerController {
         this.player = player;
         this.map = map;
         setInitialOffsets();
+        updateCurrentFeatureSeen();
     }
 
     private void setInitialOffsets() {
@@ -90,6 +96,73 @@ public class PlayerController {
         }
 
         printStuff();
+        updateCurrentFeatureSeen();
+    }
+
+    private void updateCurrentFeatureSeen() {
+//        Feature current = map.findFeatureFor(player.getMapX(), player.getMapY());
+//        for (Tile tile : current.getAllTiles()) {
+//            tile.setHasPlayerSeen(true);
+//        }
+
+        // now, update the player visibility level
+        map.resetVisibility();
+
+        List<Tile> tiles = new ArrayList<Tile>();
+
+        int deltaX = 7;
+        int deltaY = 1;
+        while (deltaX > 0) {
+            int startX = player.getMapX() - deltaX + 1;
+            int endX = player.getMapX() + deltaX;
+            int startY = player.getMapY() - deltaY + 1;
+            int endY = player.getMapY() + deltaY;
+
+            for (int y = startY; y < endY; y++) {
+                for (int x = startX; x < endX; x++) {
+                    if (map.inBounds(x, y)) {
+                        Tile tile = map.getTileAt(x, y);
+                        tile.setPlayerVisibility(tile.getPlayerVisibility() + 1);
+                        if (!tiles.contains(tile)) {
+                            tiles.add(tile);
+                        }
+                    }
+                }
+            }
+            deltaX--;
+            if (startX < player.getMapX()) {
+                deltaY++;
+            } else {
+                deltaY--;
+            }
+        }
+
+        // finally add a LOS check for every tile in tiles
+        int playerX = player.getMapX();
+        int playerY = player.getMapY();
+        for (Tile tile : tiles) {
+            BresenhamLine line = new BresenhamLine();
+            int tileX = tile.getX();
+            int tileY = tile.getY();
+            line.plot(playerX, playerY, tileX, tileY);
+            while (line.next()) {
+                int lineX = line.getX();
+                int lineY = line.getY();
+                Tile checkTile = map.getTileAt(lineX, lineY);
+                // mark every tile on the line as "seen"
+                checkTile.setHasPlayerSeen(true);
+                if (!checkTile.isWalkable()) {
+                    // we hit a non-walkable tile in between the player
+                    // and the destination, mark the destination as not visible
+                    tile.setPlayerVisibility(0);
+                    break;
+                }
+            }
+        }
+
+        // mark the player's location as "seen", not sure yet why I have to do this
+        player.getCurrentMapTile().setHasPlayerSeen(true);
+
     }
 
     private void printStuff() {

@@ -4,16 +4,24 @@ import com.wwflgames.fury.mob.Mob;
 
 public class Tile {
 
+    public static final int NOT_VISIBLE = 0;
+    public static final int FULLY_VISIBLE = 5;
+
+
     private TileType type;
     private int x;
     private int y;
     // the mob that's occupying this tile
     private Mob mob;
+    private boolean hasPlayerSeen;
+    private int playerVisibility;
 
     public Tile(TileType type, int x, int y) {
         this.type = type;
         this.x = x;
         this.y = y;
+        hasPlayerSeen = false;
+        playerVisibility = 0;
     }
 
     public TileType getType() {
@@ -43,6 +51,31 @@ public class Tile {
 
     public boolean isWalkable() {
         return type.isWalkable();
+    }
+
+    public boolean hasPlayerSeen() {
+        return hasPlayerSeen;
+    }
+
+    public void setHasPlayerSeen(boolean hasPlayerSeen) {
+        this.hasPlayerSeen = hasPlayerSeen;
+    }
+
+    public int getPlayerVisibility() {
+        return playerVisibility;
+    }
+
+    public void setPlayerVisibility(int playerVisibility) {
+        this.playerVisibility = playerVisibility;
+    }
+
+    public boolean isVisible() {
+
+        if (type == TileType.WALL) {
+            return this.hasPlayerSeen();
+        } else {
+            return this.playerVisibility != 0;
+        }
     }
 
     @Override
