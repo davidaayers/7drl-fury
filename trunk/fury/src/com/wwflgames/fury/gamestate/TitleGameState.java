@@ -6,7 +6,6 @@ import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.map.*;
 import com.wwflgames.fury.map.generation.Feature;
 import com.wwflgames.fury.mob.Stat;
-import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.monster.MonsterFactory;
 import com.wwflgames.fury.player.Player;
 import com.wwflgames.fury.player.Profession;
@@ -103,8 +102,8 @@ public class TitleGameState extends BasicGameState {
             g.drawString(prof, strX, imgHeight);
             g.flush();
 
-            int imgx = (int) x - img.getWidth() / 2;
-            MouseOverArea moa = new MouseOverArea(gameContainer, mouseOver, imgx, (int) y, new ComponentListener() {
+            int imgX = (int) x - img.getWidth() / 2;
+            MouseOverArea moa = new MouseOverArea(gameContainer, realImage, imgX, (int) y, new ComponentListener() {
                 @Override
                 public void componentActivated(AbstractComponent source) {
                     professionChosen(profession);
@@ -192,29 +191,25 @@ public class TitleGameState extends BasicGameState {
 
     private void generateMap() {
         appState.setDungeon(dungeonCreator.createDungeon(EASY));
-        //initMonsters();
         putPlayerOnMap();
-    }
-
-    private void initMonsters() {
-        // an an enemy
-        Monster monster = monsterFactory.createMonster(0);
-        appState.getMap().addMob(monster, 2, 1);
-
-        Monster monster2 = monsterFactory.createMonster(0);
-        appState.getMap().addMob(monster2, 2, 2);
-
-        Monster monster3 = monsterFactory.createMonster(0);
-        appState.getMap().addMob(monster3, 3, 3);
     }
 
     private void putPlayerOnMap() {
         // grab the map.
         DungeonMap map = appState.getDungeon().currentLevelMap();
         Feature f = map.getFeatureList().get(0);
-        Tile floor = f.getFloorTiles()[0];
-        int x = floor.getX();
-        int y = floor.getY();
+        int tile = 0;
+        Tile emptyTile = null;
+        // grab the first tile that isn't already populated with a monster
+        while (emptyTile == null) {
+            Tile floor = f.getFloorTiles()[tile];
+            if (floor.getMob() == null) {
+                emptyTile = floor;
+            }
+            tile++;
+        }
+        int x = emptyTile.getX();
+        int y = emptyTile.getY();
         Log.debug("player location is " + x + "," + y);
         appState.getMap().addMob(appState.getPlayer(), x, y);
     }

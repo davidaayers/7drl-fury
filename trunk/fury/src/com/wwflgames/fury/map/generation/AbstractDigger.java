@@ -17,7 +17,7 @@ public abstract class AbstractDigger implements Digger {
             // now really dig it
             Feature feature = tryToDigFeature(map, startX, endX, startY, endY);
             return feature;
-        } catch ( DigException de ) {
+        } catch (DigException de) {
             throw de;
         }
     }
@@ -51,9 +51,9 @@ public abstract class AbstractDigger implements Digger {
 
                 if (okToDraw) {
                     tile.setType(drawTile);
-                    if ( drawTile == TileType.FLOOR ) {
+                    if (drawTile == TileType.FLOOR) {
                         newFeature.addFloorTile(tile);
-                    } else if ( drawTile == TileType.WALL ) {
+                    } else if (drawTile == TileType.WALL) {
                         newFeature.addWallTile(tile);
                     }
                 } else {
@@ -69,20 +69,20 @@ public abstract class AbstractDigger implements Digger {
         Tile[] wallTiles = feature.getWallTiles();
         int c = 0;
         int trys = 0;
-        while ( c < howMany && trys < 20 ) {
+        while (c < howMany && trys < 20) {
             int idx = Rand.get().nextInt(wallTiles.length);
             Tile t = wallTiles[idx];
-            if ( t.getType() != TileType.JOIN ) {
-                if ( isCorner(t,map) ) {
+            if (t.getType() != TileType.JOIN) {
+                if (isCorner(t, map)) {
                     Log.debug("Found a corner, not using it");
                     continue;
                 }
-                Direction dir = findDirection(t,map);
-                if ( dir != null ) {
-                    JoinPoint jp = new JoinPoint(t.getX(),t.getY(),dir);
+                Direction dir = findDirection(t, map);
+                if (dir != null) {
+                    JoinPoint jp = new JoinPoint(t.getX(), t.getY(), dir);
                     t.setType(TileType.JOIN);
                     feature.addJoinPoint(jp);
-                    c ++;
+                    c++;
                 }
             }
             trys++;
@@ -91,11 +91,11 @@ public abstract class AbstractDigger implements Digger {
 
     private boolean isCorner(Tile tile, DungeonMap map) {
         int emptyCnt = 0;
-        for ( Direction cardinal : Direction.CARDINALS ) {
+        for (Direction cardinal : Direction.CARDINALS) {
             int checkX = tile.getX() + cardinal.getDx();
             int checkY = tile.getY() + cardinal.getDy();
-            if ( map.inBounds( checkX , checkY  ) ) {
-                if ( map.getTileAt(checkX,checkY).getType() == TileType.EMPTY ) {
+            if (map.inBounds(checkX, checkY)) {
+                if (map.getTileAt(checkX, checkY).getType() == TileType.EMPTY) {
                     emptyCnt++;
                 }
             }
@@ -105,19 +105,19 @@ public abstract class AbstractDigger implements Digger {
 
     private Direction findDirection(Tile tile, DungeonMap map) {
 
-        Log.debug("Finding direction for tile " + tile );
+        Log.debug("Finding direction for tile " + tile);
 
         // look in all of the cardinal directions. As soon as we fine one with a BLANK tile,
         // that's the direction our Join Point faces
-        for ( Direction cardinal : Direction.CARDINALS ) {
+        for (Direction cardinal : Direction.CARDINALS) {
             Log.debug("Looking in direction " + cardinal);
             int checkX = tile.getX() + cardinal.getDx();
             int checkY = tile.getY() + cardinal.getDy();
             Log.debug("checkx = " + checkX + " checky = " + checkY);
-            if ( map.inBounds( checkX , checkY  ) ) {
+            if (map.inBounds(checkX, checkY)) {
                 Tile checkTile = map.getTileAt(checkX, checkY);
-                Log.debug("In Bounds, checkTile = " + checkTile );
-                if ( checkTile.getType() == TileType.EMPTY ) {
+                Log.debug("In Bounds, checkTile = " + checkTile);
+                if (checkTile.getType() == TileType.EMPTY) {
                     Log.debug("Found an empty tile, this join point must face " + cardinal);
                     return cardinal;
                 }

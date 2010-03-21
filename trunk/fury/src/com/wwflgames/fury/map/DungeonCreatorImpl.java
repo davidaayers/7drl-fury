@@ -15,8 +15,8 @@ public class DungeonCreatorImpl implements DungeonCreator {
 
         Dungeon dungeon = new Dungeon();
 
-        for ( int idx = 0 ; idx < floorsToCreate ; idx ++ ) {
-            dungeon.addLevel(mapCreator.createMap(difficulty,idx));
+        for (int idx = 0; idx < floorsToCreate; idx++) {
+            dungeon.addLevel(mapCreator.createMap(difficulty, idx));
         }
 
         return dungeon;
