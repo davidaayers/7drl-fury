@@ -41,4 +41,11 @@
             <damage type="Magic" value="6"/>
         </usedAgainstEffects>
     </item>
+    <item name="Concentration">
+        <usedByEffects>
+            <attack-buff type="Magic" value="4"/>
+        </usedByEffects>
+        <usedAgainstEffects/>
+    </item>
+
 </items>

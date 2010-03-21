@@ -102,15 +102,4 @@ public class MeleeDamageEffect extends AbstractDamageEffect {
     }
 
 
-    private int calculateBuffDamageIncrease(Mob mob, ItemUsageResult result, List<AttackBuffEffect> attackBuffs) {
-        int buffAmt = 0;
-        for (AttackBuffEffect effect : attackBuffs) {
-            buffAmt += effect.getAmount();
-            // add message about the buff
-            String msg = "{1} attack is increased by {2}!";
-            result.add(new ItemEffectResult(msg, effect.getAmount(), mob, effect));
-        }
-        return buffAmt;
-    }
-
 }
