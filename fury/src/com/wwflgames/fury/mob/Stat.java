@@ -3,6 +3,7 @@ package com.wwflgames.fury.mob;
 public enum Stat {
 
     STRENGTH("Strength", false),
+    DEXTERITY("Dexterity", false),
     MAGIC("Magic", false),
     HEALTH("Health", false),
     ARMOR("Armor", true),
