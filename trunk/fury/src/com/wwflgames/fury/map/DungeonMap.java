@@ -88,6 +88,17 @@ public class DungeonMap implements Cloneable {
         return features;
     }
 
+    public Feature findFeatureFor(int x, int y) {
+        Tile tile = this.getTileAt(x, y);
+        for (Feature feature : features) {
+            List<Tile> allTiles = feature.getAllTiles();
+            if (allTiles.contains(tile)) {
+                return feature;
+            }
+        }
+        throw new IllegalStateException("Should not get here");
+    }
+
     public DungeonMap duplicate() {
         DungeonMap copy = new DungeonMap(this.width, this.height);
         for (int y = 0; y < height; y++) {
@@ -97,6 +108,15 @@ public class DungeonMap implements Cloneable {
             }
         }
         return copy;
+    }
+
+    public void resetVisibility() {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Tile existing = this.getTileAt(x, y);
+                existing.setPlayerVisibility(Tile.NOT_VISIBLE);
+            }
+        }
     }
 
 }

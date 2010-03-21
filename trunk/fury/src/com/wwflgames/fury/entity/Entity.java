@@ -18,6 +18,7 @@ public class Entity {
     private float rotation;
     private Integer zIndex = 0;
     private boolean remove = false;
+    private boolean visible = true;
     private Map<String, Object> propertyMap = new HashMap<String, Object>();
 
     private Renderer renderer;
@@ -123,6 +124,14 @@ public class Entity {
     public Entity setGame(StateBasedGame game) {
         this.game = game;
         return this;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     public void update(int delta) {

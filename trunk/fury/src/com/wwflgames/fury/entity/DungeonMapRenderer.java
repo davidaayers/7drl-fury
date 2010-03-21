@@ -8,49 +8,30 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
-public class DungeonMapRenderer extends MapRenderer {
-
-    private PlayerController playerController;
+public class DungeonMapRenderer extends AbstractDungeonMapRenderer {
 
     public DungeonMapRenderer(String id, DungeonMap dungeonMap, PlayerController playerController) throws SlickException {
-        super(id, dungeonMap);
-        this.playerController = playerController;
+        super(id, dungeonMap, playerController);
     }
 
     @Override
-    public void render(Graphics gr) {
+    protected void doRender(int x, int y, Tile mapTile, Graphics graphics) {
         Vector2f pos = owner.getPosition();
         float scale = owner.getScale();
 
-        for (int y = 0; y < dungeonMap.getHeight(); y++) {
-            for (int x = 0; x < dungeonMap.getWidth(); x++) {
-                int mapx = x + playerController.getOffsetX();
-                int mapy = y + playerController.getOffsetY();
-                if (mapx > dungeonMap.getWidth() - 1) {
-                    mapx = dungeonMap.getWidth() - 1;
-                }
-                if (mapx < 0) {
-                    mapx = 0;
-                }
-                if (mapy > dungeonMap.getHeight() - 1) {
-                    mapy = dungeonMap.getHeight() - 1;
-                }
-                if (mapy < 0) {
-                    mapy = 0;
-                }
-                Tile mapTile = dungeonMap.getTileAt(mapx, mapy);
-                Image drawImage = determineImageForTile(mapTile.getType());
-                int tw = drawImage.getWidth();
-                int th = drawImage.getHeight();
-                drawImage.draw(pos.x + (x * tw * scale), pos.y + (y * th * scale), scale);
-            }
+        Image drawImage = determineImageForTile(mapTile.getType());
+        int tw = drawImage.getWidth();
+        int th = drawImage.getHeight();
+        float drawX = pos.x + (x * tw * scale);
+        float drawY = pos.y + (y * th * scale);
+
+        if (mapTile.hasPlayerSeen()) {
+            drawImage.draw(drawX, drawY, scale);
         }
-    }
 
-    @Override
-    public void update(int delta) {
-        // based on the player's location on the map, determine our offsets
-
+        //debug map visibility
+        //graphics.drawString(""+mapTile.getPlayerVisibility(),drawX+7,drawY+7);
 
     }
+
 }

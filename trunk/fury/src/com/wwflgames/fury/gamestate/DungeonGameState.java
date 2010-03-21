@@ -78,6 +78,16 @@ public class DungeonGameState extends BasicGameState {
 
             entityManager.addEntity(monsterEntity);
         }
+
+        // add the fog of war
+        Entity fogOfWar = new Entity("fogOfWar")
+                .setPosition(new Vector2f(0, 0))
+                .setScale(1)
+                .addComponent(new MapFogOfWarRenderer("forRenderer", appState.getMap(), playerController));
+
+        entityManager.addEntity(fogOfWar);
+
+
     }
 
     @Override
