@@ -24,6 +24,7 @@ public class DungeonGameState extends BasicGameState {
     private AppState appState;
     private SpriteSheetCache spriteSheetCache;
     private PlayerController playerController;
+    private Entity miniMap;
 
     public DungeonGameState(AppState appState, SpriteSheetCache spriteSheetCache) {
         this.appState = appState;
@@ -46,13 +47,15 @@ public class DungeonGameState extends BasicGameState {
 
     public void enter(GameContainer container, StateBasedGame game) throws SlickException {
 
-        playerController = new PlayerController(appState.getPlayer(), appState.getMap());
+        DungeonMap map = appState.getMap();
+
+        playerController = new PlayerController(appState.getPlayer(), map);
 
         // create a dungeonMap entity
         Entity mapEntity = new Entity("dungeonMap")
                 .setPosition(new Vector2f(0, 0))
                 .setScale(1)
-                .addComponent(new DungeonMapRenderer("mapRender", appState.getMap(), playerController));
+                .addComponent(new DungeonMapRenderer("mapRender", map, playerController));
 
         entityManager.addEntity(mapEntity);
 
@@ -68,7 +71,7 @@ public class DungeonGameState extends BasicGameState {
         entityManager.addEntity(player);
 
         // grab all of the monsters on the dungeonMap
-        for (Monster monster : appState.getMap().getMonsterList()) {
+        for (Monster monster : map.getMonsterList()) {
             Entity monsterEntity = new Entity("monster" + monster.name())
                     .setPosition(new Vector2f(0, 0))
                     .setScale(1)
@@ -83,10 +86,20 @@ public class DungeonGameState extends BasicGameState {
         Entity fogOfWar = new Entity("fogOfWar")
                 .setPosition(new Vector2f(0, 0))
                 .setScale(1)
-                .addComponent(new MapFogOfWarRenderer("forRenderer", appState.getMap(), playerController));
+                .addComponent(new MapFogOfWarRenderer("forRenderer", map, playerController));
 
         entityManager.addEntity(fogOfWar);
 
+        // add the mini-map
+        float mmScale = 400f / (float) (map.getWidth() * 32);
+        float mmHeight = map.getHeight() * 32 * mmScale;
+        miniMap = new Entity("miniMap")
+                .setScale(mmScale)
+                .setPosition(new Vector2f(200, 300 - (mmHeight / 2)))
+                .setVisible(false)
+                .addComponent(new MiniDungeonMapRenderer("mapRender", map, playerController));
+
+        entityManager.addEntity(miniMap);
 
     }
 
@@ -113,6 +126,11 @@ public class DungeonGameState extends BasicGameState {
 
     public void keyPressed(int key, char c) {
         Log.debug("key = " + key);
+
+        if (key == 50) {
+            miniMap.setVisible(!miniMap.isVisible());
+        }
+
         Direction d = Direction.forKey(key);
         if (d != null) {
             tryMoveAndMaybeAttack(d.getDx(), d.getDy());

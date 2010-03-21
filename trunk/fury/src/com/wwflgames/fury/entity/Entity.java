@@ -130,8 +130,9 @@ public class Entity {
         return visible;
     }
 
-    public void setVisible(boolean visible) {
+    public Entity setVisible(boolean visible) {
         this.visible = visible;
+        return this;
     }
 
     public void update(int delta) {
