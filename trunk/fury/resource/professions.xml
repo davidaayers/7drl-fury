@@ -21,6 +21,7 @@
         </stats>
         <deck>
             <item name="Magic Missile"/>
+            <item name="Concentration"/>
         </deck>
     </player-class>
     <player-class name="Thief" sprite-sheet="rogue_male.png">
