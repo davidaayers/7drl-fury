@@ -5,9 +5,8 @@ import com.wwflgames.fury.entity.SpriteSheetCache;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.map.*;
 import com.wwflgames.fury.map.generation.Feature;
-import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.monster.MonsterFactory;
-import com.wwflgames.fury.player.Player;
+import com.wwflgames.fury.player.PlayerFactory;
 import com.wwflgames.fury.player.Profession;
 import com.wwflgames.fury.player.ProfessionFactory;
 import com.wwflgames.fury.util.Log;
@@ -39,6 +38,7 @@ public class TitleGameState extends BasicGameState {
     private StateBasedGame stateBasedGame;
     private Image titleImage;
     private ProfessionFactory professionFactory;
+    private PlayerFactory playerFactory;
     private SpriteSheetCache spriteSheetCache;
     private List<MouseOverArea> professionChoices = new ArrayList<MouseOverArea>();
     private State currentState;
@@ -47,14 +47,14 @@ public class TitleGameState extends BasicGameState {
     private DungeonCreator dungeonCreator;
 
 
-    public TitleGameState(ProfessionFactory professionFactory, SpriteSheetCache spriteSheetCache,
-                          MonsterFactory monsterFactory, AppState appState) {
+    public TitleGameState(ProfessionFactory professionFactory, PlayerFactory playerFactory,
+                          SpriteSheetCache spriteSheetCache, MonsterFactory monsterFactory, AppState appState) {
         this.professionFactory = professionFactory;
+        this.playerFactory = playerFactory;
         this.spriteSheetCache = spriteSheetCache;
         this.monsterFactory = monsterFactory;
         this.appState = appState;
 
-        DungeonMapCreator mapCreator = new FixedDungeonMapCreator();
         DungeonMapCreator randomCreator = new DungeonMapCreatorImpl(monsterFactory);
         dungeonCreator = new DungeonCreatorImpl(randomCreator);
 
@@ -126,11 +126,7 @@ public class TitleGameState extends BasicGameState {
     private void professionChosen(Profession profession) {
         Log.debug("Profession chosen: " + profession);
         currentState = State.START_GENERATING_MAP;
-        Player player = new Player(profession.getName(), profession);
-        player.setStatValue(Stat.HEALTH, 40);
-        player.setStatValue(Stat.ARMOR, 5);
-        player.setDeck(profession.getStarterDeck());
-        appState.setPlayer(player);
+        appState.setPlayer(playerFactory.createForProfession(profession));
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.wwflgames.fury.gamestate.TitleGameState;
 import com.wwflgames.fury.item.ItemFactory;
 import com.wwflgames.fury.main.AppStateImpl;
 import com.wwflgames.fury.monster.MonsterFactory;
+import com.wwflgames.fury.player.PlayerFactory;
 import com.wwflgames.fury.player.ProfessionFactory;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -21,6 +22,7 @@ public class Fury extends StateBasedGame {
     public static final int TITLE_STATE = 1;
     public static final int DUNGEON_GAME_STATE = 2;
     public static final int BATTLE_STATE = 3;
+    public static final int MANAGE_DECK_STATE = 4;
 
     private static AppGameContainer container;
 
@@ -28,6 +30,7 @@ public class Fury extends StateBasedGame {
     private SpriteSheetCache spriteSheetCache;
     private MonsterFactory monsterFactory;
     private ProfessionFactory professionFactory;
+    private PlayerFactory playerFactory;
     private ItemFactory itemFactory;
 
     public Fury() {
@@ -46,7 +49,7 @@ public class Fury extends StateBasedGame {
         // and do anything.
         initItemFactory();
         initMonsterFactory();
-        initPlayerClassFactory();
+        installPlayerFactory();
         initSpriteSheetCache();
 
         // now, actually create the game states like we're supposed to in this method. ugh.
@@ -63,8 +66,9 @@ public class Fury extends StateBasedGame {
         addState(createBattleState());
     }
 
-    private void initPlayerClassFactory() throws SlickException {
+    private void installPlayerFactory() throws SlickException {
         professionFactory = new ProfessionFactory(itemFactory);
+        playerFactory = new PlayerFactory(professionFactory);
     }
 
     private void initMonsterFactory() throws SlickException {
@@ -82,7 +86,7 @@ public class Fury extends StateBasedGame {
     }
 
     private TitleGameState createTitleGameState() {
-        return new TitleGameState(professionFactory, spriteSheetCache, monsterFactory, appState);
+        return new TitleGameState(professionFactory, playerFactory, spriteSheetCache, monsterFactory, appState);
     }
 
     private GameState createDungeonState() {
