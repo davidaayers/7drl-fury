@@ -1,10 +1,8 @@
 package com.wwflgames.fury.item;
 
-import com.wwflgames.fury.item.effect.AttackBuffEffect;
-import com.wwflgames.fury.item.effect.ItemEffect;
-import com.wwflgames.fury.item.effect.MeleeDamageEffect;
-import com.wwflgames.fury.item.effect.StatBuffEffect;
+import com.wwflgames.fury.item.effect.*;
 import com.wwflgames.fury.item.effect.damage.Damage;
+import com.wwflgames.fury.item.effect.damage.MagicDamage;
 import com.wwflgames.fury.item.effect.damage.MeleeDamage;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
@@ -87,6 +85,11 @@ public class ItemFactory {
                 MeleeDamageEffect damageEffect = new MeleeDamageEffect((MeleeDamage) dmg, value);
                 Log.debug("Created meleeDamageEffect = " + damageEffect.getDesc());
                 return damageEffect;
+            } else if (dmg instanceof MagicDamage) {
+                MagicDamageEffect damageEffect = new MagicDamageEffect((MagicDamage) dmg, value);
+                Log.debug("Created magicDamageEffect = " + damageEffect.getDesc());
+                return damageEffect;
+
             }
         } else if (childNode.getName().equals("stat-buff")) {
             Log.debug("Creating stat-buff");

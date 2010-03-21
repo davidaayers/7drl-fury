@@ -3,8 +3,8 @@
         <stats>
             <health value="40"/>
             <strength value="10"/>
-            <dexterity value="5"/>
-            <magic value="5"/>
+            <dexterity value="0"/>
+            <magic value="0"/>
         </stats>
         <deck>
             <item name="Mace of Crushing"/>
@@ -15,20 +15,20 @@
     <player-class name="Wizard" sprite-sheet="wizard_male.png">
         <stats>
             <health value="30"/>
-            <strength value="5"/>
-            <dexterity value="5"/>
+            <strength value="0"/>
+            <dexterity value="0"/>
             <magic value="20"/>
         </stats>
         <deck>
-            <item name="Mace of Crushing"/>
+            <item name="Magic Missile"/>
         </deck>
     </player-class>
     <player-class name="Thief" sprite-sheet="rogue_male.png">
         <stats>
             <health value="35"/>
-            <strength value="5"/>
+            <strength value="0"/>
             <dexterity value="15"/>
-            <magic value="5"/>
+            <magic value="0"/>
         </stats>
         <deck>
             <item name="Mace of Crushing"/>

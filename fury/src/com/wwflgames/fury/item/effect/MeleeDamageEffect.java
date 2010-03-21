@@ -7,22 +7,12 @@ import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.mob.Stat;
 import com.wwflgames.fury.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MeleeDamageEffect implements ItemEffect {
-
-    private MeleeDamage damage;
-    private int damageAmount;
+public class MeleeDamageEffect extends AbstractDamageEffect {
 
     public MeleeDamageEffect(MeleeDamage damage, int damageAmount) {
-        this.damage = damage;
-        this.damageAmount = damageAmount;
-    }
-
-    @Override
-    public String getDesc() {
-        return "" + damageAmount + " " + damage.getType() + " dmg";
+        super(damage, damageAmount);
     }
 
     @Override
@@ -40,7 +30,7 @@ public class MeleeDamageEffect implements ItemEffect {
     // for this combat round), then to health
     private void applyCrushDamage(Mob itemUser, Mob usedOn, ItemUsageResult result) {
 
-        List<AttackBuffEffect> attackBuffs = findAndRemoveApplicableBuffs(itemUser, Damage.CRUSH_DAMAGE);
+        List<AttackBuffEffect> attackBuffs = EffectHelper.findAndRemoveApplicableBuffs(itemUser, Damage.CRUSH_DAMAGE);
 
         Log.debug("Got " + attackBuffs + " attack buffs");
         int buffAmt = calculateBuffDamageIncrease(itemUser, result, attackBuffs);
@@ -51,6 +41,18 @@ public class MeleeDamageEffect implements ItemEffect {
         int armorBefore = armor;
 
         int dmg = damageAmount + buffAmt;
+
+        // crush damage is increased based on strength. Get a multiplier for
+        // strength
+        float multiplier = multiplierFor(itemUser, Stat.STRENGTH);
+        Log.debug("multiplier was " + multiplier);
+        int origDmg = dmg;
+        dmg *= multiplier;
+        if (origDmg != dmg) {
+            String msg = "{0} strength increased the attack by {2}!";
+            result.add(new ItemEffectResult(msg, dmg - origDmg, itemUser, this));
+        }
+
 
         Log.debug("Armor before: " + armor);
         Log.debug("Dmg before  : " + dmg);
@@ -99,29 +101,6 @@ public class MeleeDamageEffect implements ItemEffect {
 
     }
 
-    List<AttackBuffEffect> findAndRemoveApplicableBuffs(Mob mob, Damage damageType) {
-        List<AttackBuffEffect> applicableBuffs = new ArrayList<AttackBuffEffect>();
-        List<BuffEffect> buffEffects = mob.getBuffs();
-        Log.debug("Buff effects for " + mob + " were " + buffEffects);
-        for (BuffEffect buff : buffEffects) {
-            Log.debug("Looking at buff " + buff);
-            if (buff instanceof AttackBuffEffect) {
-                AttackBuffEffect attackBuff = (AttackBuffEffect) buff;
-                Log.debug("attackBuff = " + attackBuff.getDesc());
-
-                if (attackBuff.getDamage().getClass().isAssignableFrom(damageType.getClass())) {
-                    Log.debug("It's assignable");
-                    applicableBuffs.add(attackBuff);
-                }
-
-            }
-        }
-        // now, remove the buffs from the mob, because we're about to use them
-        for (AttackBuffEffect buff : applicableBuffs) {
-            mob.removeBuff(buff);
-        }
-        return applicableBuffs;
-    }
 
     private int calculateBuffDamageIncrease(Mob mob, ItemUsageResult result, List<AttackBuffEffect> attackBuffs) {
         int buffAmt = 0;
