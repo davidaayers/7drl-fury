@@ -2,7 +2,7 @@ package com.wwflgames.fury.map.generation;
 
 import com.wwflgames.fury.util.Rand;
 
-import java.awt.Dimension;
+import java.awt.*;
 
 public class SquareRoomDigger extends RoomDigger {
     private int minSize;
@@ -16,7 +16,7 @@ public class SquareRoomDigger extends RoomDigger {
 
     @Override
     protected Dimension determineDimension() {
-        int size = Rand.between(minSize,maxSize);
-        return new Dimension(size,size);
+        int size = Rand.between(minSize, maxSize);
+        return new Dimension(size, size);
     }
 }

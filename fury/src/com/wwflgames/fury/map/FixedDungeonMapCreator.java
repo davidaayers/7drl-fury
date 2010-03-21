@@ -2,7 +2,7 @@ package com.wwflgames.fury.map;
 
 public class FixedDungeonMapCreator implements DungeonMapCreator {
     @Override
-    public DungeonMap createMap(DifficultyLevel difficulty,int level) {
+    public DungeonMap createMap(DifficultyLevel difficulty, int level) {
         DungeonMap dungeonMap = new DungeonMap(5, 5);
 
         // add walls to the all around

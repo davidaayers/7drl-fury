@@ -5,7 +5,7 @@ import com.wwflgames.fury.map.TileType;
 import com.wwflgames.fury.util.Log;
 import com.wwflgames.fury.util.Rand;
 
-import java.awt.Dimension;
+import java.awt.*;
 
 import static com.wwflgames.fury.map.Direction.E;
 import static com.wwflgames.fury.map.Direction.N;
@@ -79,7 +79,7 @@ public class RoomDigger extends AbstractDigger {
 
         Feature feature = maybeDigFeature(map, startX, endX, startY, endY);
 
-        addJoinPoints(3, feature , map);
+        addJoinPoints(3, feature, map);
 
 
         // finally, draw the join point

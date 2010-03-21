@@ -173,9 +173,9 @@ public final class BresenhamLine {
         for (int i = 0; i < length; i++) {
             x[i] = bresenham.getX();
             y[i] = bresenham.getY();
-			bresenham.next();
-		}
+            bresenham.next();
+        }
 
-		return length;
-	}
+        return length;
+    }
 }

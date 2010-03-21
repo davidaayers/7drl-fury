@@ -1,11 +1,6 @@
 package com.wwflgames.fury.map;
 
-import com.wwflgames.fury.map.generation.DigException;
-import com.wwflgames.fury.map.generation.Digger;
-import com.wwflgames.fury.map.generation.Feature;
-import com.wwflgames.fury.map.generation.JoinPoint;
-import com.wwflgames.fury.map.generation.RoomDigger;
-import com.wwflgames.fury.map.generation.SquareRoomDigger;
+import com.wwflgames.fury.map.generation.*;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.monster.MonsterFactory;
 import com.wwflgames.fury.util.AsciiMapPrinter;
@@ -121,12 +116,12 @@ public class DungeonMapCreatorImpl implements DungeonMapCreator {
         Tile[] floorTiles = feature.getFloorTiles();
         int numMonsters = floorTiles.length / 6;
         int cnt = 0;
-        while ( cnt < numMonsters ) {
+        while (cnt < numMonsters) {
             Tile randomTile = floorTiles[Rand.get().nextInt(floorTiles.length)];
-            if ( randomTile.getMob() == null ) {
+            if (randomTile.getMob() == null) {
                 Monster monster = monsterFactory.createMonster(level);
                 map.addMob(monster, randomTile.getX(), randomTile.getY());
-                cnt ++;
+                cnt++;
             }
         }
     }
