@@ -2,6 +2,7 @@ package com.wwflgames.fury.gamestate;
 
 import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.item.Item;
+import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.main.AppState;
 import org.newdawn.slick.*;
 import org.newdawn.slick.gui.AbstractComponent;
@@ -24,6 +25,7 @@ public class ManageDeckGameState extends BasicGameState {
     private Image plusImage;
     private Image minusImage;
     private boolean shouldRebuildButtons;
+    private int currentDeckNo;
 
 
     public ManageDeckGameState(AppState appState) {
@@ -46,7 +48,8 @@ public class ManageDeckGameState extends BasicGameState {
 
     @Override
     public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-        choosePlayerDeck(1);
+        currentDeckNo = 1;
+        choosePlayerDeck(currentDeckNo);
         createAllItemList();
         createButtons();
 
@@ -68,25 +71,50 @@ public class ManageDeckGameState extends BasicGameState {
             mouseOvers.add(moa);
             y += 20;
         }
+
+        x = 400;
+        y = 200;
+        for (ItemContainer itemContainer : allPlayerItems) {
+            final Item item = itemContainer.getItem();
+            MouseOverArea moa = new MouseOverArea(container, plusImage, x, y, new ComponentListener() {
+                @Override
+                public void componentActivated(AbstractComponent source) {
+                    addItemToCurrentDeck(item);
+                }
+            });
+            moa.setMouseOverColor(Color.red);
+            mouseOvers.add(moa);
+            y += 20;
+        }
+
+
+    }
+
+    private void addItemToCurrentDeck(Item item) {
+        moveFrom(item, allPlayerItems, currentDeckItems);
+        shouldRebuildButtons = true;
     }
 
     private void removeItemFromCurrentDeck(Item item) {
-        ItemContainer container = findContainerForItem(item, currentDeckItems);
+        moveFrom(item, currentDeckItems, allPlayerItems);
+        shouldRebuildButtons = true;
+    }
+
+    private void moveFrom(Item item, List<ItemContainer> listA, List<ItemContainer> listB) {
+        ItemContainer container = findContainerForItem(item, listA);
         container.setQty(container.getQty() - 1);
         if (container.getQty() == 0) {
-            currentDeckItems.remove(container);
+            listA.remove(container);
         }
 
-        ItemContainer container2 = findContainerForItem(item, allPlayerItems);
+        ItemContainer container2 = findContainerForItem(item, listB);
         if (container2 != null) {
             container2.incQty();
         } else {
             ItemContainer newItem = new ItemContainer(item);
             newItem.incQty();
-            allPlayerItems.add(newItem);
+            listB.add(newItem);
         }
-        shouldRebuildButtons = true;
-
     }
 
     private void createAllItemList() {
@@ -144,7 +172,7 @@ public class ManageDeckGameState extends BasicGameState {
         }
 
 
-        x = 400;
+        x = 425;
         y = 200;
         // render right side, which contains all available items
         for (ItemContainer itemContainer : allPlayerItems) {
@@ -173,7 +201,20 @@ public class ManageDeckGameState extends BasicGameState {
     public void keyPressed(int key, char c) {
         if (c == ' ') {
             // go back to dungeon screen
+            buildNewDeck();
             game.enterState(Fury.DUNGEON_GAME_STATE);
+        }
+    }
+
+    private void buildNewDeck() {
+        currentDeckNo = 1;
+        ItemDeck deck = appState.getPlayer().deckForDeckNo(currentDeckNo);
+        deck.getDeck().clear();
+        for (ItemContainer container : currentDeckItems) {
+            Item item = container.getItem();
+            for (int cnt = 0; cnt < container.getQty(); cnt++) {
+                deck.getDeck().add(item);
+            }
         }
     }
 
