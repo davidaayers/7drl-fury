@@ -127,6 +127,11 @@ public class DungeonGameState extends BasicGameState {
     public void keyPressed(int key, char c) {
         Log.debug("key = " + key);
 
+        if (key == 32) {
+            // go back to dungeon screen
+            stateBasedGame.enterState(Fury.MANAGE_DECK_STATE);
+        }
+
         if (key == 50) {
             miniMap.setVisible(!miniMap.isVisible());
         }
