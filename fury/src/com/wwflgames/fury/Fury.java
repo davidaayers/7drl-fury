@@ -3,6 +3,7 @@ package com.wwflgames.fury;
 import com.wwflgames.fury.entity.SpriteSheetCache;
 import com.wwflgames.fury.gamestate.BattleGameState;
 import com.wwflgames.fury.gamestate.DungeonGameState;
+import com.wwflgames.fury.gamestate.ManageDeckGameState;
 import com.wwflgames.fury.gamestate.TitleGameState;
 import com.wwflgames.fury.item.ItemFactory;
 import com.wwflgames.fury.main.AppStateImpl;
@@ -64,6 +65,7 @@ public class Fury extends StateBasedGame {
         addState(createTitleGameState());
         addState(createDungeonState());
         addState(createBattleState());
+        addState(createManageDeckGameState());
     }
 
     private void installPlayerFactory() throws SlickException {
@@ -96,6 +98,11 @@ public class Fury extends StateBasedGame {
     private BattleGameState createBattleState() {
         return new BattleGameState(appState, spriteSheetCache, itemFactory);
     }
+
+    private GameState createManageDeckGameState() {
+        return new ManageDeckGameState(appState);
+    }
+
 
     public static void main(String[] args) {
         ResourceLoader.removeAllResourceLocations();

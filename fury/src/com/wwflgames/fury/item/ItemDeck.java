@@ -41,6 +41,10 @@ public class ItemDeck {
         return item;
     }
 
+    public List<Item> getDeck() {
+        return deck;
+    }
+
     @Override
     public String toString() {
         return "ItemDeck{" +

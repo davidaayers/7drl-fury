@@ -1,5 +1,6 @@
 package com.wwflgames.fury.player;
 
+import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.mob.Mob;
 
@@ -11,8 +12,8 @@ import java.util.Map;
 public class Player extends Mob {
 
     private Profession profession;
-    private List<ItemDeck> decks = new ArrayList<ItemDeck>();
     private Map<Integer, ItemDeck> deckMap = new HashMap<Integer, ItemDeck>();
+    private List<Item> allItems = new ArrayList<Item>();
 
     public Player(String name, Profession profession) {
         super(name);
@@ -27,9 +28,19 @@ public class Player extends Mob {
         deckMap.put(deckNo, deck);
     }
 
+    public ItemDeck deckForDeckNo(int deckNo) {
+        return deckMap.get(deckNo);
+    }
+
     public void setDefaultDeck(int deckNo) {
         setDeck(deckMap.get(deckNo));
     }
 
+    public void addItem(Item item) {
+        allItems.add(item);
+    }
 
+    public List<Item> getAllItems() {
+        return allItems;
+    }
 }
