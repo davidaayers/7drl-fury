@@ -1,10 +1,15 @@
 package com.wwflgames.fury.gamestate;
 
 import com.wwflgames.fury.Fury;
+import com.wwflgames.fury.entity.Entity;
+import com.wwflgames.fury.entity.EntityManager;
+import com.wwflgames.fury.entity.ItemRenderer;
 import com.wwflgames.fury.item.Item;
 import com.wwflgames.fury.item.ItemDeck;
 import com.wwflgames.fury.main.AppState;
 import org.newdawn.slick.*;
+import org.newdawn.slick.font.effects.ColorEffect;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.MouseOverArea;
@@ -26,6 +31,9 @@ public class ManageDeckGameState extends BasicGameState {
     private Image minusImage;
     private boolean shouldRebuildButtons;
     private int currentDeckNo;
+    private Entity cardEntity;
+    private EntityManager entityManager;
+    private UnicodeFont font;
 
 
     public ManageDeckGameState(AppState appState) {
@@ -44,6 +52,12 @@ public class ManageDeckGameState extends BasicGameState {
 
         plusImage = new Image("plus.png");
         minusImage = new Image("minus.png");
+
+        java.awt.Font jFont = new java.awt.Font("Verdana", java.awt.Font.PLAIN, 12);
+        font = new UnicodeFont(jFont);
+        font.getEffects().add(new ColorEffect(java.awt.Color.white));
+        font.addAsciiGlyphs();
+        font.loadGlyphs();
     }
 
     @Override
@@ -52,6 +66,12 @@ public class ManageDeckGameState extends BasicGameState {
         choosePlayerDeck(currentDeckNo);
         createAllItemList();
         createButtons();
+
+        entityManager = new EntityManager(container, game);
+
+        cardEntity = new Entity("cardEntity")
+                .setPosition(new Vector2f(320, 200));
+
 
     }
 
@@ -72,7 +92,7 @@ public class ManageDeckGameState extends BasicGameState {
             y += 20;
         }
 
-        x = 400;
+        x = 500;
         y = 200;
         for (ItemContainer itemContainer : allPlayerItems) {
             final Item item = itemContainer.getItem();
@@ -162,29 +182,46 @@ public class ManageDeckGameState extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         // render left side, which contains all items in the current deck
-        int x = 35;
-        int y = 200;
-        for (ItemContainer itemContainer : currentDeckItems) {
-            String str = itemContainer.getItem().name() + " " + itemContainer.getQty();
-            g.drawString(str, x, y);
-            y += 20;
+        drawItems(container, g, currentDeckItems, 35, 200);
 
-        }
-
-
-        x = 425;
-        y = 200;
-        // render right side, which contains all available items
-        for (ItemContainer itemContainer : allPlayerItems) {
-            String str = itemContainer.getItem().name() + " " + itemContainer.getQty();
-            g.drawString(str, x, y);
-            y += 20;
-        }
+        drawItems(container, g, allPlayerItems, 425, 200);
 
         for (MouseOverArea moa : mouseOvers) {
             moa.render(container, g);
         }
 
+        entityManager.render(g);
+
+    }
+
+    public void updateCard(Item item) {
+        ItemRenderer card = new ItemRenderer(item, font);
+        cardEntity.removeComponentById("cardEntity");
+        cardEntity.addComponent(card);
+    }
+
+    private void drawItems(GameContainer container, Graphics g, List<ItemContainer> items, int startX, int startY) {
+        int x = startX;
+        int y = startY;
+        for (ItemContainer itemContainer : items) {
+            String str = itemContainer.getItem().name() + " " + itemContainer.getQty();
+            int strWidth = g.getFont().getWidth(str);
+            g.setColor(Color.white);
+            g.drawString(str, x, y);
+            // if the mouse is over this item, put a line around it
+            int mouseX = container.getInput().getMouseX();
+            int mouseY = container.getInput().getMouseY();
+            if (mouseX >= x && mouseX <= x + strWidth &&
+                    mouseY >= y && mouseY <= y + 20) {
+                g.setColor(Color.yellow);
+                g.drawRect(x, y, strWidth, 20);
+                updateCard(itemContainer.getItem());
+                cardEntity.setVisible(true);
+            } else {
+                cardEntity.setVisible(false);
+            }
+            y += 20;
+        }
     }
 
     @Override
@@ -194,6 +231,8 @@ public class ManageDeckGameState extends BasicGameState {
             createButtons();
             shouldRebuildButtons = false;
         }
+
+        entityManager.update(delta);
 
     }
 
