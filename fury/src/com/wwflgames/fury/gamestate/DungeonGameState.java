@@ -5,7 +5,9 @@ import com.wwflgames.fury.entity.*;
 import com.wwflgames.fury.main.AppState;
 import com.wwflgames.fury.map.Direction;
 import com.wwflgames.fury.map.DungeonMap;
+import com.wwflgames.fury.map.Stairs;
 import com.wwflgames.fury.map.Tile;
+import com.wwflgames.fury.map.TileType;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.player.Player;
@@ -41,11 +43,14 @@ public class DungeonGameState extends BasicGameState {
     public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.gameContainer = gameContainer;
         this.stateBasedGame = stateBasedGame;
-
-        entityManager = new EntityManager(gameContainer, stateBasedGame);
     }
 
     public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+        showNewMap();
+    }
+
+    private void showNewMap() throws SlickException {
+        entityManager = new EntityManager(gameContainer, stateBasedGame);
 
         DungeonMap map = appState.getMap();
 
@@ -100,7 +105,6 @@ public class DungeonGameState extends BasicGameState {
                 .addComponent(new MiniDungeonMapRenderer("mapRender", map, playerController));
 
         entityManager.addEntity(miniMap);
-
     }
 
     @Override
@@ -113,14 +117,18 @@ public class DungeonGameState extends BasicGameState {
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics)
             throws SlickException {
 
-        entityManager.render(graphics);
+        if ( entityManager != null ) {
+            entityManager.render(graphics);
+        }
 
     }
 
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
 
-        entityManager.update(delta);
+        if ( entityManager != null ) {
+            entityManager.update(delta);
+        }
 
     }
 
@@ -138,11 +146,16 @@ public class DungeonGameState extends BasicGameState {
 
         Direction d = Direction.forKey(key);
         if (d != null) {
-            tryMoveAndMaybeAttack(d.getDx(), d.getDy());
+            //TODO: meh i dont like the slick exception that has propogated to here :(
+            try {
+                tryMoveAndMaybeAttack(d.getDx(), d.getDy());
+            } catch (SlickException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void tryMoveAndMaybeAttack(int dx, int dy) {
+    private void tryMoveAndMaybeAttack(int dx, int dy) throws SlickException {
         Player player = appState.getPlayer();
         Tile tile = player.getCurrentMapTile();
         int currX = tile.getX();
@@ -158,17 +171,34 @@ public class DungeonGameState extends BasicGameState {
             Log.debug("Out of bounds");
             return;
         }
-        Mob enemy = dungeonMap.getTileAt(newX, newY).getMob();
+        Tile newTile = dungeonMap.getTileAt(newX, newY);
+        Mob enemy = newTile.getMob();
         Log.debug("Enemy present, enemy was " + enemy);
         if (enemy != null) {
             Log.debug("about to initiate combat");
             initiateCombat(player);
+        } else if (newTile.getType() == TileType.STAIR ) {
+            changeLevel(dungeonMap.getStairs());
         } else if (dungeonMap.inBounds(newX, newY) && dungeonMap.isWalkable(newX, newY)) {
             playerController.movePlayerTo(newX, newY);
         } else {
             Log.debug("Hit a wall!");
         }
     }
+
+    private void changeLevel(Stairs stairs) throws SlickException {
+        DungeonMap oldMap = appState.getMap();
+        DungeonMap newMap = stairs.mapAtOtherEndFrom(oldMap);
+        // set the map in the app state to the new map
+        appState.getDungeon().takeStairsFrom(oldMap);
+
+        Tile newMapTile = stairs.tileAtOtherEndFrom(oldMap);
+        appState.getMap().addMob(appState.getPlayer(), newMapTile.getX(), newMapTile.getY() );
+
+        // call enter?
+        showNewMap();
+    }
+
 
     private void initiateCombat(Mob initiator) {
         if (initiator instanceof Player) {

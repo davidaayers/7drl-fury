@@ -16,6 +16,7 @@ public class DungeonMap implements Cloneable {
     private Tile[][] tiles;
     private List<Monster> monsterList = new ArrayList<Monster>();
     private List<Feature> features = new ArrayList<Feature>();
+    private Stairs stairs;
 
     public DungeonMap(int width, int height) {
         this.width = width;
@@ -119,4 +120,11 @@ public class DungeonMap implements Cloneable {
         }
     }
 
+    public Stairs getStairs() {
+        return stairs;
+    }
+
+    public void setStairs(Stairs stairs) {
+        this.stairs = stairs;
+    }
 }

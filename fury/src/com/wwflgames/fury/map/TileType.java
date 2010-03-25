@@ -4,7 +4,8 @@ public enum TileType {
     FLOOR(".", true),
     WALL("#", false),
     EMPTY(" ", false),
-    JOIN("J", false);
+    JOIN("J", false),
+    STAIR("S",true);
 
     String ascii;
     boolean walkable;

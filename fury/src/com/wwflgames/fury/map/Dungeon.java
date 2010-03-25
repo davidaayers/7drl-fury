@@ -4,19 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dungeon {
-    private int currentLevel = 0;
+    private DungeonMap currentLevel;
     private List<DungeonMap> levels = new ArrayList<DungeonMap>();
 
-    public void addLevel(DungeonMap level) {
-        levels.add(level);
+    public Dungeon(List<DungeonMap> levels) {
+        this.levels = levels;
+        currentLevel = levels.get(0);
     }
 
     public DungeonMap currentLevelMap() {
-        return levels.get(currentLevel);
+        return currentLevel;
     }
 
-    public int currentLevel() {
-        return currentLevel + 1;
+    public void takeStairsFrom(DungeonMap map) {
+        Stairs stairs = map.getStairs();
+        currentLevel = stairs.mapAtOtherEndFrom(map);
     }
+
+
+
 
 }
