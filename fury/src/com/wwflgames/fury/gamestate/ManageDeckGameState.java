@@ -31,7 +31,6 @@ public class ManageDeckGameState extends BasicGameState {
     private Image minusImage;
     private boolean shouldRebuildButtons;
     private int currentDeckNo;
-    private Entity cardEntity;
     private EntityManager entityManager;
     private UnicodeFont font;
 
@@ -68,11 +67,6 @@ public class ManageDeckGameState extends BasicGameState {
         createButtons();
 
         entityManager = new EntityManager(container, game);
-
-        cardEntity = new Entity("cardEntity")
-                .setPosition(new Vector2f(320, 200));
-
-
     }
 
     private void createButtons() {
@@ -184,7 +178,7 @@ public class ManageDeckGameState extends BasicGameState {
         // render left side, which contains all items in the current deck
         drawItems(container, g, currentDeckItems, 35, 200);
 
-        drawItems(container, g, allPlayerItems, 425, 200);
+        drawItems(container, g, allPlayerItems, 520, 200);
 
         for (MouseOverArea moa : mouseOvers) {
             moa.render(container, g);
@@ -194,15 +188,10 @@ public class ManageDeckGameState extends BasicGameState {
 
     }
 
-    public void updateCard(Item item) {
-        ItemRenderer card = new ItemRenderer(item, font);
-        cardEntity.removeComponentById("cardEntity");
-        cardEntity.addComponent(card);
-    }
-
     private void drawItems(GameContainer container, Graphics g, List<ItemContainer> items, int startX, int startY) {
         int x = startX;
         int y = startY;
+
         for (ItemContainer itemContainer : items) {
             String str = itemContainer.getItem().name() + " " + itemContainer.getQty();
             int strWidth = g.getFont().getWidth(str);
@@ -215,13 +204,17 @@ public class ManageDeckGameState extends BasicGameState {
                     mouseY >= y && mouseY <= y + 20) {
                 g.setColor(Color.yellow);
                 g.drawRect(x, y, strWidth, 20);
-                updateCard(itemContainer.getItem());
-                cardEntity.setVisible(true);
-            } else {
-                cardEntity.setVisible(false);
+                showCard(g, itemContainer);
             }
             y += 20;
         }
+    }
+
+    private void showCard(Graphics g, ItemContainer itemContainer) {
+        new Entity("cardEntity")
+                .setPosition(new Vector2f(320, 200))
+                .addComponent(new ItemRenderer(itemContainer.getItem(), font))
+                .render(g);
     }
 
     @Override
@@ -231,7 +224,6 @@ public class ManageDeckGameState extends BasicGameState {
             createButtons();
             shouldRebuildButtons = false;
         }
-
         entityManager.update(delta);
 
     }
