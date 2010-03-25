@@ -27,11 +27,14 @@ public abstract class MapRenderer extends Renderer {
     protected Image determineImageForTile(TileType tileType) {
         Image floorImage = spriteSheet.getSprite(0, 8);
         Image wallImage = spriteSheet.getSprite(0, 0);
+        Image stairImage = spriteSheet.getSprite(0,3);
         Image drawImage = floorImage;
         if (tileType == TileType.WALL) {
             drawImage = wallImage;
         } else if (tileType == TileType.EMPTY) {
             drawImage = empty;
+        } else if ( tileType == TileType.STAIR ) {
+            drawImage = stairImage;
         }
         return drawImage;
     }
