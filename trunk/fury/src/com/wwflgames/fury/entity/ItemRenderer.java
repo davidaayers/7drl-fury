@@ -21,9 +21,6 @@ public class ItemRenderer extends CardRenderer {
 
     @Override
     protected void maybeRenderItemText(Graphics g) {
-        if (!owner.isVisible()) {
-            return;
-        }
 
         // draw item name;
         int y = 4;

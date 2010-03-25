@@ -18,6 +18,10 @@ public class CardRenderer extends Renderer {
 
     @Override
     public void render(Graphics g) {
+        if (!owner.isVisible()) {
+            return;
+        }
+
         Vector2f pos = owner.getPosition();
 
         int width = 32 * 4;
