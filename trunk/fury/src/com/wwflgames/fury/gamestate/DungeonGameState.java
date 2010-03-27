@@ -3,11 +3,7 @@ package com.wwflgames.fury.gamestate;
 import com.wwflgames.fury.Fury;
 import com.wwflgames.fury.entity.*;
 import com.wwflgames.fury.main.AppState;
-import com.wwflgames.fury.map.Direction;
-import com.wwflgames.fury.map.DungeonMap;
-import com.wwflgames.fury.map.Stairs;
-import com.wwflgames.fury.map.Tile;
-import com.wwflgames.fury.map.TileType;
+import com.wwflgames.fury.map.*;
 import com.wwflgames.fury.mob.Mob;
 import com.wwflgames.fury.monster.Monster;
 import com.wwflgames.fury.player.Player;
@@ -46,11 +42,12 @@ public class DungeonGameState extends BasicGameState {
     }
 
     public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+        entityManager = new EntityManager(gameContainer, stateBasedGame);
         showNewMap();
     }
 
     private void showNewMap() throws SlickException {
-        entityManager = new EntityManager(gameContainer, stateBasedGame);
+        entityManager.removeAllEntities();
 
         DungeonMap map = appState.getMap();
 
@@ -117,7 +114,7 @@ public class DungeonGameState extends BasicGameState {
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics)
             throws SlickException {
 
-        if ( entityManager != null ) {
+        if (entityManager != null) {
             entityManager.render(graphics);
         }
 
@@ -126,7 +123,7 @@ public class DungeonGameState extends BasicGameState {
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
 
-        if ( entityManager != null ) {
+        if (entityManager != null) {
             entityManager.update(delta);
         }
 
@@ -177,8 +174,8 @@ public class DungeonGameState extends BasicGameState {
         if (enemy != null) {
             Log.debug("about to initiate combat");
             initiateCombat(player);
-        } else if (newTile.getType() == TileType.STAIR ) {
-            changeLevel(dungeonMap.getStairs());
+        } else if (newTile.getType() == TileType.STAIR) {
+            changeLevel(newTile.getStairs());
         } else if (dungeonMap.inBounds(newX, newY) && dungeonMap.isWalkable(newX, newY)) {
             playerController.movePlayerTo(newX, newY);
         } else {
@@ -187,15 +184,16 @@ public class DungeonGameState extends BasicGameState {
     }
 
     private void changeLevel(Stairs stairs) throws SlickException {
+
         DungeonMap oldMap = appState.getMap();
         DungeonMap newMap = stairs.mapAtOtherEndFrom(oldMap);
-        // set the map in the app state to the new map
-        appState.getDungeon().takeStairsFrom(oldMap);
+
+        appState.getDungeon().setCurrentLevel(newMap);
 
         Tile newMapTile = stairs.tileAtOtherEndFrom(oldMap);
-        appState.getMap().addMob(appState.getPlayer(), newMapTile.getX(), newMapTile.getY() );
+        oldMap.removeMob(appState.getPlayer());
+        newMap.addMob(appState.getPlayer(), newMapTile.getX(), newMapTile.getY());
 
-        // call enter?
         showNewMap();
     }
 

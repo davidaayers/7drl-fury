@@ -16,7 +16,6 @@ public class DungeonMap implements Cloneable {
     private Tile[][] tiles;
     private List<Monster> monsterList = new ArrayList<Monster>();
     private List<Feature> features = new ArrayList<Feature>();
-    private Stairs stairs;
 
     public DungeonMap(int width, int height) {
         this.width = width;
@@ -46,17 +45,13 @@ public class DungeonMap implements Cloneable {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 // default tiles to floor
-                tiles[x][y] = new Tile(TileType.EMPTY, x, y);
+                tiles[x][y] = new Tile(this, TileType.EMPTY, x, y);
             }
         }
     }
 
     public Tile getTileAt(int x, int y) {
         return tiles[x][y];
-    }
-
-    public void setTileAt(int x, int y, Tile tile) {
-        tiles[x][y] = tile;
     }
 
     public void addMob(Mob mob, int x, int y) {
@@ -105,7 +100,7 @@ public class DungeonMap implements Cloneable {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Tile existing = this.getTileAt(x, y);
-                copy.tiles[x][y] = new Tile(existing.getType(), x, y);
+                copy.tiles[x][y] = new Tile(copy, existing.getType(), x, y);
             }
         }
         return copy;
@@ -118,13 +113,5 @@ public class DungeonMap implements Cloneable {
                 existing.setPlayerVisibility(Tile.NOT_VISIBLE);
             }
         }
-    }
-
-    public Stairs getStairs() {
-        return stairs;
-    }
-
-    public void setStairs(Stairs stairs) {
-        this.stairs = stairs;
     }
 }

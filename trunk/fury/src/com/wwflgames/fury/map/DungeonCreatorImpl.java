@@ -29,14 +29,14 @@ public class DungeonCreatorImpl implements DungeonCreator {
         // from one level to the next
         for (int idx = 0; idx < floorsToCreate - 1; idx++) {
             DungeonMap mapA = levels.get(idx);
-            DungeonMap mapB = levels.get(idx+1);
+            DungeonMap mapB = levels.get(idx + 1);
             Tile mapATile = findRandomTile(mapA);
             mapATile.setType(TileType.STAIR);
             Tile mapBTile = findRandomTile(mapB);
             mapBTile.setType(TileType.STAIR);
-            Stairs s = new Stairs(mapA,mapB,mapATile,mapBTile);
-            mapA.setStairs(s);
-            mapB.setStairs(s);
+            Stairs s = new Stairs(mapA, mapB, mapATile, mapBTile);
+            mapATile.setStairs(s);
+            mapBTile.setStairs(s);
         }
 
         Dungeon dungeon = new Dungeon(levels);
