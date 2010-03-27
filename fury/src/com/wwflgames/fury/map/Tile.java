@@ -15,11 +15,14 @@ public class Tile {
     private Mob mob;
     private boolean hasPlayerSeen;
     private int playerVisibility;
+    private Stairs stairs;
+    private DungeonMap owningMap;
 
-    public Tile(TileType type, int x, int y) {
+    public Tile(DungeonMap owningMap, TileType type, int x, int y) {
         this.type = type;
         this.x = x;
         this.y = y;
+        this.owningMap = owningMap;
         hasPlayerSeen = false;
         playerVisibility = 0;
     }
@@ -76,6 +79,14 @@ public class Tile {
         } else {
             return this.playerVisibility != 0;
         }
+    }
+
+    public Stairs getStairs() {
+        return stairs;
+    }
+
+    public void setStairs(Stairs stairs) {
+        this.stairs = stairs;
     }
 
     @Override

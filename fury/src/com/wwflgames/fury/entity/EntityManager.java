@@ -48,6 +48,10 @@ public class EntityManager {
         return null;
     }
 
+    public void removeAllEntities() {
+        entitiesToRemove.addAll(entities);
+    }
+
     public Entity findEntityById(String id) {
         for (Entity entity : entities) {
             if (entity.getId().equals(id)) {

@@ -16,12 +16,11 @@ public class Dungeon {
         return currentLevel;
     }
 
-    public void takeStairsFrom(DungeonMap map) {
-        Stairs stairs = map.getStairs();
-        currentLevel = stairs.mapAtOtherEndFrom(map);
+    public DungeonMap getCurrentLevel() {
+        return currentLevel;
     }
 
-
-
-
+    public void setCurrentLevel(DungeonMap currentLevel) {
+        this.currentLevel = currentLevel;
+    }
 }

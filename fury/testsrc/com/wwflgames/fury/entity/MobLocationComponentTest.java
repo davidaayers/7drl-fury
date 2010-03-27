@@ -19,7 +19,7 @@ public class MobLocationComponentTest {
     @Test
     public void updateShouldSetCorrectVector2f() throws Exception {
         Mob testMob = new Mob("test");
-        Tile mapTile = new Tile(TileType.FLOOR, 1, 1);
+        Tile mapTile = new Tile(null, TileType.FLOOR, 1, 1);
         testMob.setCurrentMapTile(mapTile);
 
         mobLocationAction
